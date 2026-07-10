@@ -4,21 +4,37 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jason's Healthcare Finder List (JFB)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* Design system: ui-ux-pro-max — Pattern: Directory · Style: Inclusive/Accessible (WCAG AA/AAA)
+     Palette: Healthcare App (calm cyan + health green) · Type: Figtree / Noto Sans */
   :root{
-    --bg:#f4f6f9; --card:#ffffff; --card2:#f9fafc;
-    --ink:#1a2530; --ink2:#3d4c5c; --muted:#6b7a8c; --line:#e2e8f0;
+    --bg:#f4f7f9; --card:#ffffff; --card2:#f2f8fa;
+    --ink:#164e63; --ink2:#33586b; --muted:#5a7386; --line:#d6e6ec;
+    --primary:#0891b2; --primary-dark:#0e7490; --primary-text:#0e7490; --primary-soft:#e0f5fa;
+    --accent:#059669; --accent-soft:#e7f6f0;
     --red:#c0392b; --red-lit:#e0503f; --red-soft:#fdecea;
-    --teal:#0f766e; --teal-soft:#e6f4f2;
-    --gold:#b7791f; --gold-soft:#fdf6e7;
-    --shadow:0 1px 3px rgba(20,40,60,.08),0 1px 2px rgba(20,40,60,.04);
+    --ring:#0891b2;
+    --font-head:'Figtree',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --font-body:'Noto Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --shadow:0 1px 3px rgba(16,78,99,.10),0 1px 2px rgba(16,78,99,.05);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
   body{
     background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    line-height:1.45; padding-bottom:48px;
+    font-family:var(--font-body);
+    line-height:1.5; padding-bottom:48px;
+  }
+  /* Accessibility rule #1 — visible focus rings on every interactive element */
+  a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{
+    outline:3px solid var(--ring); outline-offset:2px; border-radius:8px;
+  }
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important}
   }
 
   /* ---------- NAV TABS ---------- */
@@ -32,7 +48,7 @@
     flex:1; text-align:center; text-decoration:none; font-size:13.5px; font-weight:700;
     color:var(--muted); padding:10px 8px; border-radius:9px; border:1.5px solid transparent;
   }
-  .nav a.active{color:var(--teal); background:var(--teal-soft); border-color:rgba(15,118,110,.2)}
+  .nav a.active{color:var(--primary-text); background:var(--primary-soft); border-color:rgba(8,145,178,.25)}
   .nav a:not(.active):hover{background:var(--card2)}
 
   /* ---------- HEADER ---------- */
@@ -42,7 +58,9 @@
   }
   .wrap{max-width:880px;margin:0 auto}
   .brand{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .brand h1{font-size:19px;letter-spacing:.2px;font-weight:800;color:var(--ink)}
+  .brand h1{font-family:var(--font-head);font-size:20px;letter-spacing:.2px;font-weight:800;color:var(--ink)}
+  .nav a{font-family:var(--font-head)}
+  .name{font-family:var(--font-head)}
   .brand .badge{font-size:11px;font-weight:800;color:var(--red);border:1.5px solid var(--red);
     border-radius:5px;padding:1px 6px;letter-spacing:.5px}
   .brand .sub{font-size:12.5px;color:var(--muted);width:100%;margin-top:2px}
@@ -58,7 +76,7 @@
   }
   .step .n{
     flex:0 0 auto;width:22px;height:22px;border-radius:50%;
-    background:var(--teal);color:#fff;font-size:12px;font-weight:800;
+    background:var(--primary-text);color:#fff;font-size:12px;font-weight:800;
     display:flex;align-items:center;justify-content:center;
   }
   .step .tx{font-size:12.5px;color:var(--ink2);line-height:1.3}
@@ -72,7 +90,7 @@
     color:var(--ink); outline:none; box-shadow:var(--shadow);
   }
   .search input::placeholder{color:#9aa8b8}
-  .search input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.15)}
+  .search input:focus{border-color:var(--primary-text);box-shadow:0 0 0 3px rgba(8,145,178,.18)}
   .search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:19px;height:19px;fill:#9aa8b8}
 
   .controls{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
@@ -81,7 +99,7 @@
     background:var(--card); border:1.5px solid var(--line); border-radius:10px; outline:none;
     min-width:130px; box-shadow:var(--shadow); cursor:pointer;
   }
-  select:focus{border-color:var(--teal)}
+  select:focus{border-color:var(--primary-text)}
   .clear{
     flex:0 0 auto; font-size:13px; font-weight:600; padding:11px 14px;
     background:#fff; color:var(--red); border:1.5px solid var(--line); border-radius:10px;
@@ -104,8 +122,8 @@
   .card .body{flex:1;min-width:0}
   .name{font-size:15.5px;font-weight:700;margin-bottom:5px;color:var(--ink)}
   .typerow{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap}
-  .chip{font-size:11px;font-weight:700;letter-spacing:.2px;color:var(--teal);
-    background:var(--teal-soft);border:1px solid rgba(15,118,110,.2);
+  .chip{font-size:11px;font-weight:700;letter-spacing:.2px;color:var(--primary-text);
+    background:var(--primary-soft);border:1px solid rgba(8,145,178,.25);
     border-radius:20px;padding:3px 10px;white-space:nowrap}
   .addr{font-size:13px;color:var(--ink2);line-height:1.5}
   .parish{color:var(--muted);font-weight:600}
@@ -124,11 +142,11 @@
 
   .empty{text-align:center;color:var(--muted);padding:52px 20px;font-size:14px}
   .empty b{color:var(--ink);display:block;margin-bottom:6px;font-size:16px}
-  mark{background:var(--gold-soft);color:var(--gold);border-radius:3px;padding:0 2px;font-weight:600}
+  mark{background:#fde68a;color:#7c4a03;border-radius:3px;padding:0 2px;font-weight:700}
   .more{display:block;width:100%;padding:14px;margin:8px 0 2px;text-align:center;
-    background:#fff;color:var(--teal);border:1.5px solid var(--line);border-radius:12px;
+    background:#fff;color:var(--primary-text);border:1.5px solid var(--line);border-radius:12px;
     font-size:14px;font-weight:700;cursor:pointer;box-shadow:var(--shadow)}
-  .more:hover{border-color:var(--teal);background:var(--teal-soft)}
+  .more:hover{border-color:var(--primary-text);background:var(--primary-soft)}
   footer{padding:26px 16px 0;color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
   footer .wrap{max-width:600px}
 

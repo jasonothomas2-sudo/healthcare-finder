@@ -57,13 +57,26 @@
     padding:14px 16px 14px;
   }
   .wrap{max-width:880px;margin:0 auto}
-  .brand{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .brand{display:flex;align-items:flex-start;gap:11px;flex-wrap:nowrap}
+  .brand .brandmark{flex:0 0 auto;width:42px;height:42px;border-radius:11px;
+    background:linear-gradient(135deg,#155e75,#0e7490);color:#fff;font-family:var(--font-head);
+    font-weight:800;font-size:17px;letter-spacing:.5px;display:flex;align-items:center;
+    justify-content:center;box-shadow:0 2px 7px rgba(8,145,178,.35)}
+  .brand .brandcol{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .brand .titlerow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
   .brand h1{font-family:var(--font-head);font-size:20px;letter-spacing:.2px;font-weight:800;color:var(--ink)}
   .nav a{font-family:var(--font-head)}
   .name{font-family:var(--font-head)}
   .brand .badge{font-size:11px;font-weight:800;color:var(--red);border:1.5px solid var(--red);
     border-radius:5px;padding:1px 6px;letter-spacing:.5px}
-  .brand .sub{font-size:12.5px;color:var(--muted);width:100%;margin-top:2px}
+  .brand .owner{font-family:var(--font-head);font-size:12.5px;font-weight:700;color:var(--primary-text)}
+  .brand .sub{font-size:12.5px;color:var(--muted);margin-top:1px}
+  footer .credit{display:flex;align-items:center;justify-content:center;gap:9px;
+    font-size:13px;color:var(--ink2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  footer .credit .cm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#155e75,#0e7490);
+    color:#fff;font-family:var(--font-head);font-weight:800;font-size:11px;letter-spacing:.3px;
+    display:inline-flex;align-items:center;justify-content:center}
+  footer .credit b{font-family:var(--font-head);color:var(--ink);font-weight:800}
 
   /* ---------- STEP BAR (instructions) ---------- */
   .steps{
@@ -165,9 +178,12 @@
 <header>
  <div class="wrap">
   <div class="brand">
-    <h1>Jason's Healthcare Finder List</h1>
-    <span class="badge">JFB</span>
-    <span class="sub">Find a health provider in Jamaica &middot; Guardian Life listing</span>
+    <div class="brandmark" aria-hidden="true">JT</div>
+    <div class="brandcol">
+      <div class="titlerow"><h1>Jason's Healthcare Finder List</h1><span class="badge">JFB</span></div>
+      <span class="owner">by Jason Thomas</span>
+      <span class="sub">Find a health provider in Jamaica &middot; Guardian Life listing</span>
+    </div>
   </div>
 
   <div class="steps">
@@ -197,6 +213,7 @@
 <main id="list"></main>
 <footer>
  <div class="wrap">
+  <div class="credit"><span class="cm" aria-hidden="true">JT</span> Created by <b>Jason Thomas</b> &middot; &copy; 2026</div>
   <b>How to call:</b> tap the red button on any listing to dial directly from your phone.
   Use the <b>Clear</b> button to reset your search anytime.<br><br>
   Source: JFB / Guardian Life provider listing. Numbers shown as published — please verify before relying on them.

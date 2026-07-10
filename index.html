@@ -21,12 +21,24 @@
     line-height:1.45; padding-bottom:48px;
   }
 
+  /* ---------- NAV TABS ---------- */
+  .nav{
+    position:sticky; top:0; z-index:30;
+    background:#fff; border-bottom:1px solid var(--line);
+    box-shadow:0 2px 10px rgba(20,40,60,.05);
+  }
+  .nav-inner{max-width:880px;margin:0 auto;display:flex;gap:4px;padding:8px 16px}
+  .nav a{
+    flex:1; text-align:center; text-decoration:none; font-size:13.5px; font-weight:700;
+    color:var(--muted); padding:10px 8px; border-radius:9px; border:1.5px solid transparent;
+  }
+  .nav a.active{color:var(--teal); background:var(--teal-soft); border-color:rgba(15,118,110,.2)}
+  .nav a:not(.active):hover{background:var(--card2)}
+
   /* ---------- HEADER ---------- */
   header{
-    position:sticky; top:0; z-index:20;
     background:#fff; border-bottom:1px solid var(--line);
     padding:14px 16px 14px;
-    box-shadow:0 2px 10px rgba(20,40,60,.05);
   }
   .wrap{max-width:880px;margin:0 auto}
   .brand{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -126,6 +138,12 @@
 </style>
 </head>
 <body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="./" class="active">Provider Finder</a>
+    <a href="watch/">Watch Rotation</a>
+  </div>
+</nav>
 <header>
  <div class="wrap">
   <div class="brand">

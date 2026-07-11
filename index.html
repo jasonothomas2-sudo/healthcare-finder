@@ -10,7 +10,7 @@
 <style>
   /* Design system: ui-ux-pro-max — Pattern: Directory · Style: Inclusive/Accessible (WCAG AA/AAA)
      Palette: Healthcare App (calm cyan + health green) · Type: Figtree / Noto Sans */
-  :root{
+  :root{ color-scheme:light dark;
     --bg:#f4f7f9; --card:#ffffff; --card2:#f2f8fa;
     --ink:#164e63; --ink2:#33586b; --muted:#5a7386; --line:#d6e6ec;
     --primary:#0891b2; --primary-dark:#0e7490; --primary-text:#0e7490; --primary-soft:#e0f5fa;
@@ -40,7 +40,7 @@
   /* ---------- NAV TABS ---------- */
   .nav{
     position:sticky; top:0; z-index:30;
-    background:#fff; border-bottom:1px solid var(--line);
+    background:var(--card); border-bottom:1px solid var(--line);
     box-shadow:0 2px 10px rgba(20,40,60,.05);
   }
   .nav-inner{max-width:880px;margin:0 auto;display:flex;gap:4px;padding:8px 16px}
@@ -53,7 +53,7 @@
 
   /* ---------- HEADER ---------- */
   header{
-    background:#fff; border-bottom:1px solid var(--line);
+    background:var(--card); border-bottom:1px solid var(--line);
     padding:14px 16px 14px;
   }
   .wrap{max-width:880px;margin:0 auto}
@@ -163,7 +163,7 @@
   footer{padding:26px 16px 0;color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
   footer .wrap{max-width:600px}
 
-  @media(min-width:720px){
+  @media (prefers-color-scheme: dark){ :root{ --bg:#0f1720; --card:#17212b; --card2:#1c2733; --ink:#e6eef2; --ink2:#b9c8d1; --muted:#8697a3; --line:#2a3742; --primary:#22a8c9; --primary-dark:#1c8aa8; --primary-text:#5fd0ea; --primary-soft:rgba(34,168,201,.18); --accent:#34d399; --accent-soft:rgba(52,211,153,.16); --red:#ff6b5b; --red-lit:#ff8577; --red-soft:rgba(255,107,91,.16); --ring:#22a8c9; } .nav{box-shadow:0 2px 10px rgba(0,0,0,.35);} } @media(min-width:720px){
     main{max-width:880px;margin:0 auto}
   }
 </style>

@@ -1,0 +1,14 @@
+{
+  "name": "Jason's Healthcare Finder List (JFB)",
+  "short_name": "JFB Finder",
+  "description": "Find a health provider in Jamaica — Guardian Life listing",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b3d4f",
+  "theme_color": "#0b4f63",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

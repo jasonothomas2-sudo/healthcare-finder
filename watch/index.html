@@ -3,113 +3,206 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b4f63">
 <title>JFB Work Shift Forecast</title>
+<link rel="manifest" href="../manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Design system: ui-ux-pro-max — Style: Inclusive/Accessible · Palette: Healthcare App · Type: Figtree / Noto Sans */
+  /* Redesign v2 — matches Provider Finder design system */
   :root{ color-scheme:light dark;
-    --bg:#f4f7f9; --card:#ffffff; --card2:#f2f8fa;
-    --ink:#164e63; --ink2:#33586b; --muted:#5a7386; --line:#d6e6ec;
-    --primary:#0891b2; --primary-text:#0e7490; --primary-soft:#e0f5fa;
-    --accent:#059669;
-    --red:#c0392b; --red-lit:#e0503f; --red-soft:#fdecea;
+    --bg:#f2f6f8; --card:#ffffff; --card2:#eef5f8;
+    --ink:#123c4d; --ink2:#33586b; --muted:#5a7386; --line:#d6e6ec;
+    --primary:#0891b2; --primary-dark:#0e7490; --primary-text:#0e7490; --primary-soft:#e0f5fa;
     --ring:#0891b2;
+    --hero1:#0b3d4f; --hero2:#0e7490; --hero3:#0891b2;
     --day:#2563eb; --eve:#b45309; --night:#6d28d9; --off:#64748b;
     --font-head:'Figtree',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --font-body:'Noto Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --shadow:0 1px 3px rgba(16,78,99,.10),0 1px 2px rgba(16,78,99,.05);
+    --shadow-lg:0 10px 30px -10px rgba(11,61,79,.25),0 4px 10px -4px rgba(11,61,79,.12);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
-  body{ background:var(--bg); color:var(--ink); font-family:var(--font-body); line-height:1.5; padding-bottom:48px; }
-  a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{ outline:3px solid var(--ring); outline-offset:2px; border-radius:8px; }
-  @media (prefers-reduced-motion: reduce){ *{animation-duration:.01ms !important; transition-duration:.01ms !important} }
-  .wrap{max-width:720px;margin:0 auto}
-  .nav{position:sticky; top:0; z-index:30; background:var(--card); border-bottom:1px solid var(--line); box-shadow:0 2px 10px rgba(20,40,60,.05);}
-  .nav-inner{max-width:720px;margin:0 auto;display:flex;gap:4px;padding:8px 12px}
-  .nav a{flex:1; text-align:center; text-decoration:none; font-size:13.5px; font-weight:700; color:var(--muted); padding:10px 8px; border-radius:9px; border:1.5px solid transparent; font-family:var(--font-head);}
-  .nav a.active{color:var(--primary-text); background:var(--primary-soft); border-color:rgba(8,145,178,.25)}
-  .nav a:not(.active):hover{background:var(--card2)}
-  header{background:var(--card); border-bottom:1px solid var(--line); padding:14px 16px 14px;}
-  .brand{display:flex;align-items:flex-start;gap:11px;flex-wrap:nowrap}
-  .brand .brandmark{flex:0 0 auto;width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,#155e75,#0e7490);color:#fff;font-family:var(--font-head);font-weight:800;font-size:17px;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 7px rgba(8,145,178,.35)}
-  .brand .brandcol{display:flex;flex-direction:column;gap:1px;min-width:0}
-  .brand .titlerow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-  .brand h1{font-family:var(--font-head);font-size:20px;letter-spacing:.2px;font-weight:800;color:var(--ink)}
-  .brand .badge{font-size:11px;font-weight:800;color:var(--red);border:1.5px solid var(--red); border-radius:5px;padding:1px 7px;letter-spacing:.5px}
-  .brand .owner{font-family:var(--font-head);font-size:12.5px;font-weight:700;color:var(--primary-text)}
-  .brand .sub{font-size:12.5px;color:var(--muted);margin-top:1px}
-  footer .credit{display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;color:var(--ink2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-  footer .credit .cm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#155e75,#0e7490);color:#fff;font-family:var(--font-head);font-weight:800;font-size:11px;letter-spacing:.3px;display:inline-flex;align-items:center;justify-content:center}
-  footer .credit b{font-family:var(--font-head);color:var(--ink);font-weight:800}
-  main{padding:14px 12px 0}
-  .steps{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-  .step{flex:1 1 0;min-width:150px;display:flex;align-items:center;gap:9px; background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;}
-  .step .n{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--primary-text); color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
-  .step .tx{font-size:12.5px;color:var(--ink2);line-height:1.3}
-  .step .tx b{color:var(--ink);font-weight:700}
-  h2.sec{font-family:var(--font-head);font-size:12px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase; font-weight:700;margin:20px 0 9px}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5;padding-bottom:48px}
+  a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{
+    outline:3px solid var(--ring);outline-offset:2px;border-radius:8px}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+  .wrap{max-width:760px;margin:0 auto}
+
+  .nav{position:sticky;top:0;z-index:40;background:var(--card);
+    border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(20,40,60,.05)}
+  .nav-inner{max-width:760px;margin:0 auto;display:flex;gap:4px;padding:8px 16px}
+  .nav a{flex:1;text-align:center;text-decoration:none;font-size:13.5px;font-weight:700;
+    font-family:var(--font-head);color:var(--muted);padding:10px 8px;border-radius:9px;
+    border:1.5px solid transparent;transition:background .15s,color .15s}
+  .nav a.active{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(8,145,178,.25)}
+  .nav a:not(.active):hover{background:var(--card2);color:var(--ink)}
+
+  .hero{position:relative;overflow:hidden;color:#fff;
+    background:linear-gradient(135deg,var(--hero1) 0%,var(--hero2) 55%,var(--hero3) 100%);
+    padding:26px 16px 30px}
+  .hero::before{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M26 14h4v8h8v4h-8v8h-4v-8h-8v-4h8z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E")}
+  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;
+    border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}
+  .hero .inner{position:relative;z-index:1}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brandmark{flex:0 0 auto;width:52px;height:52px;border-radius:14px;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
+    backdrop-filter:blur(4px);color:#fff;font-family:var(--font-head);font-weight:900;
+    font-size:19px;letter-spacing:.5px;display:flex;align-items:center;justify-content:center}
+  .titlerow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  h1{font-family:var(--font-head);font-weight:900;letter-spacing:-.3px;
+    font-size:clamp(23px,4.5vw,32px);line-height:1.15}
+  .badge{font-size:11px;font-weight:800;color:#fff;border:1.5px solid rgba(255,255,255,.55);
+    border-radius:6px;padding:2px 7px;letter-spacing:.8px}
+  .sub{margin-top:3px;font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,.85)}
+  .sub b{color:#fff;font-weight:700}
+
+  .steps{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
+  .steps.hidden{display:none}
+  .step{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 14px 7px 8px;
+    backdrop-filter:blur(4px)}
+  .step .n{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:#fff;
+    color:var(--hero2);font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .step .tx{font-size:12.5px;color:rgba(255,255,255,.92)}
+  .step .tx b{color:#fff}
+  .steps-dismiss{background:none;border:none;color:rgba(255,255,255,.75);font-size:12px;
+    font-weight:700;cursor:pointer;padding:7px 10px;border-radius:999px}
+  .steps-dismiss:hover{background:rgba(255,255,255,.12);color:#fff}
+
+  main{padding:14px 16px 0}
+  h2.sec{font-family:var(--font-head);font-size:12px;color:var(--muted);letter-spacing:.5px;
+    text-transform:uppercase;font-weight:700;margin:20px 0 9px}
+
   .watchpick{display:flex;gap:8px;margin:0 0 4px}
-  .wbtn{flex:1; padding:14px 4px; text-align:center; border-radius:11px; background:var(--card); border:1.5px solid var(--line); color:var(--ink2); font-weight:800; font-size:17px; cursor:pointer; box-shadow:var(--shadow);}
-  .wbtn.active{border-color:var(--primary-text); background:var(--primary-soft); color:var(--primary-text)}
-  .today-card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 16px; text-align:center; box-shadow:var(--shadow);}
-  .today-card .dow{font-size:12px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;font-weight:700}
+  .wbtn{flex:1;padding:14px 4px;text-align:center;border-radius:13px;background:var(--card);
+    border:1.5px solid var(--line);color:var(--ink2);font-family:var(--font-head);font-weight:800;
+    font-size:17px;cursor:pointer;box-shadow:var(--shadow);
+    transition:transform .12s ease,border-color .15s,background .15s}
+  .wbtn:hover{transform:translateY(-1px)}
+  .wbtn:active{transform:scale(.97)}
+  .wbtn.active{border-color:var(--primary-text);background:var(--primary-soft);color:var(--primary-text);
+    box-shadow:0 0 0 3px rgba(8,145,178,.15)}
+
+  .today-card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);
+    border-radius:18px;padding:24px 16px;text-align:center;box-shadow:var(--shadow-lg)}
+  .today-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;
+    background:linear-gradient(90deg,var(--hero2),var(--hero3))}
+  .today-card .dow{font-family:var(--font-head);font-size:12px;color:var(--muted);letter-spacing:.5px;
+    text-transform:uppercase;font-weight:700}
   .today-card .date{font-size:15px;color:var(--ink2);margin-bottom:14px}
-  .slot-pill{font-family:var(--font-head);display:inline-block; padding:9px 26px; border-radius:30px; color:#fff; font-weight:800; font-size:21px; letter-spacing:.3px; margin-bottom:8px;}
+  .slot-pill{font-family:var(--font-head);display:inline-block;padding:10px 30px;border-radius:30px;
+    color:#fff;font-weight:800;font-size:22px;letter-spacing:.3px;margin-bottom:8px;
+    box-shadow:0 4px 12px -3px rgba(0,0,0,.3)}
   .slot-pill.Day{background:var(--day)} .slot-pill.Evening{background:var(--eve)}
   .slot-pill.Night{background:var(--night)} .slot-pill.Off{background:var(--off)}
   .hours{font-size:14px;color:var(--muted);font-weight:600}
-  .forecast{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
-  .fc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 13px;box-shadow:var(--shadow)}
+
+  .forecast{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .fc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;
+    box-shadow:var(--shadow);border-left:4px solid var(--fcc,var(--line));
+    transition:transform .15s ease,box-shadow .15s ease}
+  .fc:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(11,61,79,.28)}
+  .fc.Day{--fcc:var(--day)} .fc.Evening{--fcc:var(--eve)} .fc.Night{--fcc:var(--night)} .fc.Off{--fcc:var(--off)}
   .fc .fc-slot{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:5px}
   .fc .fc-dot{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
   .fc .fc-dot.Day{background:var(--day)} .fc .fc-dot.Evening{background:var(--eve)}
   .fc .fc-dot.Night{background:var(--night)} .fc .fc-dot.Off{background:var(--off)}
   .fc .fc-when{font-size:13px;color:var(--ink2);font-weight:600}
-  .fc .fc-when b{font-family:var(--font-head);color:var(--primary-text);font-weight:800}
+  .fc .fc-when b{font-family:var(--font-head);color:var(--primary-text);font-weight:800;font-size:15px}
   .fc .fc-date{font-size:11px;color:var(--muted);margin-top:2px}
-  .weekstrip{display:flex; gap:8px; overflow-x:auto; padding:2px 0 6px; -webkit-overflow-scrolling:touch}
-  .daychip{flex:0 0 auto; width:70px; background:var(--card); border:1.5px solid var(--line); border-radius:12px; padding:10px 4px; text-align:center; cursor:pointer; box-shadow:var(--shadow);}
-  .daychip.selected{border-color:var(--primary-text)}
+
+  .weekstrip{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;-webkit-overflow-scrolling:touch}
+  .daychip{flex:0 0 auto;width:72px;background:var(--card);border:1.5px solid var(--line);
+    border-radius:13px;padding:10px 4px;text-align:center;cursor:pointer;box-shadow:var(--shadow);
+    transition:transform .12s ease,border-color .15s}
+  .daychip:hover{transform:translateY(-2px)}
+  .daychip.selected{border-color:var(--primary-text);box-shadow:0 0 0 3px rgba(8,145,178,.15)}
   .daychip .dname{font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700}
-  .daychip .dnum{font-size:17px;font-weight:800;margin:3px 0;color:var(--ink)}
+  .daychip .dnum{font-family:var(--font-head);font-size:17px;font-weight:800;margin:3px 0;color:var(--ink)}
   .daychip .dslot{font-size:10px;font-weight:800;color:#fff;border-radius:20px;padding:3px 8px;display:inline-block;margin-top:3px}
   .daychip .dslot.Day{background:var(--day)} .daychip .dslot.Evening{background:var(--eve)}
   .daychip .dslot.Night{background:var(--night)} .daychip .dslot.Off{background:var(--off)}
-  .datejump{display:flex; gap:8px}
-  .datejump input[type=date]{flex:1; font-size:15px; padding:12px; background:var(--card); border:1.5px solid var(--line); border-radius:10px; color:var(--ink); box-shadow:var(--shadow);}
+
+  .datejump{display:flex;gap:8px}
+  .datejump input[type=date]{flex:1;font-size:15px;padding:12px;background:var(--card);
+    border:1.5px solid var(--line);border-radius:12px;color:var(--ink);box-shadow:var(--shadow)}
   .datejump input[type=date]:focus{outline:none;border-color:var(--primary-text)}
-  .grid-day{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:6px 16px 10px; box-shadow:var(--shadow);}
-  .grid-day .row{display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-top:1px solid var(--line)}
+
+  .grid-day{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:6px 16px 10px;box-shadow:var(--shadow)}
+  .grid-day .row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
   .grid-day .row:first-child{border-top:none}
   .grid-day .rw{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink2);font-weight:600}
   .grid-day .dot{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
   .grid-day .dot.Day{background:var(--day)} .grid-day .dot.Evening{background:var(--eve)}
   .grid-day .dot.Night{background:var(--night)} .grid-day .dot.Off{background:var(--off)}
   .grid-day .rsub{font-size:11px;color:var(--muted);font-weight:500;display:block;margin-top:1px}
-  .grid-day .rv{font-weight:800; font-size:14px; color:var(--ink)}
+  .grid-day .rv{font-family:var(--font-head);font-weight:800;font-size:14px;color:var(--ink)}
   .grid-day .rv.thisWatch{color:var(--primary-text)}
   .youtag{font-size:10px;font-weight:800;color:#fff;background:var(--primary-text);border-radius:20px;padding:2px 8px;margin-left:6px}
-  .legend{display:flex; gap:14px; flex-wrap:wrap; font-size:11.5px; color:var(--muted); margin:16px 2px 4px}
-  .legend span{display:flex; align-items:center; gap:6px}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin:16px 2px 4px}
+  .legend span{display:flex;align-items:center;gap:6px}
   .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
   .legend i.Day{background:var(--day)} .legend i.Evening{background:var(--eve)}
   .legend i.Night{background:var(--night)} .legend i.Off{background:var(--off)}
+
   footer{padding:26px 16px 0;color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
-  footer .wrap{max-width:560px} @media (prefers-color-scheme: dark){ :root{ --bg:#0f1720; --card:#17212b; --card2:#1c2733; --ink:#e6eef2; --ink2:#b9c8d1; --muted:#8697a3; --line:#2a3742; --primary:#22a8c9; --primary-text:#5fd0ea; --primary-soft:rgba(34,168,201,.18); --accent:#34d399; --red:#ff6b5b; --red-lit:#ff8577; --red-soft:rgba(255,107,91,.16); --ring:#22a8c9; --day:#4d8eff; --eve:#e0a458; --night:#a78bfa; --off:#8697a3; } .nav{box-shadow:0 2px 10px rgba(0,0,0,.35);} }
+  footer .wrap{max-width:560px}
+  footer .credit{display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;
+    color:var(--ink2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  footer .credit .cm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#155e75,#0e7490);
+    color:#fff;font-family:var(--font-head);font-weight:800;font-size:11px;letter-spacing:.3px;
+    display:inline-flex;align-items:center;justify-content:center}
+  footer .credit b{font-family:var(--font-head);color:var(--ink);font-weight:800}
+
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0f1720; --card:#17212b; --card2:#1c2733;
+      --ink:#e6eef2; --ink2:#b9c8d1; --muted:#8697a3; --line:#2a3742;
+      --primary:#22a8c9; --primary-dark:#1c8aa8; --primary-text:#5fd0ea; --primary-soft:rgba(34,168,201,.18);
+      --ring:#22a8c9;
+      --hero1:#0a2e3d; --hero2:#0c5f78; --hero3:#0e7490;
+      --day:#60a5fa; --eve:#d97706; --night:#a78bfa; --off:#94a3b8;
+      --shadow-lg:0 10px 30px -10px rgba(0,0,0,.5),0 4px 10px -4px rgba(0,0,0,.4);
+    }
+    .nav{box-shadow:0 2px 10px rgba(0,0,0,.35)}
+  }
 </style>
 </head>
 <body>
-<nav class="nav"><div class="nav-inner"><a href="../">Provider Finder</a><a href="./" class="active">Shift Forecast</a><a href="../leave/">Leave Calculator</a></div></nav>
-<header><div class="wrap"><div class="brand"><div class="brandmark" aria-hidden="true">JT</div><div class="brandcol"><div class="titlerow"><h1>Work Shift Forecast</h1><span class="badge">A · B · C · D</span></div><span class="owner">by Jason Thomas</span><span class="sub">Your shift outlook — always up to date, no updates needed</span></div></div></div></header>
-<main class="wrap">
-  <div class="steps">
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../">Provider Finder</a>
+    <a href="./" class="active">Shift Forecast</a>
+    <a href="../leave/">Leave Calculator</a>
+  </div>
+</nav>
+
+<header class="hero">
+ <div class="inner wrap">
+  <div class="brand">
+    <div class="brandmark" aria-hidden="true">JT</div>
+    <div>
+      <div class="titlerow"><h1>Work Shift Forecast</h1><span class="badge">A · B · C · D</span></div>
+      <div class="sub">Your shift outlook — always up to date · by <b>Jason Thomas</b></div>
+    </div>
+  </div>
+  <div class="steps" id="steps">
     <div class="step"><span class="n">1</span><span class="tx"><b>Pick your watch</b> — A, B, C, or D</span></div>
     <div class="step"><span class="n">2</span><span class="tx"><b>See your shift today</b> and what's coming up</span></div>
     <div class="step"><span class="n">3</span><span class="tx"><b>Look ahead</b> to any date</span></div>
+    <button class="steps-dismiss" id="stepsHide" type="button" aria-label="Hide instructions">Got it ✕</button>
   </div>
+ </div>
+</header>
+
+<main class="wrap">
   <h2 class="sec">Your watch</h2>
   <div class="watchpick" id="watchpick"><button class="wbtn" data-w="A">A</button><button class="wbtn" data-w="B">B</button><button class="wbtn" data-w="C">C</button><button class="wbtn" data-w="D">D</button></div>
   <h2 class="sec">Today's shift</h2>
@@ -119,12 +212,14 @@
   <h2 class="sec">Next 7 days</h2>
   <div class="weekstrip" id="weekstrip"></div>
   <h2 class="sec">Jump to a date</h2>
-  <div class="datejump"><input type="date" id="dateInput"></div>
+  <div class="datejump"><input type="date" id="dateInput" aria-label="Jump to a date"></div>
   <h2 class="sec" id="dayDetailLabel">Day detail</h2>
   <div id="dayDetail"></div>
   <div class="legend"><span><i class="Day"></i>Day 07:00–15:00</span><span><i class="Evening"></i>Evening 15:00–22:00</span><span><i class="Night"></i>Night 22:00–07:00</span><span><i class="Off"></i>Off</span></div>
 </main>
-<footer><div class="wrap"><div class="credit"><span class="cm" aria-hidden="true">JT</span> Created by <b>Jason Thomas</b> · © 2026</div><b>How it works:</b> pick your watch once — this forecast updates itself every day, so it's always current.<br><br>Anchor: Fri Jul 10 2026 — C=Day, D=Evening, A=Night, B=Off. Cycle: Day → Evening → Night → Off, repeating every 4 days, per watch. Built for JFB station staff. Verify against the official roster if in doubt.</div></footer>
+
+<footer><div class="wrap"><div class="credit"><span class="cm" aria-hidden="true">JT</span> Created by <b>Jason Thomas</b> · © 2026</div><b>How it works:</b> pick your watch once — this forecast updates itself every day, so it's always current. Your watch choice is remembered on this device.<br><br>Anchor: Fri Jul 10 2026 — C=Day, D=Evening, A=Night, B=Off. Cycle: Day → Evening → Night → Off, repeating every 4 days, per watch. Built for JFB station staff. Verify against the official roster if in doubt.</div></footer>
+
 <script>
 const ANCHOR = new Date(2026, 6, 10);
 const ANCHOR_SLOTS = { 0:'C', 1:'D', 2:'A', 3:'B' };
@@ -135,17 +230,32 @@ function slotsForDate(date){ const off=dayOffset(date); const r={}; for(let i=0;
 function watchSlotForDate(w,date){ const s=slotsForDate(date); for(const n of SLOT_NAMES){ if(s[n]===w) return n; } }
 function fmtDate(d){ return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}); }
 function toISO(d){ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+day; }
-let selectedWatch='A'; let selectedDate=new Date(); selectedDate.setHours(0,0,0,0);
+let selectedWatch='A';
+try{ const sv=localStorage.getItem('jfb-watch'); if(sv && 'ABCD'.includes(sv)) selectedWatch=sv; }catch(e){}
+let selectedDate=new Date(); selectedDate.setHours(0,0,0,0);
 function renderWatchPicker(){ document.querySelectorAll('.wbtn').forEach(b=>{ b.classList.toggle('active', b.dataset.w===selectedWatch); }); }
 function renderTodayCard(){ const now=new Date(); now.setHours(0,0,0,0); const slot=watchSlotForDate(selectedWatch,now); document.getElementById('todayCard').innerHTML='<div class="dow">Today · Watch '+selectedWatch+'</div><div class="date">'+fmtDate(now)+'</div><div class="slot-pill '+slot+'">'+slot+'</div><div class="hours">'+SLOT_HOURS[slot]+'</div>'; }
 function relDay(n){ return n===0?'Today':n===1?'Tomorrow':'in '+n+' days'; }
-function renderForecast(){ const now=new Date(); now.setHours(0,0,0,0); const next={}; for(let i=0;i<28 && Object.keys(next).length<4;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); if(next[slot]===undefined) next[slot]={days:i,date:d}; } document.getElementById('forecast').innerHTML=SLOT_NAMES.map(function(name){ const info=next[name]; if(!info) return ''; const when=relDay(info.days); const dateStr=info.date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); return '<div class="fc"><div class="fc-slot"><span class="fc-dot '+name+'"></span>Next '+name+'</div><div class="fc-when"><b>'+when+'</b></div><div class="fc-date">'+dateStr+' · '+SLOT_HOURS[name]+'</div></div>'; }).join(''); }
+function renderForecast(){ const now=new Date(); now.setHours(0,0,0,0); const next={}; for(let i=0;i<28 && Object.keys(next).length<4;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); if(next[slot]===undefined) next[slot]={days:i,date:d}; } document.getElementById('forecast').innerHTML=SLOT_NAMES.map(function(name){ const info=next[name]; if(!info) return ''; const when=relDay(info.days); const dateStr=info.date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); return '<div class="fc '+name+'"><div class="fc-slot"><span class="fc-dot '+name+'"></span>Next '+name+'</div><div class="fc-when"><b>'+when+'</b></div><div class="fc-date">'+dateStr+' · '+SLOT_HOURS[name]+'</div></div>'; }).join(''); }
 function renderWeekStrip(){ const el=document.getElementById('weekstrip'); el.innerHTML=''; const now=new Date(); now.setHours(0,0,0,0); for(let i=0;i<7;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); const chip=document.createElement('div'); chip.className='daychip'+(toISO(d)===toISO(selectedDate)?' selected':''); chip.innerHTML='<div class="dname">'+d.toLocaleDateString('en-US',{weekday:'short'})+'</div><div class="dnum">'+d.getDate()+'</div><div class="dslot '+slot+'">'+slot+'</div>'; chip.onclick=function(){ selectedDate=d; document.getElementById('dateInput').value=toISO(d); renderAll(); }; el.appendChild(chip); } }
 function renderDayDetail(){ document.getElementById('dayDetailLabel').textContent=fmtDate(selectedDate); const s=slotsForDate(selectedDate); const rows=SLOT_NAMES.map(function(name){ const w=s[name]; const mine=w===selectedWatch; return '<div class="row"><span class="rw"><span class="dot '+name+'"></span><span>'+name+'<span class="rsub">'+SLOT_HOURS[name]+'</span></span></span><span class="'+(mine?'rv thisWatch':'rv')+'">Watch '+w+(mine?'<span class="youtag">YOU</span>':'')+'</span></div>'; }).join(''); document.getElementById('dayDetail').innerHTML='<div class="grid-day">'+rows+'</div>'; }
 function renderAll(){ renderWatchPicker(); renderTodayCard(); renderForecast(); renderWeekStrip(); renderDayDetail(); }
-document.getElementById('watchpick').addEventListener('click',function(e){ const b=e.target.closest('.wbtn'); if(!b) return; selectedWatch=b.dataset.w; renderAll(); });
+document.getElementById('watchpick').addEventListener('click',function(e){ const b=e.target.closest('.wbtn'); if(!b) return; selectedWatch=b.dataset.w; try{ localStorage.setItem('jfb-watch',selectedWatch); }catch(err){} renderAll(); });
 document.getElementById('dateInput').addEventListener('change',function(e){ const p=e.target.value.split('-').map(Number); selectedDate=new Date(p[0],p[1]-1,p[2]); renderAll(); });
 document.getElementById('dateInput').value=toISO(selectedDate);
+
+/* Collapsible steps */
+const stepsEl=document.getElementById('steps');
+try{ if(localStorage.getItem('jfb-steps-hidden-watch'))stepsEl.classList.add('hidden'); }catch(e){}
+document.getElementById('stepsHide').addEventListener('click',function(){
+  stepsEl.classList.add('hidden');
+  try{ localStorage.setItem('jfb-steps-hidden-watch','1'); }catch(e){}
+});
+
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  addEventListener('load',()=>navigator.serviceWorker.register('../sw.js').catch(()=>{}));
+}
+
 renderAll();
 </script>
 </body>

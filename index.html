@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#0b4f63">
 <title>Jason's Healthcare Finder List (JFB)</title>
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -57,7 +59,13 @@
   .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;
     border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}
   .hero .inner{position:relative;z-index:1}
-  .brand{display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap}
+  .brand-id{display:flex;align-items:center;gap:14px;min-width:0}
+  .mops{display:flex;align-items:center;gap:8px;margin-left:auto;text-decoration:none}
+  .mops-m{width:34px;height:34px;flex:0 0 auto;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.28)}
+  .mops-txt{display:flex;flex-direction:column;line-height:1.05}
+  .mops-tag{font-family:var(--font-head);font-size:8.5px;font-weight:700;letter-spacing:1.6px;color:rgba(255,255,255,.62)}
+  .mops-wm{font-family:var(--font-head);font-size:17px;font-weight:800;letter-spacing:1px;color:#fff}
   .brandmark{flex:0 0 auto;width:52px;height:52px;border-radius:14px;
     background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
     backdrop-filter:blur(4px);color:#fff;font-family:var(--font-head);font-weight:900;
@@ -121,6 +129,19 @@
     display:inline-flex;align-items:center;justify-content:center;font-size:11px;line-height:1}
   .fchip:hover .x{background:rgba(8,145,178,.35)}
 
+  /* ---------- CATEGORY QUICK-CHIPS ---------- */
+  .catbar{display:flex;gap:8px;overflow-x:auto;padding:12px 16px 2px;max-width:1112px;margin:0 auto;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .catbar::-webkit-scrollbar{display:none}
+  .catchip{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-head);
+    font-size:13px;font-weight:700;color:var(--cc,var(--muted));cursor:pointer;
+    background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;
+    box-shadow:var(--shadow);white-space:nowrap;transition:border-color .15s,background .15s,transform .12s}
+  .catchip:hover{transform:translateY(-1px)}
+  .catchip svg{width:16px;height:16px;fill:var(--cc,var(--muted))}
+  .catchip.on{color:#fff;background:var(--cc,var(--primary));border-color:var(--cc,var(--primary))}
+  .catchip.on svg{fill:#fff}
+
   /* ---------- CARD GRID ---------- */
   main{padding:8px 16px 0;max-width:1112px;margin:0 auto;
     display:grid;grid-template-columns:1fr;gap:10px}
@@ -159,6 +180,21 @@
   .call.dead{background:var(--card2);color:var(--muted);pointer-events:none;
     border:1px dashed var(--line);box-shadow:none}
   .call.dead svg{fill:var(--muted)}
+
+  /* ---------- CARD ACTION ROW ---------- */
+  .card{align-items:stretch}
+  .card .body{display:flex;flex-direction:column}
+  .actions{display:flex;gap:7px;margin-top:auto;padding-top:10px;flex-wrap:wrap}
+  .act{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-body);font-size:12px;
+    font-weight:700;color:var(--ink2);text-decoration:none;cursor:pointer;
+    background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:6px 10px;
+    transition:transform .12s ease,border-color .15s,background .15s,color .15s}
+  .act:hover{transform:translateY(-1px);border-color:var(--primary-text);color:var(--primary-text)}
+  .act svg{width:15px;height:15px;fill:currentColor}
+  .act.wa:hover{border-color:#25d366;color:#128c3e}
+  .act.fav.on{background:#fff7e0;border-color:var(--cat-dent);color:var(--cat-dent)}
+  .act.fav.on svg{fill:var(--cat-dent)}
+  @media (prefers-color-scheme: dark){ .act.fav.on{background:rgba(251,191,36,.14)} }
 
   .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 20px;font-size:14px}
   .empty svg{width:54px;height:54px;fill:none;stroke:var(--muted);stroke-width:1.6;
@@ -221,10 +257,27 @@
 <header class="hero">
  <div class="inner wrap">
   <div class="brand">
-    <div class="brandmark" aria-hidden="true">JT</div>
-    <div>
-      <div class="titlerow"><h1>Jason's Healthcare Finder List</h1><span class="badge">JFB</span></div>
-      <div class="sub">Find a health provider in Jamaica · by <b>Jason Thomas</b> · Guardian Life listing</div>
+    <div class="brand-id">
+      <div class="brandmark" aria-hidden="true">JT</div>
+      <div>
+        <div class="titlerow"><h1>Jason's Healthcare Finder List</h1><span class="badge">JFB</span></div>
+        <div class="sub">Find a health provider in Jamaica · by <b>Jason Thomas</b> · Guardian Life listing</div>
+      </div>
+    </div>
+    <div class="mops" role="img" aria-label="Built with MOPS — Media Operations System">
+      <svg class="mops-m" viewBox="0 0 128 128" aria-hidden="true">
+        <defs><linearGradient id="mopsGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#0b5cff"/><stop offset=".54" stop-color="#2847e8"/><stop offset="1" stop-color="#8a35f4"/>
+        </linearGradient></defs>
+        <rect width="128" height="128" rx="24" fill="url(#mopsGrad)"/>
+        <path d="M15 34 33 23l17 13v60L15 80Z" fill="#006cff" opacity=".42"/>
+        <path d="M78 36 111 20l9 10v51L88 100 78 88Z" fill="#b640ff" opacity=".38"/>
+        <path d="M25 28 44 38v64L25 90Z" fill="#eff7ff" opacity=".95"/>
+        <path d="M84 38 103 28v62l-19 12Z" fill="#eff7ff" opacity=".94"/>
+        <path d="M44 38 64 54l20-16v25L64 78 44 63Z" fill="#80bcff" opacity=".94"/>
+        <path d="M52 73v24l27-12Z" fill="#fff" opacity=".95"/>
+      </svg>
+      <div class="mops-txt"><span class="mops-tag">BUILT WITH</span><span class="mops-wm">MOPS</span></div>
     </div>
   </div>
   <div class="steps" id="steps">
@@ -243,6 +296,8 @@
       placeholder="Search name, town, or service…" aria-label="Search providers">
   </div>
 </div>
+
+<div class="catbar" id="catbar" role="group" aria-label="Quick category filters"></div>
 
 <div class="controls">
   <select id="parish" aria-label="Filter by parish"></select>
@@ -274,6 +329,20 @@
 <script src="data.js"></script>
 <script>
 const PHONE_ICON = '<svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.5-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1z"/></svg>';
+const WA_ICON = '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.3c-.2.2-.3.4-.2.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.6-.1l.7-.9c.2-.3.4-.2.7-.1l2 .9c.2.1.4.2.5.3.1.2.1.7-.1 1.3z"/></svg>';
+const MAP_ICON = '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
+const SHARE_ICON = '<svg viewBox="0 0 24 24"><path d="M18 16a3 3 0 0 0-2.3 1.1l-6.8-3.5a3 3 0 0 0 0-1.2l6.8-3.5a3 3 0 1 0-.9-2.1c0 .2 0 .4.1.6L8.1 10.9a3 3 0 1 0 0 6.2l6.9 3.6a3 3 0 1 0 3-4.7z"/></svg>';
+const STAR_ICON = '<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.5 6.8L12 17.8 5.9 21.2l1.5-6.8L2.3 9.8l6.9-.7z"/></svg>';
+
+/* Favorites (persisted by name|dial) */
+DATA.forEach((d,i)=>{ d._id=i; });
+function favId(d){ return d.n+'|'+(d.dial||''); }
+let FAVS=new Set();
+try{ FAVS=new Set(JSON.parse(localStorage.getItem('jfb-favs')||'[]')); }catch(e){}
+function saveFavs(){ try{ localStorage.setItem('jfb-favs',JSON.stringify([...FAVS])); }catch(e){} }
+
+/* Quick-chip categories (family key -> label). Match catOf() families. */
+const CAT_LABELS={ pharm:'Pharmacy', lab:'Lab & Imaging', doc:'Doctor', dent:'Dental', opt:'Optical', hosp:'Hospital', spec:'Specialist' };
 
 /* Category system: color + icon per service family */
 const CAT_ICONS = {
@@ -311,6 +380,33 @@ parishEl.innerHTML='<option value="">All parishes</option>'+parishes.map(p=>`<op
 typeEl.innerHTML='<option value="">All services</option>'+types.map(t=>`<option>${t}</option>`).join('');
 
 let shown=0; const PAGE=40; let current=[];
+let catFilter='';      // active category family key, '' = none
+let favFilter=false;   // showing favorites only
+
+/* Build the category quick-chip bar (only families present in the data) */
+const catbarEl=$('#catbar');
+const presentCats=[...new Set(DATA.map(d=>catOf(d.t)[0]))];
+const CAT_ORDER=['pharm','lab','doc','dent','opt','hosp','spec'];
+function renderCatbar(){
+  const favCount=FAVS.size;
+  let html=`<button class="catchip${favFilter?' on':''}" data-cat="__fav" style="--cc:var(--cat-dent)" aria-pressed="${favFilter}"><svg viewBox="0 0 24 24">${STAR_ICON.match(/<path[^>]*>/)[0]}</svg>Favorites${favCount?` (${favCount})`:''}</button>`;
+  html+=CAT_ORDER.filter(k=>presentCats.includes(k)).map(k=>{
+    const on=catFilter===k;
+    return `<button class="catchip${on?' on':''}" data-cat="${k}" style="--cc:var(--cat-${k})" aria-pressed="${on}"><svg viewBox="0 0 24 24">${CAT_ICONS[k]}</svg>${CAT_LABELS[k]}</button>`;
+  }).join('');
+  catbarEl.innerHTML=html;
+}
+catbarEl.addEventListener('click',e=>{
+  const b=e.target.closest('.catchip'); if(!b)return;
+  const c=b.dataset.cat;
+  if(c==='__fav'){ favFilter=!favFilter; }
+  else { catFilter = catFilter===c ? '' : c; }
+  render(true);
+});
+
+/* External-action URLs */
+function waUrl(d){ return 'https://wa.me/'+(d.dial||'').replace(/[^0-9]/g,''); }
+function mapUrl(d){ return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent([d.n,addr(d),d.p,'Jamaica'].filter(Boolean).join(', ')); }
 
 function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 function hi(s,q){ s=esc(s); if(!q)return s;
@@ -319,7 +415,7 @@ function hi(s,q){ s=esc(s); if(!q)return s;
 function addr(d){ return [d.a1,d.a2,d.c].filter(Boolean).join(', '); }
 
 function updateClear(){
-  const active = qEl.value.trim() || parishEl.value || typeEl.value || sortEl.value!=='default';
+  const active = qEl.value.trim() || parishEl.value || typeEl.value || sortEl.value!=='default' || catFilter || favFilter;
   clearEl.classList.toggle('on', !!active);
 }
 
@@ -343,6 +439,8 @@ function render(reset){
   if(reset){
     const fp=parishEl.value, ft=typeEl.value;
     current=DATA.filter(d=>{
+      if(favFilter&&!FAVS.has(favId(d)))return false;
+      if(catFilter&&catOf(d.t)[0]!==catFilter)return false;
       if(fp&&d.p!==fp)return false;
       if(ft&&d.t!==ft)return false;
       if(q){
@@ -367,13 +465,21 @@ function render(reset){
       : `<span class="call dead">${PHONE_ICON}<span class="num">n/a</span></span>`;
     const [ck,cc]=catOf(d.t);
     const delay=reset?` style="--cat:${cc};animation-delay:${Math.min(i*25,400)}ms"`:` style="--cat:${cc}"`;
-    return `<div class="card${reset?' in':''}"${delay}>
+    const isFav=FAVS.has(favId(d));
+    const acts=[
+      callable?`<a class="act wa" href="${waUrl(d)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(d.n)}">${WA_ICON}WhatsApp</a>`:'',
+      `<a class="act" href="${mapUrl(d)}" target="_blank" rel="noopener" aria-label="Open ${esc(d.n)} in Maps">${MAP_ICON}Map</a>`,
+      `<button class="act share" type="button" data-id="${d._id}" aria-label="Share ${esc(d.n)}">${SHARE_ICON}Share</button>`,
+      `<button class="act fav${isFav?' on':''}" type="button" data-id="${d._id}" aria-pressed="${isFav}" aria-label="${isFav?'Remove from':'Add to'} favorites">${STAR_ICON}${isFav?'Saved':'Save'}</button>`
+    ].join('');
+    return `<div class="card${reset?' in':''}"${delay} data-id="${d._id}">
         <div class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24">${CAT_ICONS[ck]}</svg></div>
         <div class="body">
           <div class="name">${hi(d.n,qq)}</div>
           <div class="typerow"><span class="chip">${esc(d.t||'—')}</span></div>
           <div class="addr">${hi(addr(d),qq)}${d.p?` · <span class="parish">${esc(d.p)}</span>`:''}</div>
           ${d.no?`<div class="note">${esc(d.no)}</div>`:''}
+          <div class="actions">${acts}</div>
         </div>${btn}</div>`;
   }).join('');
   listEl.insertAdjacentHTML('beforeend',html);
@@ -393,11 +499,43 @@ function render(reset){
           : `<span><b>${TOTAL}</b> providers listed</span>`)
       : `<span>No matches</span>`) + filterChips();
     if(!current.length){
+      const favEmpty = favFilter && FAVS.size===0;
       listEl.innerHTML=`<div class="empty">
         <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/><path d="M8 10.5h5"/></svg>
-        <b>No matches found</b>Try a different town, service, or clear your filters.
-        <br><button type="button" onclick="document.getElementById('clear').click()">Clear all filters</button></div>`;
+        <b>${favEmpty?'No saved providers yet':'No matches found'}</b>${favEmpty?'Tap <b>Save</b> on any listing to keep it here for quick access.':'Try a different town, service, or clear your filters.'}
+        <br><button type="button" onclick="document.getElementById('clear').click()">${favEmpty?'Browse all providers':'Clear all filters'}</button></div>`;
     }
+  }
+}
+
+/* Card actions: share + favorite (event delegation) */
+listEl.addEventListener('click',e=>{
+  const fav=e.target.closest('.act.fav');
+  if(fav){
+    const d=DATA[+fav.dataset.id]; const key=favId(d);
+    if(FAVS.has(key))FAVS.delete(key); else FAVS.add(key);
+    saveFavs(); renderCatbar();
+    if(favFilter){ render(true); }
+    else{
+      const on=FAVS.has(key);
+      fav.classList.toggle('on',on); fav.setAttribute('aria-pressed',on);
+      fav.setAttribute('aria-label',(on?'Remove from':'Add to')+' favorites');
+      fav.lastChild.textContent=on?'Saved':'Save';
+    }
+    return;
+  }
+  const sh=e.target.closest('.act.share');
+  if(sh){ shareProvider(DATA[+sh.dataset.id], sh); }
+});
+function shareProvider(d,btn){
+  const line=[d.n, d.t, addr(d)+(d.p?', '+d.p:''), d.ph?('Tel: '+d.ph):''].filter(Boolean).join('\n');
+  if(navigator.share){
+    navigator.share({title:d.n, text:line}).catch(()=>{});
+  }else if(navigator.clipboard){
+    navigator.clipboard.writeText(line).then(()=>{
+      const old=btn.lastChild.textContent; btn.lastChild.textContent='Copied!';
+      setTimeout(()=>{btn.lastChild.textContent=old;},1400);
+    }).catch(()=>{});
   }
 }
 
@@ -407,6 +545,7 @@ typeEl.addEventListener('change',()=>render(true));
 sortEl.addEventListener('change',()=>render(true));
 clearEl.addEventListener('click',()=>{
   qEl.value=''; parishEl.value=''; typeEl.value=''; sortEl.value='default';
+  catFilter=''; favFilter=false; renderCatbar();
   render(true); window.scrollTo({top:0,behavior:'smooth'});
 });
 
@@ -431,6 +570,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 }
 
+renderCatbar();
 render(true);
 </script>
 </body>

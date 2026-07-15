@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#0b4f63">
 <title>JFB Leave Calculator</title>
 <link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" type="image/png" href="../icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -50,7 +52,13 @@
   .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;
     border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}
   .hero .inner{position:relative;z-index:1}
-  .brand{display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap}
+  .brand-id{display:flex;align-items:center;gap:14px;min-width:0}
+  .mops{display:flex;align-items:center;gap:8px;margin-left:auto;text-decoration:none}
+  .mops-m{width:34px;height:34px;flex:0 0 auto;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.28)}
+  .mops-txt{display:flex;flex-direction:column;line-height:1.05}
+  .mops-tag{font-family:var(--font-head);font-size:8.5px;font-weight:700;letter-spacing:1.6px;color:rgba(255,255,255,.62)}
+  .mops-wm{font-family:var(--font-head);font-size:17px;font-weight:800;letter-spacing:1px;color:#fff}
   .brandmark{flex:0 0 auto;width:52px;height:52px;border-radius:14px;
     background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
     backdrop-filter:blur(4px);color:#fff;font-family:var(--font-head);font-weight:900;
@@ -163,10 +171,27 @@
 <header class="hero">
  <div class="inner wrap">
   <div class="brand">
-    <div class="brandmark" aria-hidden="true">JT</div>
-    <div>
-      <div class="titlerow"><h1>Leave Calculator</h1></div>
-      <div class="sub">Mon–Fri working days · Jamaican public holidays excluded · by <b>Jason Thomas</b></div>
+    <div class="brand-id">
+      <div class="brandmark" aria-hidden="true">JT</div>
+      <div>
+        <div class="titlerow"><h1>Leave Calculator</h1></div>
+        <div class="sub">Mon–Fri working days · Jamaican public holidays excluded · by <b>Jason Thomas</b></div>
+      </div>
+    </div>
+    <div class="mops" role="img" aria-label="Built with MOPS — Media Operations System">
+      <svg class="mops-m" viewBox="0 0 128 128" aria-hidden="true">
+        <defs><linearGradient id="mopsGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#0b5cff"/><stop offset=".54" stop-color="#2847e8"/><stop offset="1" stop-color="#8a35f4"/>
+        </linearGradient></defs>
+        <rect width="128" height="128" rx="24" fill="url(#mopsGrad)"/>
+        <path d="M15 34 33 23l17 13v60L15 80Z" fill="#006cff" opacity=".42"/>
+        <path d="M78 36 111 20l9 10v51L88 100 78 88Z" fill="#b640ff" opacity=".38"/>
+        <path d="M25 28 44 38v64L25 90Z" fill="#eff7ff" opacity=".95"/>
+        <path d="M84 38 103 28v62l-19 12Z" fill="#eff7ff" opacity=".94"/>
+        <path d="M44 38 64 54l20-16v25L64 78 44 63Z" fill="#80bcff" opacity=".94"/>
+        <path d="M52 73v24l27-12Z" fill="#fff" opacity=".95"/>
+      </svg>
+      <div class="mops-txt"><span class="mops-tag">BUILT WITH</span><span class="mops-wm">MOPS</span></div>
     </div>
   </div>
   <div class="steps" id="steps">

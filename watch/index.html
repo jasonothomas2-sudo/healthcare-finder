@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#0b4f63">
 <title>JFB Work Shift Forecast</title>
 <link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" type="image/png" href="../icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -48,7 +50,13 @@
   .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;
     border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}
   .hero .inner{position:relative;z-index:1}
-  .brand{display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap}
+  .brand-id{display:flex;align-items:center;gap:14px;min-width:0}
+  .mops{display:flex;align-items:center;gap:8px;margin-left:auto;text-decoration:none}
+  .mops-m{width:34px;height:34px;flex:0 0 auto;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.28)}
+  .mops-txt{display:flex;flex-direction:column;line-height:1.05}
+  .mops-tag{font-family:var(--font-head);font-size:8.5px;font-weight:700;letter-spacing:1.6px;color:rgba(255,255,255,.62)}
+  .mops-wm{font-family:var(--font-head);font-size:17px;font-weight:800;letter-spacing:1px;color:#fff}
   .brandmark{flex:0 0 auto;width:52px;height:52px;border-radius:14px;
     background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
     backdrop-filter:blur(4px);color:#fff;font-family:var(--font-head);font-weight:900;
@@ -101,6 +109,34 @@
   .slot-pill.Day{background:var(--day)} .slot-pill.Evening{background:var(--eve)}
   .slot-pill.Night{background:var(--night)} .slot-pill.Off{background:var(--off)}
   .hours{font-size:14px;color:var(--muted);font-weight:600}
+
+  /* Right now (live) card */
+  .now-card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);
+    border-radius:18px;padding:16px 18px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .now-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--hero2),var(--hero3))}
+  .now-main{display:flex;align-items:center;gap:14px;flex:1;min-width:220px}
+  .now-pill{font-family:var(--font-head);display:inline-flex;flex-direction:column;align-items:center;
+    justify-content:center;min-width:60px;padding:10px 12px;border-radius:14px;color:#fff;
+    box-shadow:0 4px 12px -3px rgba(0,0,0,.3)}
+  .now-pill.Day{background:var(--day)} .now-pill.Evening{background:var(--eve)}
+  .now-pill.Night{background:var(--night)} .now-pill.Off{background:var(--off)}
+  .now-pill .w{font-size:22px;font-weight:800;line-height:1}
+  .now-pill .s{font-size:9.5px;text-transform:uppercase;letter-spacing:.6px;opacity:.92;margin-top:2px;font-weight:700}
+  .now-txt{min-width:0}
+  .now-lead{display:flex;align-items:center;gap:7px;font-family:var(--font-head);font-weight:800;font-size:15px;color:var(--ink)}
+  .live-dot{width:9px;height:9px;border-radius:50%;background:#22c55e;flex:0 0 auto;
+    box-shadow:0 0 0 0 rgba(34,197,94,.5);animation:pulse 2.2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+  .now-sub{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5}
+  .now-sub b{color:var(--primary-text);font-family:var(--font-head)}
+  .now-you{font-size:10px;font-weight:800;color:#fff;background:var(--primary-text);border-radius:20px;padding:2px 8px;margin-left:2px}
+
+  .ics-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-head);font-size:14px;
+    font-weight:800;color:var(--primary-text);background:var(--primary-soft);border:1.5px solid rgba(8,145,178,.3);
+    border-radius:12px;padding:12px 16px;cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,border-color .15s}
+  .ics-btn:hover{transform:translateY(-1px);border-color:var(--primary-text)}
+  .ics-btn:active{transform:scale(.98)}
+  .ics-btn svg{width:17px;height:17px;fill:var(--primary-text)}
 
   .forecast{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
   .fc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;
@@ -187,10 +223,27 @@
 <header class="hero">
  <div class="inner wrap">
   <div class="brand">
-    <div class="brandmark" aria-hidden="true">JT</div>
-    <div>
-      <div class="titlerow"><h1>Work Shift Forecast</h1><span class="badge">A · B · C · D</span></div>
-      <div class="sub">Your shift outlook — always up to date · by <b>Jason Thomas</b></div>
+    <div class="brand-id">
+      <div class="brandmark" aria-hidden="true">JT</div>
+      <div>
+        <div class="titlerow"><h1>Work Shift Forecast</h1><span class="badge">A · B · C · D</span></div>
+        <div class="sub">Your shift outlook — always up to date · by <b>Jason Thomas</b></div>
+      </div>
+    </div>
+    <div class="mops" role="img" aria-label="Built with MOPS — Media Operations System">
+      <svg class="mops-m" viewBox="0 0 128 128" aria-hidden="true">
+        <defs><linearGradient id="mopsGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#0b5cff"/><stop offset=".54" stop-color="#2847e8"/><stop offset="1" stop-color="#8a35f4"/>
+        </linearGradient></defs>
+        <rect width="128" height="128" rx="24" fill="url(#mopsGrad)"/>
+        <path d="M15 34 33 23l17 13v60L15 80Z" fill="#006cff" opacity=".42"/>
+        <path d="M78 36 111 20l9 10v51L88 100 78 88Z" fill="#b640ff" opacity=".38"/>
+        <path d="M25 28 44 38v64L25 90Z" fill="#eff7ff" opacity=".95"/>
+        <path d="M84 38 103 28v62l-19 12Z" fill="#eff7ff" opacity=".94"/>
+        <path d="M44 38 64 54l20-16v25L64 78 44 63Z" fill="#80bcff" opacity=".94"/>
+        <path d="M52 73v24l27-12Z" fill="#fff" opacity=".95"/>
+      </svg>
+      <div class="mops-txt"><span class="mops-tag">BUILT WITH</span><span class="mops-wm">MOPS</span></div>
     </div>
   </div>
   <div class="steps" id="steps">
@@ -205,10 +258,15 @@
 <main class="wrap">
   <h2 class="sec">Your watch</h2>
   <div class="watchpick" id="watchpick"><button class="wbtn" data-w="A">A</button><button class="wbtn" data-w="B">B</button><button class="wbtn" data-w="C">C</button><button class="wbtn" data-w="D">D</button></div>
+  <h2 class="sec">Right now</h2>
+  <div class="now-card" id="nowCard"></div>
   <h2 class="sec">Today's shift</h2>
   <div class="today-card" id="todayCard"></div>
   <h2 class="sec">Coming up</h2>
   <div class="forecast" id="forecast"></div>
+  <div style="margin-top:14px"><button class="ics-btn" id="icsBtn" type="button">
+    <svg viewBox="0 0 24 24"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zM5 9h14v10H5V9zm7 2v3H9v2h3v3h2v-3h3v-2h-3v-3h-2z"/></svg>
+    Add my 30-day shifts to calendar</button></div>
   <h2 class="sec">Next 7 days</h2>
   <div class="weekstrip" id="weekstrip"></div>
   <h2 class="sec">Jump to a date</h2>
@@ -239,7 +297,96 @@ function relDay(n){ return n===0?'Today':n===1?'Tomorrow':'in '+n+' days'; }
 function renderForecast(){ const now=new Date(); now.setHours(0,0,0,0); const next={}; for(let i=0;i<28 && Object.keys(next).length<4;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); if(next[slot]===undefined) next[slot]={days:i,date:d}; } document.getElementById('forecast').innerHTML=SLOT_NAMES.map(function(name){ const info=next[name]; if(!info) return ''; const when=relDay(info.days); const dateStr=info.date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); return '<div class="fc '+name+'"><div class="fc-slot"><span class="fc-dot '+name+'"></span>Next '+name+'</div><div class="fc-when"><b>'+when+'</b></div><div class="fc-date">'+dateStr+' · '+SLOT_HOURS[name]+'</div></div>'; }).join(''); }
 function renderWeekStrip(){ const el=document.getElementById('weekstrip'); el.innerHTML=''; const now=new Date(); now.setHours(0,0,0,0); for(let i=0;i<7;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); const chip=document.createElement('div'); chip.className='daychip'+(toISO(d)===toISO(selectedDate)?' selected':''); chip.innerHTML='<div class="dname">'+d.toLocaleDateString('en-US',{weekday:'short'})+'</div><div class="dnum">'+d.getDate()+'</div><div class="dslot '+slot+'">'+slot+'</div>'; chip.onclick=function(){ selectedDate=d; document.getElementById('dateInput').value=toISO(d); renderAll(); }; el.appendChild(chip); } }
 function renderDayDetail(){ document.getElementById('dayDetailLabel').textContent=fmtDate(selectedDate); const s=slotsForDate(selectedDate); const rows=SLOT_NAMES.map(function(name){ const w=s[name]; const mine=w===selectedWatch; return '<div class="row"><span class="rw"><span class="dot '+name+'"></span><span>'+name+'<span class="rsub">'+SLOT_HOURS[name]+'</span></span></span><span class="'+(mine?'rv thisWatch':'rv')+'">Watch '+w+(mine?'<span class="youtag">YOU</span>':'')+'</span></div>'; }).join(''); document.getElementById('dayDetail').innerHTML='<div class="grid-day">'+rows+'</div>'; }
-function renderAll(){ renderWatchPicker(); renderTodayCard(); renderForecast(); renderWeekStrip(); renderDayDetail(); }
+const SLOT_START={ Day:7, Evening:15, Night:22 };  // shift start hour
+/* Which watch is on duty at a given instant, honouring real slot times.
+   Before 07:00 the on-duty Night crew is the one that started at 22:00 the previous day. */
+function currentDuty(now){
+  const h=now.getHours();
+  let slot, eff=new Date(now); eff.setHours(0,0,0,0);
+  const endsAt=new Date(now); endsAt.setSeconds(0,0);
+  if(h>=7&&h<15){ slot='Day'; endsAt.setHours(15,0,0,0); }
+  else if(h>=15&&h<22){ slot='Evening'; endsAt.setHours(22,0,0,0); }
+  else if(h>=22){ slot='Night'; endsAt.setDate(endsAt.getDate()+1); endsAt.setHours(7,0,0,0); }
+  else { slot='Night'; eff.setDate(eff.getDate()-1); endsAt.setHours(7,0,0,0); }
+  return { slot, watch:slotsForDate(eff)[slot], endsAt };
+}
+/* Next shift start strictly after `now` for watch w. */
+function nextShiftStart(w,now){
+  for(let i=0;i<8;i++){
+    const d=new Date(now); d.setDate(d.getDate()+i); d.setHours(0,0,0,0);
+    const slot=watchSlotForDate(w,d);
+    if(slot==='Off')continue;
+    const start=new Date(d); start.setHours(SLOT_START[slot],0,0,0);
+    if(start>now) return { slot, start };
+  }
+  return null;
+}
+function countdownStr(from,to){
+  let mins=Math.round((to-from)/60000); if(mins<0)mins=0;
+  const d=Math.floor(mins/1440), h=Math.floor((mins%1440)/60), m=mins%60;
+  if(d>0) return 'in '+d+'d '+h+'h';
+  if(h>0) return 'in '+h+'h '+m+'m';
+  return 'in '+m+'m';
+}
+function hhmm(d){ return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+function renderNow(){
+  const now=new Date();
+  const duty=currentDuty(now);
+  const you=duty.watch===selectedWatch;
+  let sub;
+  if(you){
+    sub='<b>You\'re on duty</b> — '+duty.slot+' shift, until '+hhmm(duty.endsAt);
+  }else{
+    const next=nextShiftStart(selectedWatch,now);
+    sub=next
+      ? 'Your next shift: <b>'+next.slot+' '+countdownStr(now,next.start)+'</b> · '
+        +next.start.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' at '+hhmm(next.start)
+      : 'You are off duty.';
+  }
+  document.getElementById('nowCard').innerHTML=
+    '<div class="now-main">'
+    +'<div class="now-pill '+duty.slot+'"><span class="w">'+duty.watch+'</span><span class="s">'+duty.slot+'</span></div>'
+    +'<div class="now-txt">'
+      +'<div class="now-lead"><span class="live-dot"></span>On duty now: Watch '+duty.watch+(you?'<span class="now-you">YOU</span>':'')+'</div>'
+      +'<div class="now-sub">'+sub+'</div>'
+    +'</div></div>';
+}
+
+/* ---- Add to calendar (.ics) ---- */
+function pad(n){ return String(n).padStart(2,'0'); }
+function icsLocal(d){ return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00'; }
+function icsUTC(d){ return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+'00Z'; }
+function buildICS(w){
+  const base=new Date(); base.setHours(0,0,0,0);
+  const stamp=icsUTC(new Date());
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//JFB Tools by Jay//Shift Forecast//EN','CALSCALE:GREGORIAN'];
+  for(let i=0;i<30;i++){
+    const d=new Date(base); d.setDate(d.getDate()+i);
+    const slot=watchSlotForDate(w,d);
+    if(slot==='Off')continue;
+    const start=new Date(d); start.setHours(SLOT_START[slot],0,0,0);
+    const end=new Date(start);
+    if(slot==='Day')end.setHours(15,0,0,0);
+    else if(slot==='Evening')end.setHours(22,0,0,0);
+    else { end.setDate(end.getDate()+1); end.setHours(7,0,0,0); }
+    L.push('BEGIN:VEVENT','UID:jfb-'+w+'-'+icsLocal(start)+'@jfbtools','DTSTAMP:'+stamp,
+      'DTSTART:'+icsLocal(start),'DTEND:'+icsLocal(end),
+      'SUMMARY:Watch '+w+' — '+slot+' shift','END:VEVENT');
+  }
+  L.push('END:VCALENDAR');
+  return L.join('\r\n');
+}
+function downloadICS(){
+  const blob=new Blob([buildICS(selectedWatch)],{type:'text/calendar'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='JFB-Watch-'+selectedWatch+'-shifts.ics';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+document.getElementById('icsBtn').addEventListener('click',downloadICS);
+setInterval(renderNow,60000);  // keep the live card fresh
+
+function renderAll(){ renderWatchPicker(); renderNow(); renderTodayCard(); renderForecast(); renderWeekStrip(); renderDayDetail(); }
 document.getElementById('watchpick').addEventListener('click',function(e){ const b=e.target.closest('.wbtn'); if(!b) return; selectedWatch=b.dataset.w; try{ localStorage.setItem('jfb-watch',selectedWatch); }catch(err){} renderAll(); });
 document.getElementById('dateInput').addEventListener('change',function(e){ const p=e.target.value.split('-').map(Number); selectedDate=new Date(p[0],p[1]-1,p[2]); renderAll(); });
 document.getElementById('dateInput').value=toISO(selectedDate);

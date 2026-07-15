@@ -196,6 +196,17 @@
   .act.fav.on svg{fill:var(--cat-dent)}
   @media (prefers-color-scheme: dark){ .act.fav.on{background:rgba(251,191,36,.14)} }
 
+  /* On narrow screens the call button becomes a full-width bar under the card
+     instead of a full-height side column */
+  @media (max-width:640px){
+    .card{flex-wrap:wrap}
+    .call{flex:1 1 100%;flex-direction:row;gap:9px;min-width:0;padding:12px 14px;margin-top:2px}
+    .call svg{margin-bottom:0}
+    .call .lbl{margin-bottom:0}
+    .call .num{font-size:14.5px}
+    .call.dead{padding:9px 14px}
+  }
+
   .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 20px;font-size:14px}
   .empty svg{width:54px;height:54px;fill:none;stroke:var(--muted);stroke-width:1.6;
     opacity:.6;margin-bottom:12px}

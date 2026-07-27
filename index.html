@@ -77,6 +77,8 @@
     border-radius:6px;padding:2px 7px;letter-spacing:.8px}
   .sub{margin-top:3px;font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,.85)}
   .sub b{color:#fff;font-weight:700}
+  .app-kicker{font-family:var(--font-head);font-size:11px;font-weight:800;letter-spacing:1.2px;
+    text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:4px}
 
   /* steps */
   .steps{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;align-items:center}
@@ -117,6 +119,26 @@
     cursor:pointer;box-shadow:var(--shadow);display:none;align-items:center;gap:5px}
   .clear.on{display:inline-flex}
   .clear:hover{border-color:var(--cat-hosp);background:color-mix(in srgb,var(--cat-hosp) 8%,var(--card))}
+  .near{flex:0 0 auto;font-size:13px;font-weight:800;padding:11px 14px;
+    background:var(--card);color:var(--primary-text);border:1.5px solid rgba(8,145,178,.35);
+    border-radius:12px;cursor:pointer;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:7px}
+  .near:hover{background:var(--primary-soft);border-color:var(--primary-text)}
+  .near.on{background:var(--primary-text);border-color:var(--primary-text);color:#fff}
+  .near.busy{opacity:.75;cursor:wait}
+  .suite-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:1112px;margin:14px auto 0;padding:0 16px}
+  .suite-tile{text-decoration:none;background:var(--card);border:1.5px solid var(--line);border-radius:12px;
+    padding:12px 13px;box-shadow:var(--shadow);color:var(--ink2);transition:transform .12s,border-color .15s}
+  .suite-tile:hover{transform:translateY(-1px);border-color:var(--primary-text)}
+  .suite-tile.active{background:var(--primary-soft);border-color:rgba(8,145,178,.3)}
+  .suite-tile b{display:block;font-family:var(--font-head);font-size:13px;color:var(--ink);margin-bottom:2px}
+  .suite-tile span{display:block;font-size:11.5px;color:var(--muted);line-height:1.35}
+  .sourcebar{max-width:1112px;margin:12px auto 0;padding:0 16px}
+  .sourcebar-inner{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;
+    color:var(--ink2);font-size:12.5px}
+  .sourcebar b{font-family:var(--font-head);color:var(--ink)}
+  .sourcebar .stamp{font-weight:800;color:var(--primary-text)}
+  @media (max-width:640px){.suite-strip{grid-template-columns:1fr}.suite-tile span{display:none}}
 
   /* ---------- RESULTS BAR ---------- */
   .resultsbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
@@ -165,6 +187,10 @@
     background:color-mix(in srgb,var(--cat,var(--cat-def)) 11%,transparent);
     border:1px solid color-mix(in srgb,var(--cat,var(--cat-def)) 30%,transparent);
     border-radius:20px;padding:3px 10px;white-space:nowrap}
+  .badge-soft{font-size:11.5px;font-weight:800;color:var(--muted);
+    background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px 9px;white-space:nowrap}
+  .badge-soft.warn{color:#a15c00;background:#fff7e0;border-color:#f3d58a}
+  .distance{font-size:12px;color:var(--primary-text);font-weight:800;margin-top:5px}
   .addr{font-size:13px;color:var(--ink2);line-height:1.5}
   .parish{color:var(--muted);font-weight:600}
   .note{font-size:12px;color:var(--muted);font-style:italic;margin-top:5px}
@@ -260,6 +286,7 @@
       --shadow-lg:0 10px 30px -10px rgba(0,0,0,.5),0 4px 10px -4px rgba(0,0,0,.4);
     }
     .nav{box-shadow:0 2px 10px rgba(0,0,0,.35)}
+    .badge-soft.warn{color:#fbbf24;background:rgba(251,191,36,.14);border-color:rgba(251,191,36,.35)}
     mark{background:#7c4a03;color:#fde68a}
   }
 </style>
@@ -279,8 +306,9 @@
     <div class="brand-id">
       <div class="brandmark" aria-hidden="true">JT</div>
       <div>
-        <div class="titlerow"><h1>Jason's Healthcare Finder List</h1><span class="badge">JFB</span></div>
-        <div class="sub">Find a health provider in Jamaica · by <b>Jason Thomas</b> · Guardian Life listing</div>
+        <div class="app-kicker">JFB Tools by Jay</div>
+        <div class="titlerow"><h1>Healthcare Finder</h1><span class="badge">JFB</span></div>
+        <div class="sub">Find a health provider in Jamaica · Guardian Life listing</div>
       </div>
     </div>
   </div>
@@ -293,6 +321,12 @@
  </div>
 </header>
 
+<div class="suite-strip" aria-label="JFB tools">
+  <a class="suite-tile active" href="./"><b>Find Provider</b><span>Search, filter, call, map, and save providers.</span></a>
+  <a class="suite-tile" href="watch/"><b>Check Shift</b><span>See current duty, next shift, and calendar export.</span></a>
+  <a class="suite-tile" href="leave/"><b>Calculate Leave</b><span>Get return dates with public holidays excluded.</span></a>
+</div>
+
 <div class="searchbar" id="searchbar">
   <div class="search">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
@@ -303,13 +337,25 @@
 
 <div class="catbar" id="catbar" role="group" aria-label="Quick category filters"></div>
 
+<div class="sourcebar">
+  <div class="sourcebar-inner">
+    <span><b>Provider source:</b> JFB / Guardian Life listing</span>
+    <span class="stamp">Last updated Jul 18, 2026</span>
+  </div>
+</div>
+
 <div class="controls">
   <select id="parish" aria-label="Filter by parish"></select>
   <select id="type" aria-label="Filter by provider type"></select>
   <select id="sort" aria-label="Sort results">
     <option value="default">Default order</option>
+    <option value="relevance">Best match</option>
     <option value="az">Name: A to Z</option>
+    <option value="distance">Nearest first</option>
   </select>
+  <button id="near" class="near" type="button" aria-pressed="false" aria-label="Use your location to sort providers nearby">
+    <span aria-hidden="true">⌖</span> Near me
+  </button>
   <button id="clear" class="clear" type="button" aria-label="Clear search and filters">&times; Clear</button>
 </div>
 
@@ -364,6 +410,11 @@ function isFakeDial(d){
   if(/\b999-?\s?9999\b/.test(d.ph||'')) return true;
   return false;
 }
+function phoneStatus(d){
+  if(isFakeDial(d)) return 'Phone needs review';
+  if(!(d.dial||'').replace(/\D/g,'')) return 'No phone listed';
+  return '';
+}
 /* data cleanup: internal editorial notes that should not reach users */
 function publicNote(no){
   if(!no) return '';
@@ -402,7 +453,7 @@ function catOf(t){
 
 const $=s=>document.querySelector(s);
 const qEl=$('#q'), parishEl=$('#parish'), typeEl=$('#type'), sortEl=$('#sort'),
-      clearEl=$('#clear'), listEl=$('#list'), countEl=$('#count');
+      clearEl=$('#clear'), nearEl=$('#near'), listEl=$('#list'), countEl=$('#count');
 
 const TOTAL = DATA.length;
 
@@ -415,6 +466,38 @@ typeEl.innerHTML='<option value="">All services</option>'+types.map(t=>`<option>
 let shown=0; const PAGE=40; let current=[];
 let catFilter='';      // active category family key, '' = none
 let favFilter=false;   // showing favorites only
+let userLoc=null;      // browser geolocation, if allowed
+
+const PARISH_CENTERS={
+  'Kingston':[17.9712,-76.7928],
+  'St. Andrew':[18.0179,-76.8099],
+  'St. Catherine':[18.0364,-77.0564],
+  'Clarendon':[17.9557,-77.2405],
+  'Manchester':[18.0417,-77.5071],
+  'St. Elizabeth':[18.0788,-77.6994],
+  'Westmoreland':[18.2944,-78.1564],
+  'Hanover':[18.4098,-78.1336],
+  'St. James':[18.4762,-77.8939],
+  'Trelawny':[18.3526,-77.6078],
+  'St. Ann':[18.4045,-77.1031],
+  'St. Mary':[18.3093,-76.8998],
+  'Portland':[18.1761,-76.4509],
+  'St. Thomas':[17.9700,-76.4332]
+};
+const SEARCH_ALIASES={
+  doctor:['doctor','dr','physician','general practitioner','gp','clinic','medical centre'],
+  gp:['gp','general practitioner','doctor','medical centre'],
+  children:['children','child','paediatrician','pediatrician','kid','kids'],
+  pediatrician:['paediatrician','pediatrician','children','child'],
+  lab:['lab','laboratory','diagnostic','diagnostics','blood test','test'],
+  xray:['xray','x-ray','radiology','imaging','diagnostic','diagnostics'],
+  eye:['eye','optical','ophthalmologist','vision','glasses'],
+  dentist:['dentist','dental','teeth','tooth'],
+  hospital:['hospital','inpatient','outpatient','emergency'],
+  pharmacy:['pharmacy','pharm','rx','drug','medication'],
+  physio:['physio','physiotherapist','physical therapy','rehab','rehabilitation'],
+  gynae:['gynae','gynaecologist','gynecologist','obgyn','women']
+};
 
 /* Build the category quick-chip bar (only families present in the data) */
 const catbarEl=$('#catbar');
@@ -442,13 +525,53 @@ function waUrl(d){ return 'https://wa.me/'+(d.dial||'').replace(/[^0-9]/g,''); }
 function mapUrl(d){ return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent([d.n,addr(d),d.p,'Jamaica'].filter(Boolean).join(', ')); }
 
 function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();}
+function searchNeedles(q){
+  const base=norm(q).split(/\s+/).filter(Boolean);
+  const terms=new Set(base);
+  base.forEach(t=>(SEARCH_ALIASES[t]||[]).forEach(a=>terms.add(norm(a))));
+  return [...terms].filter(Boolean);
+}
+function searchGroups(q){
+  return norm(q).split(/\s+/).filter(Boolean).map(t=>[t,...(SEARCH_ALIASES[t]||[]).map(norm)]);
+}
+function haystack(d){return norm([d.n,d.a1,d.a2,d.c,d.p,d.t,d.ph,d.dial,d.no].join(' '));}
+function matchScore(d,needles){
+  if(!needles.length) return 0;
+  const name=norm(d.n), type=norm(d.t), city=norm(d.c), parish=norm(d.p), hay=haystack(d);
+  let score=0;
+  for(const term of needles){
+    if(name===term)score+=90;
+    else if(name.startsWith(term))score+=60;
+    else if(name.includes(term))score+=42;
+    if(type.includes(term))score+=34;
+    if(city.includes(term)||parish.includes(term))score+=24;
+    if(hay.includes(term))score+=12;
+  }
+  return score;
+}
 function hi(s,q){ s=esc(s); if(!q)return s;
   const rx=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
   return s.replace(rx,'<mark>$1</mark>'); }
 function addr(d){ return [d.a1,d.a2,d.c].filter(Boolean).join(', '); }
+function kmBetween(a,b){
+  const R=6371, toRad=n=>n*Math.PI/180;
+  const dLat=toRad(b[0]-a[0]), dLon=toRad(b[1]-a[1]);
+  const lat1=toRad(a[0]), lat2=toRad(b[0]);
+  const x=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+function distanceKm(d){
+  if(!userLoc||!PARISH_CENTERS[d.p]) return null;
+  return kmBetween(userLoc,PARISH_CENTERS[d.p]);
+}
+function distanceLabel(d){
+  const km=distanceKm(d);
+  return km==null ? '' : `Approx. ${Math.round(km)} km from you`;
+}
 
 function updateClear(){
-  const active = qEl.value.trim() || parishEl.value || typeEl.value || sortEl.value!=='default' || catFilter || favFilter;
+  const active = qEl.value.trim() || parishEl.value || typeEl.value || sortEl.value!=='default' || catFilter || favFilter || userLoc;
   clearEl.classList.toggle('on', !!active);
 }
 
@@ -459,16 +582,19 @@ function filterChips(){
   if(q)chips.push(`<button class="fchip" data-f="q" aria-label="Remove search ${esc(q)}">“${esc(q)}”<span class="x">✕</span></button>`);
   if(parishEl.value)chips.push(`<button class="fchip" data-f="parish" aria-label="Remove parish filter">${esc(parishEl.value)}<span class="x">✕</span></button>`);
   if(typeEl.value)chips.push(`<button class="fchip" data-f="type" aria-label="Remove service filter">${esc(typeEl.value)}<span class="x">✕</span></button>`);
+  if(userLoc)chips.push(`<button class="fchip" data-f="near" aria-label="Remove nearby sorting">Near me<span class="x">✕</span></button>`);
   return chips.join('');
 }
 countEl.addEventListener('click',e=>{
   const b=e.target.closest('.fchip'); if(!b)return;
-  ({q:()=>qEl.value='',parish:()=>parishEl.value='',type:()=>typeEl.value=''})[b.dataset.f]();
+  ({q:()=>qEl.value='',parish:()=>parishEl.value='',type:()=>typeEl.value='',near:()=>{userLoc=null; nearEl.classList.remove('on'); nearEl.setAttribute('aria-pressed','false'); if(sortEl.value==='distance')sortEl.value='default';}})[b.dataset.f]();
   render(true);
 });
 
 function render(reset){
-  const q=qEl.value.trim().toLowerCase();
+  const q=qEl.value.trim();
+  const needles=searchNeedles(q);
+  const groups=searchGroups(q);
   if(reset){
     const fp=parishEl.value, ft=typeEl.value;
     current=DATA.filter(d=>{
@@ -476,14 +602,21 @@ function render(reset){
       if(catFilter&&catOf(d.t)[0]!==catFilter)return false;
       if(fp&&d.p!==fp)return false;
       if(ft&&d.t!==ft)return false;
-      if(q){
-        const hay=(d.n+' '+d.a1+' '+d.a2+' '+d.c+' '+d.p+' '+d.t).toLowerCase();
-        if(!hay.includes(q))return false;
+      if(needles.length){
+        d._score=matchScore(d,needles);
+        const hay=haystack(d);
+        if(d._score<=0||!groups.every(group=>group.some(term=>hay.includes(term))))return false;
+      }else{
+        d._score=0;
       }
       return true;
     });
-    if(sortEl.value==='az'){
+    if(sortEl.value==='distance'&&userLoc){
+      current=current.slice().sort((a,b)=>(distanceKm(a)??9999)-(distanceKm(b)??9999)||(b._score-a._score)||(a.n||'').localeCompare(b.n||''));
+    }else if(sortEl.value==='az'){
       current=current.slice().sort((a,b)=>(a.n||'').localeCompare(b.n||''));
+    }else if(sortEl.value==='relevance'||needles.length){
+      current=current.slice().sort((a,b)=>(b._score-a._score)||(a.n||'').localeCompare(b.n||''));
     }
     shown=0; listEl.innerHTML='';
     updateClear();
@@ -497,6 +630,8 @@ function render(reset){
       ? `<a class="call" href="${tel}" aria-label="Call ${esc(d.n)} at ${esc(d.ph)}">${PHONE_ICON}<span class="lbl">Call</span><span class="num">${esc(d.ph)}</span></a>`
       : `<span class="call dead">${PHONE_ICON}<span class="num">n/a</span></span>`;
     const [ck,cc]=catOf(d.t);
+    const pstat=phoneStatus(d);
+    const dist=distanceLabel(d);
     const delay=reset?` style="--cat:${cc};animation-delay:${Math.min(i*25,400)}ms"`:` style="--cat:${cc}"`;
     const isFav=FAVS.has(favId(d));
     const acts=[
@@ -509,8 +644,9 @@ function render(reset){
         <div class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24">${CAT_ICONS[ck]}</svg></div>
         <div class="body">
           <div class="name">${hi(d.n,qq)}</div>
-          <div class="typerow"><span class="chip">${esc(d.t||'—')}</span></div>
+          <div class="typerow"><span class="chip">${esc(d.t||'—')}</span>${pstat?`<span class="badge-soft warn">${esc(pstat)}</span>`:''}</div>
           <div class="addr">${hi(addr(d),qq)}${d.p?` · <span class="parish">${esc(d.p)}</span>`:''}</div>
+          ${dist?`<div class="distance">${esc(dist)}</div>`:''}
           ${publicNote(d.no)?`<div class="note">${esc(publicNote(d.no))}</div>`:''}
           <div class="actions">${acts}</div>
         </div>${btn}</div>`;
@@ -576,9 +712,39 @@ let t; qEl.addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>render
 parishEl.addEventListener('change',()=>render(true));
 typeEl.addEventListener('change',()=>render(true));
 sortEl.addEventListener('change',()=>render(true));
+nearEl.addEventListener('click',()=>{
+  if(userLoc){
+    userLoc=null;
+    nearEl.classList.remove('on');
+    nearEl.setAttribute('aria-pressed','false');
+    if(sortEl.value==='distance')sortEl.value='default';
+    render(true);
+    return;
+  }
+  if(!navigator.geolocation){
+    nearEl.textContent='Location unavailable';
+    setTimeout(()=>{nearEl.innerHTML='<span aria-hidden="true">⌖</span> Near me';},1800);
+    return;
+  }
+  nearEl.classList.add('busy');
+  nearEl.textContent='Finding you...';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    userLoc=[pos.coords.latitude,pos.coords.longitude];
+    sortEl.value='distance';
+    nearEl.classList.remove('busy');
+    nearEl.classList.add('on');
+    nearEl.setAttribute('aria-pressed','true');
+    nearEl.innerHTML='<span aria-hidden="true">⌖</span> Near me';
+    render(true);
+  },()=>{
+    nearEl.classList.remove('busy');
+    nearEl.textContent='Location blocked';
+    setTimeout(()=>{nearEl.innerHTML='<span aria-hidden="true">⌖</span> Near me';},1800);
+  },{enableHighAccuracy:false,timeout:8000,maximumAge:300000});
+});
 clearEl.addEventListener('click',()=>{
   qEl.value=''; parishEl.value=''; typeEl.value=''; sortEl.value='default';
-  catFilter=''; favFilter=false; renderCatbar();
+  catFilter=''; favFilter=false; userLoc=null; nearEl.classList.remove('on'); nearEl.setAttribute('aria-pressed','false'); renderCatbar();
   render(true); window.scrollTo({top:0,behavior:'smooth'});
 });
 

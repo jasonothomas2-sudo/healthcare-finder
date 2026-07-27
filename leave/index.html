@@ -68,6 +68,8 @@
     border-radius:6px;padding:2px 7px;letter-spacing:.8px}
   .sub{margin-top:3px;font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,.85)}
   .sub b{color:#fff;font-weight:700}
+  .app-kicker{font-family:var(--font-head);font-size:11px;font-weight:800;letter-spacing:1.2px;
+    text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:4px}
 
   .steps{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
   .steps.hidden{display:none}
@@ -91,6 +93,11 @@
   .field input{width:100%;font-size:16px;padding:13px 14px;background:var(--card);
     border:1.5px solid var(--line);border-radius:12px;color:var(--ink);box-shadow:var(--shadow)}
   .field input:focus{outline:none;border-color:var(--primary-text);box-shadow:0 0 0 3px rgba(8,145,178,.15)}
+  .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 14px}
+  .quick-row button{flex:1 1 auto;min-width:86px;font-family:var(--font-head);font-size:12.5px;
+    font-weight:800;color:var(--ink2);background:var(--card);border:1.5px solid var(--line);
+    border-radius:11px;padding:10px 9px;cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,border-color .15s,color .15s}
+  .quick-row button:hover{transform:translateY(-1px);border-color:var(--primary-text);color:var(--primary-text)}
   .calc-btn{width:100%;padding:16px;font-family:var(--font-head);font-size:16px;font-weight:800;
     letter-spacing:.2px;background:linear-gradient(160deg,var(--hero2),var(--hero3));color:#fff;
     border:none;border-radius:13px;cursor:pointer;box-shadow:0 4px 12px rgba(8,145,178,.35);
@@ -121,6 +128,18 @@
   .result .big.return{color:var(--green)}
   .result .divider{border-top:1px solid var(--line);margin:14px 0}
   .result .meta{font-size:13px;color:var(--muted);line-height:1.7}
+  .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 2px}
+  .summary-grid div{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 7px}
+  .summary-grid b{display:block;font-family:var(--font-head);font-size:18px;color:var(--ink);line-height:1}
+  .summary-grid span{font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.35px}
+  .result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .result-actions button{flex:1 1 130px;font-family:var(--font-head);font-size:13px;font-weight:800;
+    color:var(--primary-text);background:var(--primary-soft);border:1.5px solid rgba(8,145,178,.3);
+    border-radius:11px;padding:11px 10px;cursor:pointer}
+  .result-actions button.secondary{color:var(--ink2);background:var(--card2);border-color:var(--line)}
+  .result-actions a{flex:1 1 170px;text-decoration:none;text-align:center;font-family:var(--font-head);font-size:13px;font-weight:800;
+    color:var(--primary-text);background:var(--primary-soft);border:1.5px solid rgba(8,145,178,.3);
+    border-radius:11px;padding:11px 10px}
   .adjusted-note{font-size:12px;color:var(--gold);margin-top:8px;font-weight:600}
   .skipped{margin-top:14px;text-align:left}
   .skipped h3{font-family:var(--font-head);font-size:12px;color:var(--muted);text-transform:uppercase;
@@ -132,6 +151,10 @@
   .skipped .hname{color:var(--gold);font-weight:600}
   .error{background:var(--red-soft);border:1px solid var(--red-lit);border-radius:12px;
     padding:12px 14px;margin-top:14px;font-size:14px;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:18px;z-index:60;transform:translate(-50%,12px);
+    background:var(--ink);color:var(--card);font-size:13px;font-weight:800;border-radius:999px;
+    padding:10px 16px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;box-shadow:var(--shadow-lg)}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
 
   footer{padding:26px 16px 0;color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
   footer .wrap{max-width:560px}
@@ -179,8 +202,9 @@
     <div class="brand-id">
       <div class="brandmark" aria-hidden="true">JT</div>
       <div>
+        <div class="app-kicker">JFB Tools by Jay</div>
         <div class="titlerow"><h1>Leave Calculator</h1></div>
-        <div class="sub">Mon–Fri working days · Jamaican public holidays excluded · by <b>Jason Thomas</b></div>
+        <div class="sub">Mon–Fri working days · Jamaican public holidays excluded</div>
       </div>
     </div>
   </div>
@@ -196,12 +220,23 @@
 <main class="wrap">
   <h2 class="sec">Leave start date</h2>
   <div class="field"><input type="date" id="startDate" aria-label="Leave start date"></div>
+  <div class="quick-row" aria-label="Quick start date options">
+    <button type="button" data-start="today">Today</button>
+    <button type="button" data-start="next">Next workday</button>
+  </div>
   <h2 class="sec">Number of leave days</h2>
   <div class="field"><input type="number" id="numDays" min="1" max="365" inputmode="numeric" placeholder="e.g. 10" aria-label="Number of leave days"></div>
-  <button class="calc-btn" id="calcBtn">Calculate return date</button>
+  <div class="quick-row" aria-label="Common leave day presets">
+    <button type="button" data-days="5">5 days</button>
+    <button type="button" data-days="10">10 days</button>
+    <button type="button" data-days="15">15 days</button>
+    <button type="button" data-days="20">20 days</button>
+  </div>
+  <button class="calc-btn" id="calcBtn" type="button">Calculate return date</button>
   <div id="nudgeBox"></div>
   <div id="resultBox"></div>
 </main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <footer><div class="wrap"><div class="credit"><span class="cm" aria-hidden="true">JT</span> Created by <b>Jason Thomas</b> · © 2026</div>Counts Monday-Friday, excluding: New Year's Day, Ash Wednesday, Good Friday, Easter Monday, Labour Day, Emancipation Day, Independence Day, National Heroes Day, Christmas Day, Boxing Day.<br><br>Holiday dates are calculated automatically each year. Verify with HR/official leave policy before submitting.
 <div class="mops" role="img" aria-label="Built with MOPS — Media Operations System">
@@ -234,9 +269,58 @@ function blockReason(d){ if(isWeekend(d)) return d.getDay()===6?'a Saturday':'a 
 function nearestWorkingDay(d,dir){ var x=new Date(d); while(!isWorkingDay(x)) x=addDays(x,dir); return x; }
 function fmtLeave(d){ return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}); }
 var startEl=document.getElementById('startDate'), numEl=document.getElementById('numDays'), nudgeBox=document.getElementById('nudgeBox'), resultBox=document.getElementById('resultBox');
+var lastResultText='';
 function parseStart(){ if(!startEl.value) return null; var p=startEl.value.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
-document.getElementById('calcBtn').addEventListener('click',function(){ nudgeBox.innerHTML=''; resultBox.innerHTML=''; var start=parseStart(); var n=parseInt(numEl.value,10); if(!start){ resultBox.innerHTML='<div class="error">Pick a start date first.</div>'; return; } if(!n||n<1){ resultBox.innerHTML='<div class="error">Enter the number of leave days (1 or more).</div>'; return; } var reason=blockReason(start); if(reason){ var fwd=nearestWorkingDay(start,1), back=nearestWorkingDay(start,-1); nudgeBox.innerHTML='<div class="nudge"><div class="why">'+fmtLeave(start)+' is <b>'+reason+'</b> - leave cannot start on a non-working day. Move it:</div><div class="nudge-opts"><button id="nBack">Back to<span class="dir">'+fmtLeave(back)+'</span></button><button id="nFwd">Forward to<span class="dir">'+fmtLeave(fwd)+'</span></button></div></div>'; document.getElementById('nBack').onclick=function(){ runCalc(back,n,start); }; document.getElementById('nFwd').onclick=function(){ runCalc(fwd,n,start); }; return; } runCalc(start,n,null); });
-function runCalc(start,n,originalPicked){ nudgeBox.innerHTML=''; var d=new Date(start), counted=0, last=null; var skipped=[]; while(counted<n){ if(isWorkingDay(d)){ counted++; last=new Date(d); } else { var h=holidayName(d); if(h) skipped.push([new Date(d),h]); } if(counted<n) d=addDays(d,1); } var ret=addDays(last,1); var retSkipped=[]; while(!isWorkingDay(ret)){ var h2=holidayName(ret); if(h2) retSkipped.push([new Date(ret),h2]); ret=addDays(ret,1); } var allSkipped=skipped.concat(retSkipped); var skippedHtml = allSkipped.length ? '<div class="skipped"><h3>Public holidays inside this period (not counted as leave)</h3><ul>'+allSkipped.map(function(p){return '<li><span>'+fmtLeave(p[0])+'</span><span class="hname">'+p[1]+'</span></li>';}).join('')+'</ul></div>' : ''; resultBox.innerHTML='<div class="result"><div class="rt">Leave begins</div><div class="big">'+fmtLeave(start)+'</div>'+(originalPicked?'<div class="adjusted-note">Adjusted from '+fmtLeave(originalPicked)+'</div>':'')+'<div class="divider"></div><div class="rt">Last day of leave (day '+n+')</div><div class="big">'+fmtLeave(last)+'</div><div class="divider"></div><div class="rt">Return to work</div><div class="big return">'+fmtLeave(ret)+'</div><div class="divider"></div><div class="meta">'+n+' working day'+(n>1?'s':'')+' of leave - Mon-Fri only - public holidays excluded</div>'+skippedHtml+'</div>'; }
+function showToast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(showToast._t); showToast._t=setTimeout(function(){t.classList.remove('on');},1600); }
+function setStart(d){ startEl.value=isoDate(d); try{localStorage.setItem('jfb-leave-start',startEl.value);}catch(e){} }
+function clearResult(){ nudgeBox.innerHTML=''; resultBox.innerHTML=''; lastResultText=''; }
+function validateInputs(){ var start=parseStart(); var n=parseInt(numEl.value,10); if(!start){ resultBox.innerHTML='<div class="error">Pick a start date first.</div>'; return null; } if(!n||n<1){ resultBox.innerHTML='<div class="error">Enter the number of leave days (1 or more).</div>'; return null; } if(n>365){ resultBox.innerHTML='<div class="error">Use 365 days or less for one calculation.</div>'; return null; } return {start:start,n:n}; }
+function calculate(){ clearResult(); var v=validateInputs(); if(!v)return; try{localStorage.setItem('jfb-leave-days',String(v.n));localStorage.setItem('jfb-leave-start',startEl.value);}catch(e){} var reason=blockReason(v.start); if(reason){ var fwd=nearestWorkingDay(v.start,1), back=nearestWorkingDay(v.start,-1); nudgeBox.innerHTML='<div class="nudge"><div class="why">'+fmtLeave(v.start)+' is <b>'+reason+'</b> - leave cannot start on a non-working day. Move it:</div><div class="nudge-opts"><button id="nBack" type="button">Back to<span class="dir">'+fmtLeave(back)+'</span></button><button id="nFwd" type="button">Forward to<span class="dir">'+fmtLeave(fwd)+'</span></button></div></div>'; document.getElementById('nBack').onclick=function(){ runCalc(back,v.n,v.start); }; document.getElementById('nFwd').onclick=function(){ runCalc(fwd,v.n,v.start); }; return; } runCalc(v.start,v.n,null); }
+document.getElementById('calcBtn').addEventListener('click',calculate);
+document.querySelectorAll('[data-start]').forEach(function(b){ b.addEventListener('click',function(){ var d=new Date(); d.setHours(0,0,0,0); if(b.dataset.start==='next')d=nearestWorkingDay(d,1); setStart(d); clearResult(); }); });
+document.querySelectorAll('[data-days]').forEach(function(b){ b.addEventListener('click',function(){ numEl.value=b.dataset.days; try{localStorage.setItem('jfb-leave-days',numEl.value);}catch(e){} clearResult(); }); });
+startEl.addEventListener('change',function(){ try{localStorage.setItem('jfb-leave-start',startEl.value);}catch(e){} clearResult(); });
+numEl.addEventListener('input',function(){ try{localStorage.setItem('jfb-leave-days',numEl.value);}catch(e){} clearResult(); });
+numEl.addEventListener('keydown',function(e){ if(e.key==='Enter')calculate(); });
+function runCalc(start,n,originalPicked){
+  nudgeBox.innerHTML='';
+  var d=new Date(start), counted=0, last=null;
+  var skipped=[], weekends=0;
+  while(counted<n){
+    if(isWorkingDay(d)){ counted++; last=new Date(d); }
+    else { if(isWeekend(d))weekends++; var h=holidayName(d); if(h) skipped.push([new Date(d),h]); }
+    if(counted<n) d=addDays(d,1);
+  }
+  var ret=addDays(last,1), retSkipped=[];
+  while(!isWorkingDay(ret)){
+    if(isWeekend(ret))weekends++;
+    var h2=holidayName(ret); if(h2) retSkipped.push([new Date(ret),h2]);
+    ret=addDays(ret,1);
+  }
+  var allSkipped=skipped.concat(retSkipped);
+  var skippedHtml = allSkipped.length ? '<div class="skipped"><h3>Public holidays inside this period (not counted as leave)</h3><ul>'+allSkipped.map(function(p){return '<li><span>'+fmtLeave(p[0])+'</span><span class="hname">'+p[1]+'</span></li>';}).join('')+'</ul></div>' : '';
+  lastResultText='Leave begins: '+fmtLeave(start)+'\nLast day of leave: '+fmtLeave(last)+'\nReturn to work: '+fmtLeave(ret)+'\nLeave days: '+n+' working day'+(n>1?'s':'');
+  resultBox.innerHTML='<div class="result">'
+    +'<div class="rt">Leave begins</div><div class="big">'+fmtLeave(start)+'</div>'
+    +(originalPicked?'<div class="adjusted-note">Adjusted from '+fmtLeave(originalPicked)+'</div>':'')
+    +'<div class="divider"></div><div class="rt">Last day of leave (day '+n+')</div><div class="big">'+fmtLeave(last)+'</div>'
+    +'<div class="divider"></div><div class="rt">Return to work</div><div class="big return">'+fmtLeave(ret)+'</div>'
+    +'<div class="summary-grid"><div><b>'+n+'</b><span>Leave days</span></div><div><b>'+weekends+'</b><span>Weekend days</span></div><div><b>'+allSkipped.length+'</b><span>Holidays</span></div></div>'
+    +'<div class="divider"></div><div class="meta">'+n+' working day'+(n>1?'s':'')+' of leave - Mon-Fri only - public holidays excluded</div>'
+    +'<div class="result-actions"><button type="button" id="copyResult">Copy result</button><a href="../watch/?date='+isoDate(ret)+'">Check shift on return date</a><button type="button" class="secondary" id="resetCalc">Reset</button></div>'
+    +skippedHtml+'</div>';
+  document.getElementById('copyResult').onclick=function(){
+    if(navigator.share){navigator.share({title:'JFB leave result',text:lastResultText}).catch(function(){});return;}
+    if(navigator.clipboard)navigator.clipboard.writeText(lastResultText).then(function(){showToast('Leave result copied');});
+  };
+  document.getElementById('resetCalc').onclick=function(){
+    startEl.value=''; numEl.value='';
+    try{localStorage.removeItem('jfb-leave-start');localStorage.removeItem('jfb-leave-days');}catch(e){}
+    clearResult();
+  };
+}
+try{ var savedStart=localStorage.getItem('jfb-leave-start'), savedDays=localStorage.getItem('jfb-leave-days'); if(savedStart)startEl.value=savedStart; if(savedDays)numEl.value=savedDays; }catch(e){}
+try{ var qp=new URLSearchParams(location.search), qs=qp.get('start'); if(qs)startEl.value=qs; }catch(e){}
 
 /* Collapsible steps */
 var stepsEl=document.getElementById('steps');

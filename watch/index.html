@@ -66,6 +66,8 @@
     border-radius:6px;padding:2px 7px;letter-spacing:.8px}
   .sub{margin-top:3px;font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,.85)}
   .sub b{color:#fff;font-weight:700}
+  .app-kicker{font-family:var(--font-head);font-size:11px;font-weight:800;letter-spacing:1.2px;
+    text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:4px}
 
   .steps{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
   .steps.hidden{display:none}
@@ -135,6 +137,19 @@
   .ics-btn:hover{transform:translateY(-1px);border-color:var(--primary-text)}
   .ics-btn:active{transform:scale(.98)}
   .ics-btn svg{width:17px;height:17px;fill:var(--primary-text)}
+  .quick-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .action-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-family:var(--font-head);
+    font-size:13.5px;font-weight:800;color:var(--ink2);background:var(--card);border:1.5px solid var(--line);
+    border-radius:12px;padding:11px 13px;cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,border-color .15s,color .15s}
+  .action-btn:hover{transform:translateY(-1px);border-color:var(--primary-text);color:var(--primary-text)}
+  .action-btn.primary{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(8,145,178,.3)}
+  .action-btn svg{width:16px;height:16px;fill:currentColor}
+  a.action-btn{text-decoration:none}
+  .range-pick{display:flex;gap:6px;align-items:center;background:var(--card);border:1px solid var(--line);
+    border-radius:13px;padding:5px;box-shadow:var(--shadow);margin-bottom:10px}
+  .range-pick button{flex:1;border:0;border-radius:9px;background:transparent;color:var(--muted);
+    font-family:var(--font-head);font-size:12.5px;font-weight:800;padding:9px 8px;cursor:pointer}
+  .range-pick button.active{background:var(--primary-soft);color:var(--primary-text)}
 
   .forecast{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
   .fc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;
@@ -185,6 +200,10 @@
   .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
   .legend i.Day{background:var(--day)} .legend i.Evening{background:var(--eve)}
   .legend i.Night{background:var(--night)} .legend i.Off{background:var(--off)}
+  .toast{position:fixed;left:50%;bottom:18px;z-index:60;transform:translate(-50%,12px);
+    background:var(--ink);color:var(--card);font-size:13px;font-weight:800;border-radius:999px;
+    padding:10px 16px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;box-shadow:var(--shadow-lg)}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
 
   footer{padding:26px 16px 0;color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
   footer .wrap{max-width:560px}
@@ -231,8 +250,9 @@
     <div class="brand-id">
       <div class="brandmark" aria-hidden="true">JT</div>
       <div>
-        <div class="titlerow"><h1>Work Shift Forecast</h1><span class="badge">A · B · C · D</span></div>
-        <div class="sub">Your shift outlook — always up to date · by <b>Jason Thomas</b></div>
+        <div class="app-kicker">JFB Tools by Jay</div>
+        <div class="titlerow"><h1>Shift Forecast</h1><span class="badge">A · B · C · D</span></div>
+        <div class="sub">Your shift outlook — always up to date</div>
       </div>
     </div>
   </div>
@@ -247,9 +267,13 @@
 
 <main class="wrap">
   <h2 class="sec">Your watch</h2>
-  <div class="watchpick" id="watchpick"><button class="wbtn" data-w="A">A</button><button class="wbtn" data-w="B">B</button><button class="wbtn" data-w="C">C</button><button class="wbtn" data-w="D">D</button></div>
+  <div class="watchpick" id="watchpick" role="group" aria-label="Choose your watch"><button class="wbtn" data-w="A" type="button">A</button><button class="wbtn" data-w="B" type="button">B</button><button class="wbtn" data-w="C" type="button">C</button><button class="wbtn" data-w="D" type="button">D</button></div>
   <h2 class="sec">Right now</h2>
   <div class="now-card" id="nowCard"></div>
+  <div class="quick-actions">
+    <button class="action-btn primary" id="nextShiftBtn" type="button">Jump to my next shift</button>
+    <button class="action-btn" id="shareShiftBtn" type="button">Copy shift summary</button>
+  </div>
   <h2 class="sec">Today's shift</h2>
   <div class="today-card" id="todayCard"></div>
   <h2 class="sec">Coming up</h2>
@@ -257,7 +281,11 @@
   <div style="margin-top:14px"><button class="ics-btn" id="icsBtn" type="button">
     <svg viewBox="0 0 24 24"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zM5 9h14v10H5V9zm7 2v3H9v2h3v3h2v-3h3v-2h-3v-3h-2z"/></svg>
     Add my 30-day shifts to calendar</button></div>
-  <h2 class="sec">Next 7 days</h2>
+  <h2 class="sec">Look ahead</h2>
+  <div class="range-pick" id="rangePick" role="group" aria-label="Forecast range">
+    <button type="button" data-days="7" class="active">7 days</button>
+    <button type="button" data-days="14">14 days</button>
+  </div>
   <div class="weekstrip" id="weekstrip"></div>
   <h2 class="sec">Jump to a date</h2>
   <div class="datejump"><input type="date" id="dateInput" aria-label="Jump to a date"></div>
@@ -265,6 +293,7 @@
   <div id="dayDetail"></div>
   <div class="legend"><span><i class="Day"></i>Day 07:00–15:00</span><span><i class="Evening"></i>Evening 15:00–22:00</span><span><i class="Night"></i>Night 22:00–07:00</span><span><i class="Off"></i>Off</span></div>
 </main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <footer><div class="wrap"><div class="credit"><span class="cm" aria-hidden="true">JT</span> Created by <b>Jason Thomas</b> · © 2026</div><b>How it works:</b> pick your watch once — this forecast updates itself every day, so it's always current. Your watch choice is remembered on this device.<br><br>Anchor: Fri Jul 10 2026 — C=Day, D=Evening, A=Night, B=Off. Cycle: Day → Evening → Night → Off, repeating every 4 days, per watch. Built for JFB station staff. Verify against the official roster if in doubt.
 <div class="mops" role="img" aria-label="Built with MOPS — Media Operations System">
@@ -296,12 +325,15 @@ function toISO(d){ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'
 let selectedWatch='A';
 try{ const sv=localStorage.getItem('jfb-watch'); if(sv && 'ABCD'.includes(sv)) selectedWatch=sv; }catch(e){}
 let selectedDate=new Date(); selectedDate.setHours(0,0,0,0);
-function renderWatchPicker(){ document.querySelectorAll('.wbtn').forEach(b=>{ b.classList.toggle('active', b.dataset.w===selectedWatch); }); }
+try{ const qp=new URLSearchParams(location.search); const qd=qp.get('date'); if(qd){ const p=qd.split('-').map(Number); if(p.length===3&&p[0]&&p[1]&&p[2]) selectedDate=new Date(p[0],p[1]-1,p[2]); selectedDate.setHours(0,0,0,0); } }catch(e){}
+let forecastDays=7;
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(showToast._t); showToast._t=setTimeout(()=>t.classList.remove('on'),1600); }
+function renderWatchPicker(){ document.querySelectorAll('.wbtn').forEach(b=>{ const on=b.dataset.w===selectedWatch; b.classList.toggle('active', on); b.setAttribute('aria-pressed',on); }); }
 function renderTodayCard(){ const now=new Date(); now.setHours(0,0,0,0); const slot=watchSlotForDate(selectedWatch,now); document.getElementById('todayCard').innerHTML='<div class="dow">Today · Watch '+selectedWatch+'</div><div class="date">'+fmtDate(now)+'</div><div class="slot-pill '+slot+'">'+slot+'</div><div class="hours">'+SLOT_HOURS[slot]+'</div>'; }
 function relDay(n){ return n===0?'Today':n===1?'Tomorrow':'in '+n+' days'; }
 function renderForecast(){ const now=new Date(); now.setHours(0,0,0,0); const next={}; for(let i=0;i<28 && Object.keys(next).length<4;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); if(next[slot]===undefined) next[slot]={days:i,date:d}; } document.getElementById('forecast').innerHTML=SLOT_NAMES.map(function(name){ const info=next[name]; if(!info) return ''; const when=relDay(info.days); const dateStr=info.date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); return '<div class="fc '+name+'"><div class="fc-slot"><span class="fc-dot '+name+'"></span>Next '+name+'</div><div class="fc-when"><b>'+when+'</b></div><div class="fc-date">'+dateStr+' · '+SLOT_HOURS[name]+'</div></div>'; }).join(''); }
-function renderWeekStrip(){ const el=document.getElementById('weekstrip'); el.innerHTML=''; const now=new Date(); now.setHours(0,0,0,0); for(let i=0;i<7;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); const chip=document.createElement('div'); chip.className='daychip'+(toISO(d)===toISO(selectedDate)?' selected':''); chip.innerHTML='<div class="dname">'+d.toLocaleDateString('en-US',{weekday:'short'})+'</div><div class="dnum">'+d.getDate()+'</div><div class="dslot '+slot+'">'+slot+'</div>'; chip.onclick=function(){ selectedDate=d; document.getElementById('dateInput').value=toISO(d); renderAll(); }; el.appendChild(chip); } }
-function renderDayDetail(){ document.getElementById('dayDetailLabel').textContent=fmtDate(selectedDate); const s=slotsForDate(selectedDate); const rows=SLOT_NAMES.map(function(name){ const w=s[name]; const mine=w===selectedWatch; return '<div class="row"><span class="rw"><span class="dot '+name+'"></span><span>'+name+'<span class="rsub">'+SLOT_HOURS[name]+'</span></span></span><span class="'+(mine?'rv thisWatch':'rv')+'">Watch '+w+(mine?'<span class="youtag">YOU</span>':'')+'</span></div>'; }).join(''); document.getElementById('dayDetail').innerHTML='<div class="grid-day">'+rows+'</div>'; }
+function renderWeekStrip(){ const el=document.getElementById('weekstrip'); el.innerHTML=''; const now=new Date(); now.setHours(0,0,0,0); for(let i=0;i<forecastDays;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); const chip=document.createElement('button'); chip.type='button'; chip.className='daychip'+(toISO(d)===toISO(selectedDate)?' selected':''); chip.setAttribute('aria-label',fmtDate(d)+', '+slot+' shift'); chip.innerHTML='<div class="dname">'+d.toLocaleDateString('en-US',{weekday:'short'})+'</div><div class="dnum">'+d.getDate()+'</div><div class="dslot '+slot+'">'+slot+'</div>'; chip.onclick=function(){ selectedDate=d; document.getElementById('dateInput').value=toISO(d); renderAll(); }; el.appendChild(chip); } }
+function renderDayDetail(){ document.getElementById('dayDetailLabel').textContent=fmtDate(selectedDate); const s=slotsForDate(selectedDate); const rows=SLOT_NAMES.map(function(name){ const w=s[name]; const mine=w===selectedWatch; return '<div class="row"><span class="rw"><span class="dot '+name+'"></span><span>'+name+'<span class="rsub">'+SLOT_HOURS[name]+'</span></span></span><span class="'+(mine?'rv thisWatch':'rv')+'">Watch '+w+(mine?'<span class="youtag">YOU</span>':'')+'</span></div>'; }).join(''); document.getElementById('dayDetail').innerHTML='<div class="grid-day">'+rows+'</div><div class="quick-actions"><a class="action-btn primary" href="../leave/?start='+toISO(selectedDate)+'">Calculate leave from this date</a></div>'; }
 const SLOT_START={ Day:7, Evening:15, Night:22 };  // shift start hour
 /* Which watch is on duty at a given instant, honouring real slot times.
    Before 07:00 the on-duty Night crew is the one that started at 22:00 the previous day. */
@@ -334,6 +366,14 @@ function countdownStr(from,to){
   return 'in '+m+'m';
 }
 function hhmm(d){ return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+function shiftSummary(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const todaySlot=watchSlotForDate(selectedWatch,today);
+  const now=new Date(), duty=currentDuty(now), next=nextShiftStart(selectedWatch,now);
+  const lines=['JFB Watch '+selectedWatch,'Today: '+todaySlot+' · '+SLOT_HOURS[todaySlot],'On duty now: Watch '+duty.watch+' · '+duty.slot];
+  if(next) lines.push('Next shift: '+next.slot+' on '+fmtDate(next.start)+' at '+hhmm(next.start));
+  return lines.join('\n');
+}
 function renderNow(){
   const now=new Date();
   const duty=currentDuty(now);
@@ -389,6 +429,25 @@ function downloadICS(){
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 document.getElementById('icsBtn').addEventListener('click',downloadICS);
+document.getElementById('shareShiftBtn').addEventListener('click',function(){
+  const text=shiftSummary();
+  if(navigator.share){ navigator.share({title:'JFB Watch '+selectedWatch,text}).catch(()=>{}); return; }
+  if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>showToast('Shift summary copied')); }
+});
+document.getElementById('nextShiftBtn').addEventListener('click',function(){
+  const next=nextShiftStart(selectedWatch,new Date());
+  if(!next){ showToast('No upcoming shift found'); return; }
+  selectedDate=new Date(next.start); selectedDate.setHours(0,0,0,0);
+  document.getElementById('dateInput').value=toISO(selectedDate);
+  renderAll();
+  document.getElementById('dayDetail').scrollIntoView({behavior:'smooth',block:'center'});
+});
+document.getElementById('rangePick').addEventListener('click',function(e){
+  const b=e.target.closest('button[data-days]'); if(!b)return;
+  forecastDays=Number(b.dataset.days);
+  document.querySelectorAll('#rangePick button').forEach(x=>x.classList.toggle('active',x===b));
+  renderWeekStrip();
+});
 setInterval(renderNow,60000);  // keep the live card fresh
 
 function renderAll(){ renderWatchPicker(); renderNow(); renderTodayCard(); renderForecast(); renderWeekStrip(); renderDayDetail(); }

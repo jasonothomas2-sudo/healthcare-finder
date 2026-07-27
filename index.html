@@ -107,6 +107,11 @@
   .searchbar.stuck{background:var(--bg);padding-top:8px;padding-bottom:8px;
     box-shadow:0 10px 14px -12px rgba(11,61,79,.35)}
   .searchbar.stuck .search input{box-shadow:var(--shadow)}
+  @media (max-width:640px){
+    .searchbar{position:relative;top:auto;z-index:1;margin-top:12px}
+    .searchbar.stuck{background:transparent;padding-top:0;padding-bottom:0;box-shadow:none}
+    .searchbar.stuck .search input{box-shadow:var(--shadow-lg)}
+  }
 
   /* ---------- FILTERS ---------- */
   .controls{display:flex;gap:8px;margin:12px auto 0;padding:0 16px;flex-wrap:wrap;align-items:center;max-width:1112px}

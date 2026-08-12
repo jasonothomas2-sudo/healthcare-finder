@@ -17,11 +17,11 @@
     --bg:#f2f6f8; --card:#ffffff; --card2:#eef5f8;
     --ink:#123c4d; --ink2:#33586b; --muted:#5a7386; --line:#d6e6ec;
     --primary:#0891b2; --primary-dark:#0e7490; --primary-text:#0e7490; --primary-soft:#e0f5fa;
-    --green:#059669; --green-dark:#047857;
+    --green:#047857; --green-dark:#065f46;
     --red:#c0392b; --red-lit:#e0503f; --red-soft:#fdecea;
     --gold:#b45309; --gold-soft:#fdf3e4;
     --ring:#0891b2;
-    --hero1:#0b3d4f; --hero2:#0e7490; --hero3:#0891b2;
+    --hero1:#0b3d4f; --hero2:#0e7490; --hero3:#0c6075;
     --font-head:'Figtree',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --font-body:'Noto Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --shadow:0 1px 3px rgba(16,78,99,.10),0 1px 2px rgba(16,78,99,.05);
@@ -83,6 +83,21 @@
   .steps-dismiss{background:none;border:none;color:rgba(255,255,255,.75);font-size:12px;
     font-weight:700;cursor:pointer;padding:7px 10px;border-radius:999px}
   .steps-dismiss:hover{background:rgba(255,255,255,.12);color:#fff}
+
+  @media (max-width:640px){
+    .hero{padding:18px 16px 22px}
+    .brandmark{width:44px;height:44px;border-radius:12px;font-size:16px}
+    .brand-id{gap:11px}
+    .app-kicker{font-size:10px;margin-bottom:2px}
+    h1{font-size:24px}
+    .sub{font-size:13px;line-height:1.4}
+    .steps{flex-wrap:nowrap;overflow-x:auto;margin:14px -16px 0;padding:0 16px 4px;
+      scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    .steps::-webkit-scrollbar{display:none}
+    .step{flex:0 0 auto}
+    .steps-dismiss{flex:0 0 auto;background:rgba(255,255,255,.10)}
+    main{padding-top:8px}
+  }
 
   main{padding:14px 16px 0}
   h2.sec{font-family:var(--font-head);font-size:12px;color:var(--muted);letter-spacing:.5px;
@@ -261,7 +276,22 @@ function addDays(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
 function thirdMondayOct(y){ var d=new Date(y,9,1); var off=(8-d.getDay())%7; return new Date(y,9,1+off+14); }
 function isoDate(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 var holidayCache={};
-function holidaysForYear(y){ if(holidayCache[y]) return holidayCache[y]; var easter=easterSunday(y); var list=[[isoDate(new Date(y,0,1)),"New Year's Day"],[isoDate(addDays(easter,-46)),"Ash Wednesday"],[isoDate(addDays(easter,-2)),"Good Friday"],[isoDate(addDays(easter,1)),"Easter Monday"],[isoDate(new Date(y,4,23)),"Labour Day"],[isoDate(new Date(y,7,1)),"Emancipation Day"],[isoDate(new Date(y,7,6)),"Independence Day"],[isoDate(thirdMondayOct(y)),"National Heroes Day"],[isoDate(new Date(y,11,25)),"Christmas Day"],[isoDate(new Date(y,11,26)),"Boxing Day"]]; var map={}; list.forEach(function(p){map[p[0]]=p[1];}); holidayCache[y]=map; return map; }
+function observedMonday(d){ var x=new Date(d); x.setDate(x.getDate()+(x.getDay()===6?2:1)); return x; }
+function holidaysForYear(y){
+  if(holidayCache[y]) return holidayCache[y];
+  var easter=easterSunday(y), map={};
+  function put(d,name){ map[isoDate(d)]=name; }
+  var newYear=new Date(y,0,1), labour=new Date(y,4,23), emancipation=new Date(y,7,1), independence=new Date(y,7,6), christmas=new Date(y,11,25);
+  put(newYear.getDay()===0?observedMonday(newYear):newYear,"New Year's Day"+(newYear.getDay()===0?' (observed)':''));
+  put(addDays(easter,-46),"Ash Wednesday"); put(addDays(easter,-2),"Good Friday"); put(addDays(easter,1),"Easter Monday");
+  put(labour.getDay()===0||labour.getDay()===6?observedMonday(labour):labour,"Labour Day"+(labour.getDay()===0||labour.getDay()===6?' (observed)':''));
+  put(emancipation.getDay()===0?observedMonday(emancipation):emancipation,"Emancipation Day"+(emancipation.getDay()===0?' (observed)':''));
+  put(independence.getDay()===0?observedMonday(independence):independence,"Independence Day"+(independence.getDay()===0?' (observed)':''));
+  put(thirdMondayOct(y),"National Heroes Day");
+  if(christmas.getDay()===0){ put(new Date(y,11,26),"Christmas Day (observed)"); put(new Date(y,11,27),"Boxing Day (observed)"); }
+  else { put(christmas,"Christmas Day"); put(new Date(y,11,26),"Boxing Day"); }
+  holidayCache[y]=map; return map;
+}
 function holidayName(d){ return holidaysForYear(d.getFullYear())[isoDate(d)] || null; }
 function isWeekend(d){ var g=d.getDay(); return g===0||g===6; }
 function isWorkingDay(d){ return !isWeekend(d) && !holidayName(d); }

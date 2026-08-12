@@ -18,9 +18,9 @@
     --bg:#f2f6f8; --card:#ffffff; --card2:#eef5f8;
     --ink:#123c4d; --ink2:#33586b; --muted:#5a7386; --line:#d6e6ec;
     --primary:#0891b2; --primary-dark:#0e7490; --primary-text:#0e7490; --primary-soft:#e0f5fa;
-    --green:#059669; --green-dark:#047857;
+    --green:#047857; --green-dark:#065f46;
     --ring:#0891b2;
-    --hero1:#0b3d4f; --hero2:#0e7490; --hero3:#0891b2;
+    --hero1:#0b3d4f; --hero2:#0e7490; --hero3:#0c6075;
     /* category colors */
     --cat-pharm:#0891b2; --cat-lab:#7c3aed; --cat-doc:#2563eb; --cat-spec:#4f46e5;
     --cat-dent:#d97706; --cat-opt:#db2777; --cat-hosp:#dc2626; --cat-def:#64748b;
@@ -144,6 +144,25 @@
   .sourcebar b{font-family:var(--font-head);color:var(--ink)}
   .sourcebar .stamp{font-weight:800;color:var(--primary-text)}
   @media (max-width:640px){.suite-strip{grid-template-columns:1fr}.suite-tile span{display:none}}
+
+  /* Keep the primary task above the fold on phones. The top navigation already
+     exposes the other tools, so the duplicate suite cards are desktop-only. */
+  @media (max-width:640px){
+    .hero{padding:18px 16px 22px}
+    .brandmark{width:44px;height:44px;border-radius:12px;font-size:16px}
+    .brand-id{gap:11px}
+    .app-kicker{font-size:10px;margin-bottom:2px}
+    h1{font-size:24px}
+    .sub{font-size:13px;line-height:1.4}
+    .steps{flex-wrap:nowrap;overflow-x:auto;margin:14px -16px 0;padding:0 16px 4px;
+      scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    .steps::-webkit-scrollbar{display:none}
+    .step{flex:0 0 auto}
+    .steps-dismiss{flex:0 0 auto;background:rgba(255,255,255,.10)}
+    .suite-strip{display:none}
+    .searchbar{margin-top:12px}
+    .sourcebar{margin-top:10px}
+  }
 
   /* ---------- RESULTS BAR ---------- */
   .resultsbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;
@@ -342,13 +361,6 @@
 
 <div class="catbar" id="catbar" role="group" aria-label="Quick category filters"></div>
 
-<div class="sourcebar">
-  <div class="sourcebar-inner">
-    <span><b>Provider source:</b> JFB / Guardian Life listing</span>
-    <span class="stamp">Last updated Jul 18, 2026</span>
-  </div>
-</div>
-
 <div class="controls">
   <select id="parish" aria-label="Filter by parish"></select>
   <select id="type" aria-label="Filter by provider type"></select>
@@ -365,6 +377,12 @@
 </div>
 
 <div class="resultsbar" id="count" role="status" aria-live="polite"></div>
+<div class="sourcebar">
+  <div class="sourcebar-inner">
+    <span><b>Provider source:</b> JFB / Guardian Life listing</span>
+    <span class="stamp">Last updated Jul 18, 2026</span>
+  </div>
+</div>
 <main id="list"></main>
 
 <button class="totop" id="totop" type="button" aria-label="Back to top">

@@ -156,6 +156,33 @@
     padding:10px 16px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;box-shadow:var(--shadow-lg)}
   .toast.on{opacity:1;transform:translate(-50%,0)}
 
+  /* Mode switch + Balance mode */
+  .modes{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:13px;
+    padding:5px;box-shadow:var(--shadow);margin-top:2px}
+  .modes button{flex:1;font-family:var(--font-head);font-size:14px;font-weight:800;color:var(--muted);
+    background:transparent;border:1.5px solid transparent;border-radius:10px;padding:11px 8px;cursor:pointer;
+    transition:background .15s,color .15s}
+  .modes button.on{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(8,145,178,.25)}
+  [hidden]{display:none !important}
+  .lbl{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin:0 0 6px}
+  .hint{font-size:12px;color:var(--muted);margin:6px 2px 0}
+  .quick-row button.on{color:var(--primary-text);border-color:var(--primary-text);background:var(--primary-soft)}
+  .checks{display:flex;flex-direction:column;gap:10px;margin:-4px 0 16px}
+  .check{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1.5px solid var(--line);
+    border-radius:12px;padding:12px 14px;cursor:pointer;box-shadow:var(--shadow)}
+  .check input{width:20px;height:20px;margin-top:1px;accent-color:var(--primary);flex:0 0 auto}
+  .check b{display:block;font-family:var(--font-head);font-size:13.5px;color:var(--ink)}
+  .check span{font-size:12px;color:var(--muted)}
+  .cap{margin-top:16px;text-align:left}
+  .cap .track{height:12px;border-radius:999px;background:var(--card2);border:1px solid var(--line);overflow:hidden}
+  .cap .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--hero2),var(--hero3));transition:width .4s ease}
+  .cap .fill.full{background:var(--gold)}
+  .cap .ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:5px;font-weight:600}
+  .big.warn{color:var(--gold)}
+  .rules{margin-top:18px;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .rules h3{font-family:var(--font-head);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+  .rules li{font-size:12.5px;color:var(--ink2);margin:0 0 6px 16px}
+
   footer{padding:26px 16px 0;color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
   footer .wrap{max-width:560px}
   footer .credit{display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;
@@ -218,6 +245,11 @@
 </header>
 
 <main class="wrap">
+  <div class="modes" role="tablist" aria-label="Calculator mode">
+    <button type="button" role="tab" id="tabReturn" class="on" aria-selected="true">Return date</button>
+    <button type="button" role="tab" id="tabBalance" aria-selected="false">Leave balance</button>
+  </div>
+<div id="modeReturn">
   <h2 class="sec">Leave start date</h2>
   <div class="field"><input type="date" id="startDate" aria-label="Leave start date"></div>
   <div class="quick-row" aria-label="Quick start date options">
@@ -235,6 +267,52 @@
   <button class="calc-btn" id="calcBtn" type="button">Calculate return date</button>
   <div id="nudgeBox"></div>
   <div id="resultBox"></div>
+</div>
+
+<div id="modeBalance" hidden>
+  <h2 class="sec">Days earned per year</h2>
+  <div class="quick-row" id="entRow" aria-label="Yearly leave entitlement">
+    <button type="button" data-ent="15">15</button>
+    <button type="button" data-ent="17">17</button>
+    <button type="button" data-ent="21">21</button>
+    <button type="button" data-ent="28">28</button>
+    <button type="button" data-ent="35">35</button>
+  </div>
+  <div class="field"><input type="number" id="entDays" min="1" max="60" step="0.5" inputmode="decimal" placeholder="Or enter your own" aria-label="Days earned per year"></div>
+  <div class="checks">
+    <label class="check"><input type="checkbox" id="ebm"><div><b>Earned Beyond Maximum</b><span>May accumulate 2 extra years beyond the normal maximum (5 years total).</span></div></label>
+    <label class="check" id="post2002Wrap" hidden><input type="checkbox" id="post2002"><div><b>Non-uniform staff, joined after 2002</b><span>Free sick allowance is 10 days instead of 14.</span></div></label>
+  </div>
+
+  <h2 class="sec">Leave period</h2>
+  <label class="lbl" for="lastLeave">Last date leave was taken</label>
+  <div class="field"><input type="date" id="lastLeave"></div>
+  <label class="lbl" for="checkTo">Check leave up to this date</label>
+  <div class="field" style="margin-bottom:8px"><input type="date" id="checkTo"></div>
+  <div class="quick-row"><button type="button" id="checkToday">Use today</button></div>
+
+  <h2 class="sec">Adjustments (optional)</h2>
+  <label class="lbl" for="openBal">Balance from previous vacation leave</label>
+  <div class="field"><input type="number" id="openBal" min="0" step="0.5" inputmode="decimal" placeholder="0"></div>
+  <label class="lbl" for="sickDays">Excess sick days</label>
+  <div class="field"><input type="number" id="sickDays" min="0" step="0.5" inputmode="decimal" placeholder="0">
+    <div class="hint" id="sickHint">Free allowance is 14 days. Enter only the days beyond it.</div></div>
+  <label class="lbl" for="takenDays">Vacation taken in this period</label>
+  <div class="field"><input type="number" id="takenDays" min="0" step="0.5" inputmode="decimal" placeholder="0"></div>
+
+  <button class="calc-btn" id="balBtn" type="button">Calculate balance</button>
+  <div id="balBox"></div>
+
+  <div class="rules">
+    <h3>The rules used</h3>
+    <ul>
+      <li><b>Daily earning:</b> leave builds each day (yearly days ÷ 365) from the last date leave was taken. The leave year is not the calendar year.</li>
+      <li><b>Sick leave:</b> only excess sick days come out of vacation earned. Free allowance is 14 days, or 10 for non-uniform staff on 15 days a year who joined after 2002.</li>
+      <li><b>Limit:</b> up to 3 years of entitlement can be held. Extra days are lost.</li>
+      <li><b>Earned Beyond Maximum:</b> up to 2 more years beyond the limit (5 total).</li>
+    </ul>
+  </div>
+</div>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -321,6 +399,98 @@ function runCalc(start,n,originalPicked){
 }
 try{ var savedStart=localStorage.getItem('jfb-leave-start'), savedDays=localStorage.getItem('jfb-leave-days'); if(savedStart)startEl.value=savedStart; if(savedDays)numEl.value=savedDays; }catch(e){}
 try{ var qp=new URLSearchParams(location.search), qs=qp.get('start'); if(qs)startEl.value=qs; }catch(e){}
+
+/* ===== Mode switch + Leave balance ===== */
+var tabReturn=document.getElementById('tabReturn'), tabBalance=document.getElementById('tabBalance');
+var modeReturn=document.getElementById('modeReturn'), modeBalance=document.getElementById('modeBalance');
+var subEl=document.querySelector('.sub'), stepsBox=document.getElementById('steps');
+var SUB_RETURN=subEl.textContent, SUB_BAL='Daily accrual · sick leave deductions · accumulation cap';
+function setMode(m){
+  var bal=(m==='balance');
+  modeReturn.hidden=bal; modeBalance.hidden=!bal;
+  tabReturn.classList.toggle('on',!bal); tabBalance.classList.toggle('on',bal);
+  tabReturn.setAttribute('aria-selected',String(!bal)); tabBalance.setAttribute('aria-selected',String(bal));
+  subEl.textContent=bal?SUB_BAL:SUB_RETURN;
+  stepsBox.style.display=bal?'none':'';
+  try{localStorage.setItem('jfb-leave-mode',m);}catch(e){}
+}
+tabReturn.addEventListener('click',function(){setMode('return');});
+tabBalance.addEventListener('click',function(){setMode('balance');});
+
+var entEl=document.getElementById('entDays'), ebmEl=document.getElementById('ebm'), p02El=document.getElementById('post2002'), p02Wrap=document.getElementById('post2002Wrap');
+var lastEl=document.getElementById('lastLeave'), toEl=document.getElementById('checkTo');
+var openEl=document.getElementById('openBal'), sickEl=document.getElementById('sickDays'), takenEl=document.getElementById('takenDays');
+var balBox=document.getElementById('balBox'), sickHint=document.getElementById('sickHint'), lastBalText='', lastBalDays=0;
+var balFields=[['ent',entEl],['last',lastEl],['open',openEl],['sick',sickEl],['taken',takenEl]];
+
+function fmt1(x){ return (Math.round(x*10)/10).toFixed(1).replace(/\.0$/,''); }
+function parseDate(v){ if(!v)return null; var p=v.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
+function sickAllowance(){ var e=parseFloat(entEl.value); return (e===15 && p02El.checked)?10:14; }
+function syncEntUI(){
+  var e=parseFloat(entEl.value);
+  document.querySelectorAll('[data-ent]').forEach(function(b){ b.classList.toggle('on',parseFloat(b.dataset.ent)===e); });
+  p02Wrap.hidden=(e!==15); if(e!==15)p02El.checked=false;
+  sickHint.textContent='Free allowance is '+sickAllowance()+' days. Enter only the days beyond it.';
+}
+function saveBal(){ try{ var o={ebm:ebmEl.checked,p02:p02El.checked}; balFields.forEach(function(f){o[f[0]]=f[1].value;}); localStorage.setItem('jfb-leave-bal',JSON.stringify(o)); }catch(e){} }
+function clearBal(){ balBox.innerHTML=''; lastBalText=''; lastBalDays=0; }
+document.querySelectorAll('[data-ent]').forEach(function(b){ b.addEventListener('click',function(){ entEl.value=b.dataset.ent; syncEntUI(); saveBal(); clearBal(); }); });
+[entEl,openEl,sickEl,takenEl].forEach(function(el){ el.addEventListener('input',function(){ syncEntUI(); saveBal(); clearBal(); }); });
+[ebmEl,p02El,lastEl,toEl].forEach(function(el){ el.addEventListener('change',function(){ syncEntUI(); saveBal(); clearBal(); }); });
+document.getElementById('checkToday').addEventListener('click',function(){ toEl.value=isoDate(new Date()); saveBal(); clearBal(); });
+
+function balError(msg){ balBox.innerHTML='<div class="error">'+msg+'</div>'; }
+function calcBalance(){
+  clearBal();
+  var ent=parseFloat(entEl.value), last=parseDate(lastEl.value), to=parseDate(toEl.value);
+  if(!ent||ent<=0){ balError('Pick or enter the days earned per year.'); return; }
+  if(!last){ balError('Enter the last date leave was taken.'); return; }
+  if(!to){ to=new Date(); to.setHours(0,0,0,0); toEl.value=isoDate(to); }
+  if(to<last){ balError('The check date must be on or after the last date leave was taken.'); return; }
+  var days=Math.round((to-last)/86400000);
+  var open=Math.max(0,parseFloat(openEl.value)||0), sick=Math.max(0,parseFloat(sickEl.value)||0), taken=Math.max(0,parseFloat(takenEl.value)||0);
+  var earned=ent/365*days;
+  var gross=open+earned-sick-taken;
+  var years=ebmEl.checked?5:3, cap=ent*years;
+  var lost=gross>cap?gross-cap:0, bal=gross>cap?cap:gross;
+  var pct=Math.max(0,Math.min(100,bal/cap*100));
+  var whole=Math.max(0,Math.floor(bal+1e-9));
+  lastBalDays=whole;
+  lastBalText='Leave balance as at '+fmtLeave(to)+': '+fmt1(bal)+' days\nEarned since '+fmtLeave(last)+': '+fmt1(earned)+' days ('+ent+' days/yr)\nMaximum: '+fmt1(cap)+' days ('+years+' yrs)';
+  saveBal();
+  balBox.innerHTML='<div class="result">'
+    +'<div class="rt">Leave balance as at '+fmtLeave(to)+'</div>'
+    +'<div class="big '+(bal<0?'warn':'return')+'">'+fmt1(bal)+' days</div>'
+    +(bal<0?'<div class="adjusted-note">Balance is negative: more leave has been deducted than earned.</div>':'')
+    +(lost>0?'<div class="adjusted-note">'+fmt1(lost)+' day'+(lost===1?'':'s')+' lost to the '+years+'-year limit</div>':'')
+    +'<div class="cap"><div class="track"><div class="fill'+(lost>0?' full':'')+'" style="width:'+pct+'%"></div></div>'
+    +'<div class="ends"><span>0</span><span>max '+fmt1(cap)+' ('+years+' yrs × '+ent+')</span></div></div>'
+    +'<div class="summary-grid"><div><b>'+fmt1(earned)+'</b><span>Earned</span></div><div><b>'+fmt1(sick+taken)+'</b><span>Deducted</span></div><div><b>'+fmt1(lost)+'</b><span>Lost to cap</span></div></div>'
+    +'<div class="divider"></div><div class="meta">'+days+' day'+(days===1?'':'s')+' elapsed since last leave · '+ent+' days a year ÷ 365 per day'+(open?' · includes '+fmt1(open)+' brought forward':'')+'</div>'
+    +'<div class="result-actions"><button type="button" id="balCopy">Copy result</button>'
+    +(whole>=1?'<button type="button" id="balPlan">Plan '+whole+' day'+(whole===1?'':'s')+' of leave</button>':'')
+    +'<button type="button" class="secondary" id="balReset">Reset</button></div></div>';
+  document.getElementById('balCopy').onclick=function(){
+    if(navigator.share){navigator.share({title:'JFB leave balance',text:lastBalText}).catch(function(){});return;}
+    if(navigator.clipboard)navigator.clipboard.writeText(lastBalText).then(function(){showToast('Leave balance copied');});
+  };
+  var planBtn=document.getElementById('balPlan');
+  if(planBtn)planBtn.onclick=function(){
+    numEl.value=String(Math.min(365,lastBalDays));
+    try{localStorage.setItem('jfb-leave-days',numEl.value);}catch(e){}
+    clearResult(); setMode('return'); window.scrollTo({top:0,behavior:'smooth'});
+    showToast('Pick a start date to plan it');
+  };
+  document.getElementById('balReset').onclick=function(){
+    balFields.forEach(function(f){f[1].value='';}); ebmEl.checked=false; p02El.checked=false;
+    try{localStorage.removeItem('jfb-leave-bal');}catch(e){}
+    syncEntUI(); clearBal();
+  };
+}
+document.getElementById('balBtn').addEventListener('click',calcBalance);
+try{ var sb=JSON.parse(localStorage.getItem('jfb-leave-bal')||'null'); if(sb){ balFields.forEach(function(f){ if(sb[f[0]]!=null)f[1].value=sb[f[0]]; }); ebmEl.checked=!!sb.ebm; p02El.checked=!!sb.p02; } }catch(e){}
+syncEntUI();
+try{ var qm=new URLSearchParams(location.search).get('mode')||localStorage.getItem('jfb-leave-mode'); if(qm==='balance')setMode('balance'); }catch(e){}
 
 /* Collapsible steps */
 var stepsEl=document.getElementById('steps');

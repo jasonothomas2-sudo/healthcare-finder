@@ -105,3 +105,12 @@ header.hero .steps-dismiss{color:#fff;text-shadow:0 1px 2px rgba(50,0,0,.5)}
 /* Touch-friendly sizes: buttons are at least 44px tall */
 .act,.catchip,.near,.seg button,.quick-row button,.range-pick button,.modes button,.acts button,.acts a,.steps-dismiss{min-height:44px}
 .act,.acts button,.acts a,.seg button,.quick-row button,.range-pick button{display:inline-flex;align-items:center;justify-content:center}
+
+/* Phones: dots under the steps row (added by theme.js) */
+.steps-dots{display:none}
+@media (max-width:600px){
+  .steps-dots{display:flex;gap:5px;justify-content:center;margin-top:8px}
+  .steps-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);transition:width .2s,background .2s}
+  .steps-dots i.on{width:16px;background:#fff}
+  .steps.hidden + .steps-dots{display:none}
+}

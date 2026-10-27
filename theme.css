@@ -12,7 +12,10 @@
   --primary:#dc2626; --primary-dark:#b91c1c; --primary-text:#b91c1c; --primary-soft:#fdecea;
   --primary-rgb:220,38,38;
   --ring:#dc2626;
-  --hero1:#7f1d1d; --hero2:#b91c1c; --hero3:#ef4444;
+  --hero1:#7f1d1d; --hero2:#b91c1c; --hero3:#dc2626;
+
+  /* Selected state: neutral, so red stays for the brand and primary actions */
+  --sel-bg:var(--ink); --sel-fg:var(--card);
 
   /* Semantic colours (shared by every page) */
   --green:#059669; --green-dark:#047857;
@@ -63,4 +66,51 @@
 .nav a:not(.active):hover{background:var(--card2);color:var(--ink)}
 @media (max-width:480px){
   .nav a{font-size:11.5px;padding:9px 2px;white-space:nowrap}
+}
+
+/* Header photo: firefighter blended into the red banner.
+   The image itself is colour-graded red and feathered at the sides, so it
+   melts into the gradient. It stays inside the content width. */
+header.hero::after{
+  content:"";position:absolute;top:0;bottom:0;left:auto;height:auto;border-radius:0;
+  right:max(0px,calc((100% - var(--nav-max)) / 2));
+  width:min(100%,520px);
+  background:url("hero-firefighter.webp") right bottom / auto 112% no-repeat;
+  opacity:.95;pointer-events:none;
+}
+@media (max-width:600px){ header.hero::after{opacity:.75;background-size:auto 64%} }
+@media (prefers-color-scheme: dark){ header.hero::after{filter:brightness(.85)} }
+
+/* Header text legibility on the red banner */
+header.hero .app-kicker,header.hero .kicker{color:rgba(255,255,255,.94);text-shadow:0 1px 2px rgba(50,0,0,.45)}
+header.hero .sub{color:rgba(255,255,255,.96);text-shadow:0 1px 2px rgba(50,0,0,.45)}
+header.hero h1{text-shadow:0 1px 3px rgba(50,0,0,.35)}
+header.hero .step{background:rgba(50,5,5,.34);border-color:rgba(255,255,255,.3)}
+header.hero .step .tx{color:#fff;text-shadow:0 1px 1px rgba(50,0,0,.4)}
+header.hero .steps-dismiss{color:#fff;text-shadow:0 1px 2px rgba(50,0,0,.5)}
+
+/* Phones: compact header, so the content starts higher.
+   The 3 steps become one swipeable row; the dismiss link comes first. */
+@media (max-width:600px){
+  header.hero{padding-top:18px;padding-bottom:20px}
+  header.hero .steps{flex-wrap:nowrap;overflow-x:auto;gap:6px;margin-top:12px;margin-right:-16px;padding-right:16px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(to right,#000 90%,transparent);mask-image:linear-gradient(to right,#000 90%,transparent)}
+  header.hero .steps::-webkit-scrollbar{display:none}
+  header.hero .step{flex:0 0 auto;padding:5px 12px 5px 6px;white-space:nowrap}
+  header.hero .step .tx{font-size:12px}
+  header.hero .steps-dismiss{order:-1;flex:0 0 auto;white-space:nowrap;font-size:11.5px;padding:6px 8px}
+}
+
+/* Touch-friendly sizes: buttons are at least 44px tall */
+.act,.catchip,.near,.seg button,.quick-row button,.range-pick button,.modes button,.acts button,.acts a,.steps-dismiss{min-height:44px}
+.act,.acts button,.acts a,.seg button,.quick-row button,.range-pick button{display:inline-flex;align-items:center;justify-content:center}
+
+/* Phones: dots under the steps row (added by theme.js) */
+.steps-dots{display:none}
+@media (max-width:600px){
+  .steps-dots{display:flex;gap:5px;justify-content:center;margin-top:8px}
+  .steps-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);transition:width .2s,background .2s}
+  .steps-dots i.on{width:16px;background:#fff}
+  .steps.hidden + .steps-dots{display:none}
 }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b4f63">
+<meta name="theme-color" content="#b91c1c">
 <title>JFB Leave Calculator</title>
 <link rel="manifest" href="../manifest.json">
 <link rel="apple-touch-icon" href="../icon-192.png">
@@ -11,21 +11,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../theme.css">
 <style>
   /* Redesign v2 — matches Provider Finder design system */
-  :root{ color-scheme:light dark;
-    --bg:#f2f6f8; --card:#ffffff; --card2:#eef5f8;
-    --ink:#123c4d; --ink2:#33586b; --muted:#5a7386; --line:#d6e6ec;
-    --primary:#0891b2; --primary-dark:#0e7490; --primary-text:#0e7490; --primary-soft:#e0f5fa;
-    --green:#059669; --green-dark:#047857;
-    --red:#c0392b; --red-lit:#e0503f; --red-soft:#fdecea;
-    --gold:#b45309; --gold-soft:#fdf3e4;
-    --ring:#0891b2;
-    --hero1:#0b3d4f; --hero2:#0e7490; --hero3:#0891b2;
-    --font-head:'Figtree',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    --font-body:'Noto Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    --shadow:0 1px 3px rgba(16,78,99,.10),0 1px 2px rgba(16,78,99,.05);
-    --shadow-lg:0 10px 30px -10px rgba(11,61,79,.25),0 4px 10px -4px rgba(11,61,79,.12);
+  :root{ color-scheme:light dark; --nav-max:760px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
@@ -35,17 +24,6 @@
   @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
   .wrap{max-width:760px;margin:0 auto}
 
-  .nav{position:sticky;top:0;z-index:40;background:var(--card);
-    border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(20,40,60,.05)}
-  .nav-inner{max-width:760px;margin:0 auto;display:flex;gap:4px;padding:8px 16px}
-  .nav a{flex:1;text-align:center;text-decoration:none;font-size:13.5px;font-weight:700;
-    font-family:var(--font-head);color:var(--muted);padding:10px 8px;border-radius:9px;
-    border:1.5px solid transparent;transition:background .15s,color .15s}
-  .nav a.active{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(8,145,178,.25)}
-  .nav a:not(.active):hover{background:var(--card2);color:var(--ink)}
-  @media (max-width:480px){
-    .nav a{font-size:11.5px;padding:9px 2px;white-space:nowrap}
-  }
 
   .hero{position:relative;overflow:hidden;color:#fff;
     background:linear-gradient(135deg,var(--hero1) 0%,var(--hero2) 55%,var(--hero3) 100%);
@@ -92,7 +70,7 @@
   .field{margin-bottom:16px}
   .field input{width:100%;font-size:16px;padding:13px 14px;background:var(--card);
     border:1.5px solid var(--line);border-radius:12px;color:var(--ink);box-shadow:var(--shadow)}
-  .field input:focus{outline:none;border-color:var(--primary-text);box-shadow:0 0 0 3px rgba(8,145,178,.15)}
+  .field input:focus{outline:none;border-color:var(--primary-text);box-shadow:0 0 0 3px rgba(var(--primary-rgb),.15)}
   .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 14px}
   .quick-row button{flex:1 1 auto;min-width:86px;font-family:var(--font-head);font-size:12.5px;
     font-weight:800;color:var(--ink2);background:var(--card);border:1.5px solid var(--line);
@@ -100,9 +78,9 @@
   .quick-row button:hover{transform:translateY(-1px);border-color:var(--primary-text);color:var(--primary-text)}
   .calc-btn{width:100%;padding:16px;font-family:var(--font-head);font-size:16px;font-weight:800;
     letter-spacing:.2px;background:linear-gradient(160deg,var(--hero2),var(--hero3));color:#fff;
-    border:none;border-radius:13px;cursor:pointer;box-shadow:0 4px 12px rgba(8,145,178,.35);
+    border:none;border-radius:13px;cursor:pointer;box-shadow:0 4px 12px rgba(var(--primary-rgb),.35);
     transition:transform .12s ease,box-shadow .12s ease}
-  .calc-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(8,145,178,.4)}
+  .calc-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(var(--primary-rgb),.4)}
   .calc-btn:active{transform:scale(.98)}
 
   .nudge{background:var(--gold-soft);border:1px solid var(--gold);border-radius:14px;padding:16px;margin-top:16px}
@@ -134,11 +112,11 @@
   .summary-grid span{font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.35px}
   .result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
   .result-actions button{flex:1 1 130px;font-family:var(--font-head);font-size:13px;font-weight:800;
-    color:var(--primary-text);background:var(--primary-soft);border:1.5px solid rgba(8,145,178,.3);
+    color:var(--primary-text);background:var(--primary-soft);border:1.5px solid rgba(var(--primary-rgb),.3);
     border-radius:11px;padding:11px 10px;cursor:pointer}
   .result-actions button.secondary{color:var(--ink2);background:var(--card2);border-color:var(--line)}
   .result-actions a{flex:1 1 170px;text-decoration:none;text-align:center;font-family:var(--font-head);font-size:13px;font-weight:800;
-    color:var(--primary-text);background:var(--primary-soft);border:1.5px solid rgba(8,145,178,.3);
+    color:var(--primary-text);background:var(--primary-soft);border:1.5px solid rgba(var(--primary-rgb),.3);
     border-radius:11px;padding:11px 10px}
   .adjusted-note{font-size:12px;color:var(--gold);margin-top:8px;font-weight:600}
   .skipped{margin-top:14px;text-align:left}
@@ -162,7 +140,7 @@
   .modes button{flex:1;font-family:var(--font-head);font-size:14px;font-weight:800;color:var(--muted);
     background:transparent;border:1.5px solid transparent;border-radius:10px;padding:11px 8px;cursor:pointer;
     transition:background .15s,color .15s}
-  .modes button.on{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(8,145,178,.25)}
+  .modes button.on{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(var(--primary-rgb),.25)}
   [hidden]{display:none !important}
   .lbl{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin:0 0 6px}
   .hint{font-size:12px;color:var(--muted);margin:6px 2px 0}
@@ -187,7 +165,7 @@
   footer .wrap{max-width:560px}
   footer .credit{display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;
     color:var(--ink2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-  footer .credit .cm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#155e75,#0e7490);
+  footer .credit .cm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--hero1),var(--hero2));
     color:#fff;font-family:var(--font-head);font-weight:800;font-size:11px;letter-spacing:.3px;
     display:inline-flex;align-items:center;justify-content:center}
   footer .credit b{font-family:var(--font-head);color:var(--ink);font-weight:800}
@@ -199,19 +177,6 @@
   footer .mops .mops-wm{font-family:var(--font-head);font-size:14px;font-weight:800;
     letter-spacing:.8px;color:var(--ink)}
 
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0f1720; --card:#17212b; --card2:#1c2733;
-      --ink:#e6eef2; --ink2:#b9c8d1; --muted:#8697a3; --line:#2a3742;
-      --primary:#22a8c9; --primary-dark:#1c8aa8; --primary-text:#5fd0ea; --primary-soft:rgba(34,168,201,.18);
-      --green:#10b981; --green-dark:#059669; --ring:#22a8c9;
-      --red:#ff6b5b; --red-lit:#ff8577; --red-soft:rgba(255,107,91,.16);
-      --gold:#fbbf24; --gold-soft:rgba(251,191,36,.12);
-      --hero1:#0a2e3d; --hero2:#0c5f78; --hero3:#0e7490;
-      --shadow-lg:0 10px 30px -10px rgba(0,0,0,.5),0 4px 10px -4px rgba(0,0,0,.4);
-    }
-    .nav{box-shadow:0 2px 10px rgba(0,0,0,.35)}
-  }
 </style>
 </head>
 <body>

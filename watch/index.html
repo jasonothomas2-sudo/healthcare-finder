@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b4f63">
+<meta name="theme-color" content="#b91c1c">
 <title>JFB Work Shift Forecast</title>
 <link rel="manifest" href="../manifest.json">
 <link rel="apple-touch-icon" href="../icon-192.png">
@@ -11,19 +11,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../theme.css">
 <style>
   /* Redesign v2 — matches Provider Finder design system */
-  :root{ color-scheme:light dark;
-    --bg:#f2f6f8; --card:#ffffff; --card2:#eef5f8;
-    --ink:#123c4d; --ink2:#33586b; --muted:#5a7386; --line:#d6e6ec;
-    --primary:#0891b2; --primary-dark:#0e7490; --primary-text:#0e7490; --primary-soft:#e0f5fa;
-    --ring:#0891b2;
-    --hero1:#0b3d4f; --hero2:#0e7490; --hero3:#0891b2;
+  :root{ color-scheme:light dark; --nav-max:760px;
     --day:#2563eb; --eve:#b45309; --night:#6d28d9; --off:#64748b;
-    --font-head:'Figtree',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    --font-body:'Noto Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    --shadow:0 1px 3px rgba(16,78,99,.10),0 1px 2px rgba(16,78,99,.05);
-    --shadow-lg:0 10px 30px -10px rgba(11,61,79,.25),0 4px 10px -4px rgba(11,61,79,.12);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
@@ -33,17 +25,6 @@
   @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
   .wrap{max-width:760px;margin:0 auto}
 
-  .nav{position:sticky;top:0;z-index:40;background:var(--card);
-    border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(20,40,60,.05)}
-  .nav-inner{max-width:760px;margin:0 auto;display:flex;gap:4px;padding:8px 16px}
-  .nav a{flex:1;text-align:center;text-decoration:none;font-size:13.5px;font-weight:700;
-    font-family:var(--font-head);color:var(--muted);padding:10px 8px;border-radius:9px;
-    border:1.5px solid transparent;transition:background .15s,color .15s}
-  .nav a.active{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(8,145,178,.25)}
-  .nav a:not(.active):hover{background:var(--card2);color:var(--ink)}
-  @media (max-width:480px){
-    .nav a{font-size:11.5px;padding:9px 2px;white-space:nowrap}
-  }
 
   .hero{position:relative;overflow:hidden;color:#fff;
     background:linear-gradient(135deg,var(--hero1) 0%,var(--hero2) 55%,var(--hero3) 100%);
@@ -94,7 +75,7 @@
   .wbtn:hover{transform:translateY(-1px)}
   .wbtn:active{transform:scale(.97)}
   .wbtn.active{border-color:var(--primary-text);background:var(--primary-soft);color:var(--primary-text);
-    box-shadow:0 0 0 3px rgba(8,145,178,.15)}
+    box-shadow:0 0 0 3px rgba(var(--primary-rgb),.15)}
 
   .today-card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);
     border-radius:18px;padding:24px 16px;text-align:center;box-shadow:var(--shadow-lg)}
@@ -132,7 +113,7 @@
   .now-you{font-size:10px;font-weight:800;color:#fff;background:var(--primary-text);border-radius:20px;padding:2px 8px;margin-left:2px}
 
   .ics-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-head);font-size:14px;
-    font-weight:800;color:var(--primary-text);background:var(--primary-soft);border:1.5px solid rgba(8,145,178,.3);
+    font-weight:800;color:var(--primary-text);background:var(--primary-soft);border:1.5px solid rgba(var(--primary-rgb),.3);
     border-radius:12px;padding:12px 16px;cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,border-color .15s}
   .ics-btn:hover{transform:translateY(-1px);border-color:var(--primary-text)}
   .ics-btn:active{transform:scale(.98)}
@@ -142,7 +123,7 @@
     font-size:13.5px;font-weight:800;color:var(--ink2);background:var(--card);border:1.5px solid var(--line);
     border-radius:12px;padding:11px 13px;cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,border-color .15s,color .15s}
   .action-btn:hover{transform:translateY(-1px);border-color:var(--primary-text);color:var(--primary-text)}
-  .action-btn.primary{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(8,145,178,.3)}
+  .action-btn.primary{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(var(--primary-rgb),.3)}
   .action-btn svg{width:16px;height:16px;fill:currentColor}
   a.action-btn{text-decoration:none}
   .range-pick{display:flex;gap:6px;align-items:center;background:var(--card);border:1px solid var(--line);
@@ -155,7 +136,7 @@
   .fc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;
     box-shadow:var(--shadow);border-left:4px solid var(--fcc,var(--line));
     transition:transform .15s ease,box-shadow .15s ease}
-  .fc:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(11,61,79,.28)}
+  .fc:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(var(--shadow-rgb),.28)}
   .fc.Day{--fcc:var(--day)} .fc.Evening{--fcc:var(--eve)} .fc.Night{--fcc:var(--night)} .fc.Off{--fcc:var(--off)}
   .fc .fc-slot{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:5px}
   .fc .fc-dot{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
@@ -170,7 +151,7 @@
     border-radius:13px;padding:10px 4px;text-align:center;cursor:pointer;box-shadow:var(--shadow);
     transition:transform .12s ease,border-color .15s}
   .daychip:hover{transform:translateY(-2px)}
-  .daychip.selected{border-color:var(--primary-text);box-shadow:0 0 0 3px rgba(8,145,178,.15)}
+  .daychip.selected{border-color:var(--primary-text);box-shadow:0 0 0 3px rgba(var(--primary-rgb),.15)}
   .daychip .dname{font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700}
   .daychip .dnum{font-family:var(--font-head);font-size:17px;font-weight:800;margin:3px 0;color:var(--ink)}
   .daychip .dslot{font-size:10px;font-weight:800;color:#fff;border-radius:20px;padding:3px 8px;display:inline-block;margin-top:3px}
@@ -209,7 +190,7 @@
   footer .wrap{max-width:560px}
   footer .credit{display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;
     color:var(--ink2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-  footer .credit .cm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#155e75,#0e7490);
+  footer .credit .cm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--hero1),var(--hero2));
     color:#fff;font-family:var(--font-head);font-weight:800;font-size:11px;letter-spacing:.3px;
     display:inline-flex;align-items:center;justify-content:center}
   footer .credit b{font-family:var(--font-head);color:var(--ink);font-weight:800}
@@ -223,15 +204,8 @@
 
   @media (prefers-color-scheme: dark){
     :root{
-      --bg:#0f1720; --card:#17212b; --card2:#1c2733;
-      --ink:#e6eef2; --ink2:#b9c8d1; --muted:#8697a3; --line:#2a3742;
-      --primary:#22a8c9; --primary-dark:#1c8aa8; --primary-text:#5fd0ea; --primary-soft:rgba(34,168,201,.18);
-      --ring:#22a8c9;
-      --hero1:#0a2e3d; --hero2:#0c5f78; --hero3:#0e7490;
       --day:#60a5fa; --eve:#d97706; --night:#a78bfa; --off:#94a3b8;
-      --shadow-lg:0 10px 30px -10px rgba(0,0,0,.5),0 4px 10px -4px rgba(0,0,0,.4);
     }
-    .nav{box-shadow:0 2px 10px rgba(0,0,0,.35)}
   }
 </style>
 </head>

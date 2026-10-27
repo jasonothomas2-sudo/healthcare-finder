@@ -101,3 +101,7 @@ header.hero .steps-dismiss{color:#fff;text-shadow:0 1px 2px rgba(50,0,0,.5)}
   header.hero .step .tx{font-size:12px}
   header.hero .steps-dismiss{order:-1;flex:0 0 auto;white-space:nowrap;font-size:11.5px;padding:6px 8px}
 }
+
+/* Touch-friendly sizes: buttons are at least 44px tall */
+.act,.catchip,.near,.seg button,.quick-row button,.range-pick button,.modes button,.acts button,.acts a,.steps-dismiss{min-height:44px}
+.act,.acts button,.acts a,.seg button,.quick-row button,.range-pick button{display:inline-flex;align-items:center;justify-content:center}

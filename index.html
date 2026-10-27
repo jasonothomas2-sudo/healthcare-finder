@@ -115,12 +115,13 @@
   .suite-tile:hover{transform:translateY(-1px);border-color:var(--primary-text)}
   .suite-tile.active{background:var(--card2);border-color:var(--ink2)}
   .suite-tile b{display:block;font-family:var(--font-head);font-size:13px;color:var(--ink);margin-bottom:2px}
-  .suite-tile span{display:block;font-size:11.5px;color:var(--muted);line-height:1.35}
+  .suite-tile span{display:block;font-size:12.5px;color:var(--muted);line-height:1.35}
   .sourcebar{max-width:1112px;margin:12px auto 0;padding:0 16px}
   .sourcebar-inner{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;
     background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;
     color:var(--ink2);font-size:12.5px}
   .sourcebar b{font-family:var(--font-head);color:var(--ink)}
+  .sourcebar .wa-note{font-size:12.5px;color:var(--muted);margin:6px 2px 0}
   .sourcebar .stamp{font-weight:800;color:var(--primary-text)}
   @media (max-width:640px){.suite-strip{grid-template-columns:1fr}.suite-tile span{display:none}}
 
@@ -185,7 +186,7 @@
   .call:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(5,150,105,.38)}
   .call:active{transform:scale(.96)}
   .call svg{width:20px;height:20px;fill:#fff;margin-bottom:4px}
-  .call .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;opacity:.9;margin-bottom:1px}
+  .call .lbl{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;opacity:.9;margin-bottom:1px}
   .call .num{font-size:13px;letter-spacing:.2px}
   .call.dead{background:var(--card2);color:var(--muted);pointer-events:none;
     border:1px dashed var(--line);box-shadow:none}
@@ -195,7 +196,7 @@
   .card{align-items:stretch}
   .card .body{display:flex;flex-direction:column}
   .actions{display:flex;gap:7px;margin-top:auto;padding-top:10px;flex-wrap:wrap}
-  .act{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-body);font-size:12px;
+  .act{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-body);font-size:13px;
     font-weight:700;color:var(--ink2);text-decoration:none;cursor:pointer;
     background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;
     transition:transform .12s ease,border-color .15s,background .15s,color .15s}
@@ -240,7 +241,7 @@
   .totop svg{width:20px;height:20px;fill:#fff}
 
   /* ---------- FOOTER ---------- */
-  footer{padding:30px 16px 0;color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
+  footer{padding:30px 16px 0;color:var(--muted);font-size:12.5px;text-align:center;line-height:1.7}
   footer .wrap{max-width:600px}
   footer .credit{display:flex;align-items:center;justify-content:center;gap:9px;
     font-size:13px;color:var(--ink2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
@@ -319,6 +320,7 @@
     <span><b>Provider source:</b> JFB / Guardian Life listing</span>
     <span class="stamp">Last updated Jul 18, 2026</span>
   </div>
+  <div class="wa-note">WhatsApp shows only on numbers that look like mobiles. Not every mobile is on WhatsApp.</div>
 </div>
 
 <div class="controls">
@@ -499,6 +501,20 @@ catbarEl.addEventListener('click',e=>{
 
 /* External-action URLs */
 function waUrl(d){ return 'https://wa.me/'+(d.dial||'').replace(/[^0-9]/g,''); }
+/* WhatsApp only works on mobile numbers, and not every mobile is on WhatsApp.
+   Rule: Jamaican numbers whose exchange (the 3 digits after 876) starts with 6, 7 or 9
+   are treated as landlines (no WhatsApp button). Everything else is treated as a likely mobile.
+   To correct a single number, add it below: true = always show, false = always hide.
+   Example:  '+18764521053': false,                                                        */
+const WA_OVERRIDE = {
+};
+function waEligible(d){
+  if(!d.dial||isFakeDial(d)) return false;
+  if(Object.prototype.hasOwnProperty.call(WA_OVERRIDE,d.dial)) return !!WA_OVERRIDE[d.dial];
+  const digits=d.dial.replace(/\D/g,'');
+  if(digits.length!==11||digits.slice(1,4)!=='876') return false;
+  return '679'.indexOf(digits[4])===-1;
+}
 function mapUrl(d){ return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent([d.n,addr(d),d.p,'Jamaica'].filter(Boolean).join(', ')); }
 
 function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
@@ -612,7 +628,7 @@ function render(reset){
     const delay=reset?` style="--cat:${cc};animation-delay:${Math.min(i*25,400)}ms"`:` style="--cat:${cc}"`;
     const isFav=FAVS.has(favId(d));
     const acts=[
-      callable?`<a class="act wa" href="${waUrl(d)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(d.n)}">${WA_ICON}WhatsApp</a>`:'',
+      waEligible(d)?`<a class="act wa" href="${waUrl(d)}" target="_blank" rel="noopener" title="Opens WhatsApp. Works only if this number is on WhatsApp." aria-label="WhatsApp ${esc(d.n)} (only works if this number is on WhatsApp)">${WA_ICON}WhatsApp</a>`:'',
       `<a class="act" href="${mapUrl(d)}" target="_blank" rel="noopener" aria-label="Open ${esc(d.n)} in Maps">${MAP_ICON}Map</a>`,
       `<button class="act share" type="button" data-id="${d._id}" aria-label="Share ${esc(d.n)}">${SHARE_ICON}Share</button>`,
       `<button class="act fav${isFav?' on':''}" type="button" data-id="${d._id}" aria-pressed="${isFav}" aria-label="${isFav?'Remove from':'Add to'} favorites">${STAR_ICON}${isFav?'Saved':'Save'}</button>`

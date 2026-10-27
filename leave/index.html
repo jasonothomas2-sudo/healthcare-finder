@@ -8,276 +8,220 @@
 <link rel="manifest" href="../manifest.json">
 <link rel="apple-touch-icon" href="../icon-192.png">
 <link rel="icon" type="image/png" href="../icon-192.png">
+<link rel="stylesheet" href="../theme.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../theme.css">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Redesign v2 — matches Provider Finder design system */
-  :root{ color-scheme:light dark; --nav-max:760px;
+  /* Clean preview: one column, result first, live updates */
+  /* Page aliases onto the shared theme (theme.css) */
+  :root{ --nav-max:596px;
+    --surface:var(--card2); --accent:var(--primary-dark); --accent-2:var(--primary); --accent-soft:var(--primary-soft);
+    --grad:linear-gradient(135deg,var(--hero1) 0%,var(--hero2) 55%,var(--hero3) 100%);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
   body{background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5;padding-bottom:48px}
-  a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{
-    outline:3px solid var(--ring);outline-offset:2px;border-radius:8px}
+  [hidden]{display:none !important}
+  a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--accent-2);outline-offset:2px;border-radius:8px}
   @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
-  .wrap{max-width:760px;margin:0 auto}
+  .wrap{max-width:560px;margin:0 auto;padding:0 18px}
 
+  .hero{background:var(--grad);color:#fff;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.6;
+    background:radial-gradient(circle at 85% 20%,rgba(255,200,120,.35),transparent 45%),radial-gradient(circle at 10% 110%,rgba(0,0,0,.25),transparent 50%)}
+  .hero .wrap{position:relative;z-index:1;padding-top:26px;padding-bottom:26px;min-height:132px}
+  .kicker{font-family:var(--font-head);font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+  h1{font-family:var(--font-head);font-weight:800;letter-spacing:-.4px;font-size:clamp(28px,6vw,36px);line-height:1.15;margin:4px 0 6px}
+  .sub{font-size:14.5px}
+  main.wrap{padding-top:0}
 
-  .hero{position:relative;overflow:hidden;color:#fff;
-    background:linear-gradient(135deg,var(--hero1) 0%,var(--hero2) 55%,var(--hero3) 100%);
-    padding:26px 16px 30px}
-  .hero::before{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M26 14h4v8h8v4h-8v8h-4v-8h-8v-4h8z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E")}
-  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;
-    border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}
-  .hero .inner{position:relative;z-index:1}
-  .brand{display:flex;align-items:center;gap:14px}
-  .brand-id{display:flex;align-items:center;gap:14px;min-width:0}
-  .brandmark{flex:0 0 auto;width:52px;height:52px;border-radius:14px;
-    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
-    backdrop-filter:blur(4px);color:#fff;font-family:var(--font-head);font-weight:900;
-    font-size:19px;letter-spacing:.5px;display:flex;align-items:center;justify-content:center}
-  .titlerow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  h1{font-family:var(--font-head);font-weight:900;letter-spacing:-.3px;
-    font-size:clamp(23px,4.5vw,32px);line-height:1.15}
-  .badge{font-size:11px;font-weight:800;color:#fff;border:1.5px solid rgba(255,255,255,.55);
-    border-radius:6px;padding:2px 7px;letter-spacing:.8px}
-  .sub{margin-top:3px;font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,.85)}
-  .sub b{color:#fff;font-weight:700}
-  .app-kicker{font-family:var(--font-head);font-size:11px;font-weight:800;letter-spacing:1.2px;
-    text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:4px}
+  .modes{display:flex;gap:4px;margin:20px 0 18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px}
+  .modes button{flex:1;font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--muted);background:transparent;
+    border:none;border-radius:9px;padding:10px 8px;cursor:pointer}
+  .modes button.on{background:var(--sel-bg);color:var(--sel-fg)}
 
-  .steps{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
-  .steps.hidden{display:none}
-  .step{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 14px 7px 8px;
-    backdrop-filter:blur(4px)}
-  .step .n{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:#fff;
-    color:var(--hero2);font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
-  .step .tx{font-size:12.5px;color:rgba(255,255,255,.92)}
-  .step .tx b{color:#fff}
-  .steps-dismiss{background:none;border:none;color:rgba(255,255,255,.75);font-size:12px;
-    font-weight:700;cursor:pointer;padding:7px 10px;border-radius:999px}
-  .steps-dismiss:hover{background:rgba(255,255,255,.12);color:#fff}
+  /* Result card (always on top) */
+  .res{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;margin-bottom:26px}
+  .res-k{font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+  .res-big{font-family:var(--font-head);font-weight:800;font-size:clamp(24px,6vw,30px);line-height:1.2;margin:6px 0 4px;letter-spacing:-.3px}
+  .res-big.ok{color:var(--green)}
+  .res-big.idle{color:var(--line)}
+  .res-big.warn{color:var(--gold)}
+  .res-line{font-size:14px;color:var(--ink2)}
+  .res-line b{color:var(--ink);font-weight:600}
+  .res-note{font-size:12.5px;color:var(--gold);font-weight:600;margin-top:8px}
+  .res-hint{font-size:14px;color:var(--muted);margin-top:2px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .chips span{font-size:12.5px;color:var(--ink2);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+  .chips b{color:var(--ink);font-family:var(--font-head)}
+  .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .acts button,.acts a{font-family:var(--font-head);font-size:13px;font-weight:700;text-decoration:none;text-align:center;
+    color:var(--ink2);background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}
+  .acts .plain{color:var(--ink2);background:transparent;border-color:var(--line)}
+  details.hol{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+  details.hol summary{font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer}
+  details.hol ul{list-style:none;margin-top:6px}
+  details.hol li{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:6px 0;border-top:1px solid var(--line);color:var(--ink2)}
+  details.hol li:first-child{border-top:none}
+  details.hol .hn{color:var(--gold);font-weight:600;text-align:right}
 
-  main{padding:14px 16px 0}
-  h2.sec{font-family:var(--font-head);font-size:12px;color:var(--muted);letter-spacing:.5px;
-    text-transform:uppercase;font-weight:700;margin:20px 0 9px}
-  .scope-line{font-size:12.5px;color:var(--ink2);background:var(--card2);border:1px solid var(--line);
-    border-radius:12px;padding:10px 12px;margin-bottom:4px}
-  .field{margin-bottom:16px}
-  .field input{width:100%;font-size:16px;padding:13px 14px;background:var(--card);
-    border:1.5px solid var(--line);border-radius:12px;color:var(--ink);box-shadow:var(--shadow)}
-  .field input:focus{outline:none;border-color:var(--primary-text);box-shadow:0 0 0 3px rgba(var(--primary-rgb),.15)}
-  .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 14px}
-  .quick-row button{flex:1 1 auto;min-width:86px;font-family:var(--font-head);font-size:12.5px;
-    font-weight:800;color:var(--ink2);background:var(--card);border:1.5px solid var(--line);
-    border-radius:11px;padding:10px 9px;cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,border-color .15s,color .15s}
-  .quick-row button:hover{transform:translateY(-1px);border-color:var(--primary-text);color:var(--primary-text)}
-  .calc-btn{width:100%;padding:16px;font-family:var(--font-head);font-size:16px;font-weight:800;
-    letter-spacing:.2px;background:linear-gradient(160deg,var(--hero2),var(--hero3));color:#fff;
-    border:none;border-radius:13px;cursor:pointer;box-shadow:0 4px 12px rgba(var(--primary-rgb),.35);
-    transition:transform .12s ease,box-shadow .12s ease}
-  .calc-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(var(--primary-rgb),.4)}
-  .calc-btn:active{transform:scale(.98)}
+  .bar{margin-top:16px}
+  .bar .track{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+  .bar .fill{height:100%;border-radius:999px;background:var(--grad);transition:width .35s ease}
+  .bar .fill.full{background:var(--gold)}
+  .bar .ends{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:6px}
 
-  .nudge{background:var(--gold-soft);border:1px solid var(--gold);border-radius:14px;padding:16px;margin-top:16px}
-  .nudge .why{font-size:14px;margin-bottom:12px;color:var(--ink2)}
-  .nudge .why b{color:var(--gold)}
-  .nudge-opts{display:flex;gap:10px}
-  .nudge-opts button{flex:1;padding:12px 8px;font-family:var(--font-head);font-size:13.5px;font-weight:700;
-    background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:11px;cursor:pointer;
-    transition:transform .12s ease,border-color .15s}
-  .nudge-opts button:hover{transform:translateY(-1px);border-color:var(--primary-text)}
-  .nudge-opts button:active{transform:scale(.97)}
-  .nudge-opts .dir{font-size:11px;color:var(--muted);display:block;font-weight:500;margin-top:3px}
+  /* Form */
+  .group{margin-bottom:22px}
+  label.lbl,.lbl{display:block;font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:7px}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+  input[type=date],input[type=number]{width:100%;font-family:var(--font-body);font-size:16px;color:var(--ink);background:var(--bg);
+    border:1px solid var(--line);border-radius:10px;padding:12px 13px;appearance:none;-webkit-appearance:none;min-height:48px}
+  input[type=date]:focus,input[type=number]:focus{outline:none;border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(var(--primary-rgb),.18)}
+  .seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .seg button{flex:1 1 auto;min-width:56px;font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--ink2);
+    background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:8px 12px;cursor:pointer}
+  .seg button:hover{border-color:var(--accent-2);color:var(--accent)}
+  .seg button.on{background:var(--sel-bg);border-color:var(--sel-bg);color:var(--sel-fg)}
+  .nudge{margin-top:10px;background:var(--gold-soft);border:1px solid var(--gold);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--ink2)}
+  .nudge b{color:var(--gold)}
+  .nudge .seg{margin-top:10px}
+  .nudge .seg button{border-radius:10px;text-align:left;font-size:12.5px;line-height:1.35}
+  .nudge .seg button span{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+  .row:last-of-type{border-bottom:1px solid var(--line)}
+  .row b{font-family:var(--font-head);font-size:14px;display:block}
+  .row span{font-size:12.5px;color:var(--muted)}
+  input.sw{appearance:none;-webkit-appearance:none;flex:0 0 auto;width:46px;height:28px;border-radius:999px;background:var(--line);
+    position:relative;cursor:pointer;transition:background .15s}
+  input.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;
+    box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .15s}
+  input.sw:checked{background:var(--grad)}
+  input.sw:checked::after{transform:translateX(18px)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:420px){.two{grid-template-columns:1fr}}
+  .link{background:none;border:none;color:var(--accent);font-family:var(--font-head);font-weight:700;font-size:13px;cursor:pointer;padding:6px 0;margin-top:4px}
+  .error{background:var(--red-soft);border:1px solid var(--red);border-radius:12px;padding:10px 14px;font-size:13.5px;color:var(--ink);margin-top:10px}
 
-  .result{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);
-    border-radius:18px;padding:24px 16px;margin-top:18px;text-align:center;box-shadow:var(--shadow-lg);
-    animation:rise .35s ease both}
-  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  .result::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;
-    background:linear-gradient(90deg,var(--hero2),var(--hero3))}
-  .result .rt{font-family:var(--font-head);font-size:12px;color:var(--muted);letter-spacing:.5px;
-    text-transform:uppercase;font-weight:700}
-  .result .big{font-family:var(--font-head);font-size:21px;font-weight:800;margin:4px 0 2px;color:var(--ink)}
-  .result .big.return{color:var(--green)}
-  .result .divider{border-top:1px solid var(--line);margin:14px 0}
-  .result .meta{font-size:13px;color:var(--muted);line-height:1.7}
-  .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 2px}
-  .summary-grid div{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 7px}
-  .summary-grid b{display:block;font-family:var(--font-head);font-size:18px;color:var(--ink);line-height:1}
-  .summary-grid span{font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.35px}
-  .result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-  .result-actions button{flex:1 1 130px;font-family:var(--font-head);font-size:13px;font-weight:800;
-    color:var(--ink2);background:var(--card2);border:1.5px solid var(--line);
-    border-radius:11px;padding:11px 10px;cursor:pointer}
-  .result-actions button.secondary{color:var(--ink2);background:var(--card2);border-color:var(--line)}
-  .result-actions a{flex:1 1 170px;text-decoration:none;text-align:center;font-family:var(--font-head);font-size:13px;font-weight:800;
-    color:var(--ink2);background:var(--card2);border:1.5px solid var(--line);
-    border-radius:11px;padding:11px 10px}
-  .adjusted-note{font-size:12px;color:var(--gold);margin-top:8px;font-weight:600}
-  .skipped{margin-top:14px;text-align:left}
-  .skipped h3{font-family:var(--font-head);font-size:12px;color:var(--muted);text-transform:uppercase;
-    letter-spacing:.4px;margin-bottom:6px;font-weight:700}
-  .skipped ul{list-style:none}
-  .skipped li{font-size:13px;padding:6px 0;border-top:1px solid var(--line);display:flex;
-    justify-content:space-between;color:var(--ink2)}
-  .skipped li:first-child{border-top:none}
-  .skipped .hname{color:var(--gold);font-weight:600}
-  .error{background:var(--red-soft);border:1px solid var(--red-lit);border-radius:12px;
-    padding:12px 14px;margin-top:14px;font-size:14px;color:var(--ink)}
-  .toast{position:fixed;left:50%;bottom:18px;z-index:60;transform:translate(-50%,12px);
-    background:var(--ink);color:var(--card);font-size:13px;font-weight:800;border-radius:999px;
-    padding:10px 16px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;box-shadow:var(--shadow-lg)}
+  details.rules{border-top:1px solid var(--line);padding-top:14px;margin-top:8px}
+  details.rules summary{font-family:var(--font-head);font-size:14px;font-weight:700;cursor:pointer;color:var(--ink)}
+  details.rules ul{margin:10px 0 0 18px}
+  details.rules li{font-size:13.5px;color:var(--ink2);margin-bottom:7px}
+
+  .toast{position:fixed;left:50%;bottom:18px;z-index:60;transform:translate(-50%,12px);background:var(--ink);color:var(--bg);
+    font-size:13px;font-weight:700;border-radius:999px;padding:10px 16px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
   .toast.on{opacity:1;transform:translate(-50%,0)}
 
-  /* Mode switch + Balance mode */
-  .modes{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:13px;
-    padding:5px;box-shadow:var(--shadow);margin-top:2px}
-  .modes button{flex:1;font-family:var(--font-head);font-size:14px;font-weight:800;color:var(--muted);
-    background:transparent;border:1.5px solid transparent;border-radius:10px;padding:11px 8px;cursor:pointer;
-    transition:background .15s,color .15s}
-  .modes button.on{color:var(--sel-fg);background:var(--sel-bg);border-color:var(--sel-bg)}
-  [hidden]{display:none !important}
-  .lbl{display:block;font-size:13px;font-weight:700;color:var(--ink2);margin:0 0 6px}
-  .hint{font-size:12px;color:var(--muted);margin:6px 2px 0}
-  .quick-row button.on{color:var(--sel-fg);border-color:var(--sel-bg);background:var(--sel-bg)}
-  .checks{display:flex;flex-direction:column;gap:10px;margin:-4px 0 16px}
-  .check{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1.5px solid var(--line);
-    border-radius:12px;padding:12px 14px;cursor:pointer;box-shadow:var(--shadow)}
-  .check input{width:20px;height:20px;margin-top:1px;accent-color:var(--primary);flex:0 0 auto}
-  .check b{display:block;font-family:var(--font-head);font-size:13.5px;color:var(--ink)}
-  .check span{font-size:12px;color:var(--muted)}
-  .cap{margin-top:16px;text-align:left}
-  .cap .track{height:12px;border-radius:999px;background:var(--card2);border:1px solid var(--line);overflow:hidden}
-  .cap .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--hero2),var(--hero3));transition:width .4s ease}
-  .cap .fill.full{background:var(--gold)}
-  .cap .ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:5px;font-weight:600}
-  .big.warn{color:var(--gold)}
-  .rules{margin-top:18px;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
-  .rules h3{font-family:var(--font-head);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
-  .rules li{font-size:12.5px;color:var(--ink2);margin:0 0 6px 16px}
-
-  footer{padding:26px 16px 0;color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
-  footer .wrap{max-width:560px}
-  footer .credit{display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;
-    color:var(--ink2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-  footer .credit .cm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--hero1),var(--hero2));
-    color:#fff;font-family:var(--font-head);font-weight:800;font-size:11px;letter-spacing:.3px;
-    display:inline-flex;align-items:center;justify-content:center}
+  footer{padding:30px 18px 0;color:var(--muted);font-size:12.5px;text-align:center;line-height:1.7}
+  footer .wrap{max-width:520px}
+  footer .credit{display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;color:var(--ink2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  footer .credit .cm{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#7f1d1d,#dc2626);color:#fff;
+    font-family:var(--font-head);font-weight:800;font-size:11px;display:inline-flex;align-items:center;justify-content:center}
   footer .credit b{font-family:var(--font-head);color:var(--ink);font-weight:800}
-  footer .mops{display:flex;align-items:center;justify-content:center;gap:8px;
-    margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+  footer .mops{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
   footer .mops .mops-m{width:22px;height:22px;flex:0 0 auto;border-radius:6px}
-  footer .mops .mops-tag{font-family:var(--font-head);font-size:9px;font-weight:700;
-    letter-spacing:1.4px;color:var(--muted)}
-  footer .mops .mops-wm{font-family:var(--font-head);font-size:14px;font-weight:800;
-    letter-spacing:.8px;color:var(--ink)}
-
+  footer .mops .mops-tag{font-family:var(--font-head);font-size:9px;font-weight:700;letter-spacing:1.4px;color:var(--muted)}
+  footer .mops .mops-wm{font-family:var(--font-head);font-size:14px;font-weight:800;letter-spacing:.8px;color:var(--ink)}
 </style>
 </head>
 <body>
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="../">Provider Finder</a>
-    <a href="../watch/">Shift Forecast</a>
-    <a href="./" class="active">Leave Calculator</a>
-  </div>
-</nav>
+<nav class="nav"><div class="nav-inner">
+  <a href="../">Provider Finder</a>
+  <a href="../watch/">Shift Forecast</a>
+  <a href="./" class="active">Leave Calculator</a>
+</div></nav>
 
 <header class="hero">
- <div class="inner wrap">
-  <div class="brand">
-    <div class="brand-id">
-      <div class="brandmark" aria-hidden="true">JT</div>
-      <div>
-        <div class="app-kicker">JFB Tools by Jay</div>
-        <div class="titlerow"><h1>Leave Calculator</h1></div>
-        <div class="sub">Mon–Fri working days · Jamaican public holidays excluded</div>
-      </div>
+  <div class="wrap">
+    <div class="txt">
+      <div class="kicker">JFB Tools by Jay</div>
+      <h1>Leave calculator</h1>
+      <div class="sub" id="sub">Mon–Fri working days · Jamaican public holidays excluded</div>
     </div>
   </div>
-  <div class="steps" id="steps">
-    <div class="step"><span class="n">1</span><span class="tx"><b>Pick a start date</b> and number of leave days</span></div>
-    <div class="step"><span class="n">2</span><span class="tx"><b>Adjust if needed</b> — weekends and holidays cannot start leave</span></div>
-    <div class="step"><span class="n">3</span><span class="tx"><b>Get your return date</b>, holidays inside the period shown</span></div>
-    <button class="steps-dismiss" id="stepsHide" type="button" aria-label="Hide instructions">Got it ✕</button>
-  </div>
- </div>
 </header>
 
 <main class="wrap">
+
   <div class="modes" role="tablist" aria-label="Calculator mode">
     <button type="button" role="tab" id="tabReturn" class="on" aria-selected="true">Return date</button>
     <button type="button" role="tab" id="tabBalance" aria-selected="false">Leave balance</button>
   </div>
-<div id="modeReturn">
-  <h2 class="sec">Leave start date</h2>
-  <div class="field"><input type="date" id="startDate" aria-label="Leave start date"></div>
-  <div class="quick-row" aria-label="Quick start date options">
-    <button type="button" data-start="today">Today</button>
-    <button type="button" data-start="next">Next workday</button>
-  </div>
-  <h2 class="sec">Number of leave days</h2>
-  <div class="field"><input type="number" id="numDays" min="1" max="365" inputmode="numeric" placeholder="e.g. 10" aria-label="Number of leave days"></div>
-  <div class="quick-row" aria-label="Common leave day presets">
-    <button type="button" data-days="5">5 days</button>
-    <button type="button" data-days="10">10 days</button>
-    <button type="button" data-days="15">15 days</button>
-    <button type="button" data-days="20">20 days</button>
-  </div>
-  <button class="calc-btn" id="calcBtn" type="button">Calculate return date</button>
-  <div id="nudgeBox"></div>
-  <div id="resultBox"></div>
-</div>
 
-<div id="modeBalance" hidden>
-  <h2 class="sec">Days earned per year</h2>
-  <div class="quick-row" id="entRow" aria-label="Yearly leave entitlement">
-    <button type="button" data-ent="15">15</button>
-    <button type="button" data-ent="17">17</button>
-    <button type="button" data-ent="21">21</button>
-    <button type="button" data-ent="28">28</button>
-    <button type="button" data-ent="35">35</button>
-  </div>
-  <div class="field"><input type="number" id="entDays" min="1" max="60" step="0.5" inputmode="decimal" placeholder="Or enter your own" aria-label="Days earned per year"></div>
-  <div class="checks">
-    <label class="check"><input type="checkbox" id="ebm"><div><b>Earned Beyond Maximum</b><span>May accumulate 2 extra years beyond the normal maximum (5 years total).</span></div></label>
-    <label class="check" id="post2002Wrap" hidden><input type="checkbox" id="post2002"><div><b>Non-uniform staff, joined after 2002</b><span>Free sick allowance is 10 days instead of 14.</span></div></label>
-  </div>
+  <!-- RETURN DATE -->
+  <section id="modeReturn">
+    <div id="resBox" aria-live="polite"></div>
 
-  <h2 class="sec">Leave period</h2>
-  <label class="lbl" for="lastLeave">Last date leave was taken</label>
-  <div class="field"><input type="date" id="lastLeave"></div>
-  <label class="lbl" for="checkTo">Check leave up to this date</label>
-  <div class="field" style="margin-bottom:8px"><input type="date" id="checkTo"></div>
-  <div class="quick-row"><button type="button" id="checkToday">Use today</button></div>
+    <div class="group">
+      <label class="lbl" for="startDate">Leave start date</label>
+      <input type="date" id="startDate">
+      <div class="seg" aria-label="Quick start date options">
+        <button type="button" data-start="today">Today</button>
+        <button type="button" data-start="next">Next workday</button>
+      </div>
+      <div id="nudgeBox"></div>
+    </div>
+    <div class="group">
+      <label class="lbl" for="numDays">Number of leave days</label>
+      <input type="number" id="numDays" min="1" max="365" inputmode="numeric" placeholder="e.g. 10">
+      <div class="seg" aria-label="Common leave day presets">
+        <button type="button" data-days="5">5</button>
+        <button type="button" data-days="10">10</button>
+        <button type="button" data-days="15">15</button>
+        <button type="button" data-days="20">20</button>
+      </div>
+    </div>
+  </section>
 
-  <h2 class="sec">Adjustments (optional)</h2>
-  <label class="lbl" for="openBal">Balance from previous vacation leave</label>
-  <div class="field"><input type="number" id="openBal" min="0" step="0.5" inputmode="decimal" placeholder="0"></div>
-  <label class="lbl" for="sickDays">Excess sick days</label>
-  <div class="field"><input type="number" id="sickDays" min="0" step="0.5" inputmode="decimal" placeholder="0">
-    <div class="hint" id="sickHint">Free allowance is 14 days. Enter only the days beyond it.</div></div>
-  <label class="lbl" for="takenDays">Vacation taken in this period</label>
-  <div class="field"><input type="number" id="takenDays" min="0" step="0.5" inputmode="decimal" placeholder="0"></div>
+  <!-- LEAVE BALANCE -->
+  <section id="modeBalance" hidden>
+    <div id="balBox" aria-live="polite"></div>
 
-  <button class="calc-btn" id="balBtn" type="button">Calculate balance</button>
-  <div id="balBox"></div>
+    <div class="group">
+      <div class="lbl">Days earned per year</div>
+      <div class="seg" id="entRow">
+        <button type="button" data-ent="15">15</button>
+        <button type="button" data-ent="17">17</button>
+        <button type="button" data-ent="21">21</button>
+        <button type="button" data-ent="28">28</button>
+        <button type="button" data-ent="35">35</button>
+      </div>
+      <div style="margin-top:10px"><input type="number" id="entDays" min="1" max="60" step="0.5" inputmode="decimal" placeholder="Or enter your own" aria-label="Days earned per year"></div>
+    </div>
 
-  <div class="rules">
-    <h3>The rules used</h3>
-    <ul>
-      <li><b>Daily earning:</b> leave builds each day (yearly days ÷ 365) from the last date leave was taken. The leave year is not the calendar year.</li>
-      <li><b>Sick leave:</b> only excess sick days come out of vacation earned. Free allowance is 14 days, or 10 for non-uniform staff on 15 days a year who joined after 2002.</li>
-      <li><b>Limit:</b> up to 3 years of entitlement can be held. Extra days are lost.</li>
-      <li><b>Earned Beyond Maximum:</b> up to 2 more years beyond the limit (5 total).</li>
-    </ul>
-  </div>
-</div>
+    <div class="group">
+      <div class="two">
+        <div><label class="lbl" for="lastLeave">Last leave taken</label><input type="date" id="lastLeave"></div>
+        <div><label class="lbl" for="checkTo">Check up to</label><input type="date" id="checkTo"></div>
+      </div>
+      <button class="link" type="button" id="checkToday">Use today's date</button>
+    </div>
+
+    <div class="group">
+      <div class="two">
+        <div><label class="lbl" for="openBal">Brought forward</label><input type="number" id="openBal" min="0" step="0.5" inputmode="decimal" placeholder="0"></div>
+        <div><label class="lbl" for="takenDays">Vacation taken</label><input type="number" id="takenDays" min="0" step="0.5" inputmode="decimal" placeholder="0"></div>
+      </div>
+      <div style="margin-top:12px"><label class="lbl" for="sickDays">Excess sick days</label><input type="number" id="sickDays" min="0" step="0.5" inputmode="decimal" placeholder="0">
+        <div class="hint" id="sickHint">Free allowance is 14 days. Enter only the days beyond it.</div></div>
+    </div>
+
+    <div class="group" style="margin-bottom:12px">
+      <label class="row"><div><b>Earned Beyond Maximum</b><span>Up to 2 extra years (5 total)</span></div><input type="checkbox" class="sw" id="ebm"></label>
+      <label class="row" id="post2002Wrap" hidden><div><b>Non-uniform staff, joined after 2002</b><span>Free sick allowance is 10 days</span></div><input type="checkbox" class="sw" id="post2002"></label>
+    </div>
+
+    <details class="rules">
+      <summary>How it's calculated</summary>
+      <ul>
+        <li><b>Daily earning:</b> yearly days ÷ 365 for each day since leave was last taken. The leave year is not the calendar year.</li>
+        <li><b>Sick leave:</b> only excess sick days come out of vacation earned. Free allowance is 14 days, or 10 for non-uniform staff on 15 days a year who joined after 2002.</li>
+        <li><b>Limit:</b> up to 3 years of entitlement can be held. Extra days are lost.</li>
+        <li><b>Earned Beyond Maximum:</b> up to 2 more years (5 total).</li>
+      </ul>
+    </details>
+  </section>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -299,6 +243,7 @@
 </div></div></footer>
 
 <script>
+/* ---------- Dates & Jamaican public holidays (unchanged logic) ---------- */
 function easterSunday(y){ var a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),month=Math.floor((h+l-7*m+114)/31),day=((h+l-7*m+114)%31)+1; return new Date(y,month-1,day); }
 function addDays(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
 function thirdMondayOct(y){ var d=new Date(y,9,1); var off=(8-d.getDay())%7; return new Date(y,9,1+off+14); }
@@ -311,64 +256,15 @@ function isWorkingDay(d){ return !isWeekend(d) && !holidayName(d); }
 function blockReason(d){ if(isWeekend(d)) return d.getDay()===6?'a Saturday':'a Sunday'; var h=holidayName(d); return h?h+' (public holiday)':null; }
 function nearestWorkingDay(d,dir){ var x=new Date(d); while(!isWorkingDay(x)) x=addDays(x,dir); return x; }
 function fmtLeave(d){ return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}); }
-var startEl=document.getElementById('startDate'), numEl=document.getElementById('numDays'), nudgeBox=document.getElementById('nudgeBox'), resultBox=document.getElementById('resultBox');
-var lastResultText='';
-function parseStart(){ if(!startEl.value) return null; var p=startEl.value.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
-function showToast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(showToast._t); showToast._t=setTimeout(function(){t.classList.remove('on');},1600); }
-function setStart(d){ startEl.value=isoDate(d); try{localStorage.setItem('jfb-leave-start',startEl.value);}catch(e){} }
-function clearResult(){ nudgeBox.innerHTML=''; resultBox.innerHTML=''; lastResultText=''; }
-function validateInputs(){ var start=parseStart(); var n=parseInt(numEl.value,10); if(!start){ resultBox.innerHTML='<div class="error">Pick a start date first.</div>'; return null; } if(!n||n<1){ resultBox.innerHTML='<div class="error">Enter the number of leave days (1 or more).</div>'; return null; } if(n>365){ resultBox.innerHTML='<div class="error">Use 365 days or less for one calculation.</div>'; return null; } return {start:start,n:n}; }
-function calculate(){ clearResult(); var v=validateInputs(); if(!v)return; try{localStorage.setItem('jfb-leave-days',String(v.n));localStorage.setItem('jfb-leave-start',startEl.value);}catch(e){} var reason=blockReason(v.start); if(reason){ var fwd=nearestWorkingDay(v.start,1), back=nearestWorkingDay(v.start,-1); nudgeBox.innerHTML='<div class="nudge"><div class="why">'+fmtLeave(v.start)+' is <b>'+reason+'</b> - leave cannot start on a non-working day. Move it:</div><div class="nudge-opts"><button id="nBack" type="button">Back to<span class="dir">'+fmtLeave(back)+'</span></button><button id="nFwd" type="button">Forward to<span class="dir">'+fmtLeave(fwd)+'</span></button></div></div>'; document.getElementById('nBack').onclick=function(){ runCalc(back,v.n,v.start); }; document.getElementById('nFwd').onclick=function(){ runCalc(fwd,v.n,v.start); }; return; } runCalc(v.start,v.n,null); }
-document.getElementById('calcBtn').addEventListener('click',calculate);
-document.querySelectorAll('[data-start]').forEach(function(b){ b.addEventListener('click',function(){ var d=new Date(); d.setHours(0,0,0,0); if(b.dataset.start==='next')d=nearestWorkingDay(d,1); setStart(d); clearResult(); }); });
-document.querySelectorAll('[data-days]').forEach(function(b){ b.addEventListener('click',function(){ numEl.value=b.dataset.days; try{localStorage.setItem('jfb-leave-days',numEl.value);}catch(e){} clearResult(); }); });
-startEl.addEventListener('change',function(){ try{localStorage.setItem('jfb-leave-start',startEl.value);}catch(e){} clearResult(); });
-numEl.addEventListener('input',function(){ try{localStorage.setItem('jfb-leave-days',numEl.value);}catch(e){} clearResult(); });
-numEl.addEventListener('keydown',function(e){ if(e.key==='Enter')calculate(); });
-function runCalc(start,n,originalPicked){
-  nudgeBox.innerHTML='';
-  var d=new Date(start), counted=0, last=null;
-  var skipped=[], weekends=0;
-  while(counted<n){
-    if(isWorkingDay(d)){ counted++; last=new Date(d); }
-    else { if(isWeekend(d))weekends++; var h=holidayName(d); if(h) skipped.push([new Date(d),h]); }
-    if(counted<n) d=addDays(d,1);
-  }
-  var ret=addDays(last,1), retSkipped=[];
-  while(!isWorkingDay(ret)){
-    if(isWeekend(ret))weekends++;
-    var h2=holidayName(ret); if(h2) retSkipped.push([new Date(ret),h2]);
-    ret=addDays(ret,1);
-  }
-  var allSkipped=skipped.concat(retSkipped);
-  var skippedHtml = allSkipped.length ? '<div class="skipped"><h3>Public holidays inside this period (not counted as leave)</h3><ul>'+allSkipped.map(function(p){return '<li><span>'+fmtLeave(p[0])+'</span><span class="hname">'+p[1]+'</span></li>';}).join('')+'</ul></div>' : '';
-  lastResultText='Leave begins: '+fmtLeave(start)+'\nLast day of leave: '+fmtLeave(last)+'\nReturn to work: '+fmtLeave(ret)+'\nLeave days: '+n+' working day'+(n>1?'s':'');
-  resultBox.innerHTML='<div class="result">'
-    +'<div class="rt">Leave begins</div><div class="big">'+fmtLeave(start)+'</div>'
-    +(originalPicked?'<div class="adjusted-note">Adjusted from '+fmtLeave(originalPicked)+'</div>':'')
-    +'<div class="divider"></div><div class="rt">Last day of leave (day '+n+')</div><div class="big">'+fmtLeave(last)+'</div>'
-    +'<div class="divider"></div><div class="rt">Return to work</div><div class="big return">'+fmtLeave(ret)+'</div>'
-    +'<div class="summary-grid"><div><b>'+n+'</b><span>Leave days</span></div><div><b>'+weekends+'</b><span>Weekend days</span></div><div><b>'+allSkipped.length+'</b><span>Holidays</span></div></div>'
-    +'<div class="divider"></div><div class="meta">'+n+' working day'+(n>1?'s':'')+' of leave - Mon-Fri only - public holidays excluded</div>'
-    +'<div class="result-actions"><button type="button" id="copyResult">Copy result</button><a href="../watch/?date='+isoDate(ret)+'">Check shift on return date</a><button type="button" class="secondary" id="resetCalc">Reset</button></div>'
-    +skippedHtml+'</div>';
-  document.getElementById('copyResult').onclick=function(){
-    if(navigator.share){navigator.share({title:'JFB leave result',text:lastResultText}).catch(function(){});return;}
-    if(navigator.clipboard)navigator.clipboard.writeText(lastResultText).then(function(){showToast('Leave result copied');});
-  };
-  document.getElementById('resetCalc').onclick=function(){
-    startEl.value=''; numEl.value='';
-    try{localStorage.removeItem('jfb-leave-start');localStorage.removeItem('jfb-leave-days');}catch(e){}
-    clearResult();
-  };
-}
-try{ var savedStart=localStorage.getItem('jfb-leave-start'), savedDays=localStorage.getItem('jfb-leave-days'); if(savedStart)startEl.value=savedStart; if(savedDays)numEl.value=savedDays; }catch(e){}
-try{ var qp=new URLSearchParams(location.search), qs=qp.get('start'); if(qs)startEl.value=qs; }catch(e){}
+function fmtShort(d){ return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }
+function fmt1(x){ return (Math.round(x*10)/10).toFixed(1).replace(/\.0$/,''); }
+function parseDate(v){ if(!v)return null; var p=v.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
+function store(k,v){ try{ if(v==null)localStorage.removeItem(k); else localStorage.setItem(k,v); }catch(e){} }
+function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
 
-/* ===== Mode switch + Leave balance ===== */
+/* ---------- Mode switch ---------- */
 var tabReturn=document.getElementById('tabReturn'), tabBalance=document.getElementById('tabBalance');
-var modeReturn=document.getElementById('modeReturn'), modeBalance=document.getElementById('modeBalance');
-var subEl=document.querySelector('.sub'), stepsBox=document.getElementById('steps');
+var modeReturn=document.getElementById('modeReturn'), modeBalance=document.getElementById('modeBalance'), subEl=document.getElementById('sub');
 var SUB_RETURN=subEl.textContent, SUB_BAL='Daily accrual · sick leave deductions · accumulation cap';
 function setMode(m){
   var bal=(m==='balance');
@@ -376,94 +272,140 @@ function setMode(m){
   tabReturn.classList.toggle('on',!bal); tabBalance.classList.toggle('on',bal);
   tabReturn.setAttribute('aria-selected',String(!bal)); tabBalance.setAttribute('aria-selected',String(bal));
   subEl.textContent=bal?SUB_BAL:SUB_RETURN;
-  stepsBox.style.display=bal?'none':'';
-  try{localStorage.setItem('jfb-leave-mode',m);}catch(e){}
+  store('jfb-leave-mode',m);
 }
 tabReturn.addEventListener('click',function(){setMode('return');});
 tabBalance.addEventListener('click',function(){setMode('balance');});
 
+function showToast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(showToast._t); showToast._t=setTimeout(function(){t.classList.remove('on');},1600); }
+function shareText(title,text,toastMsg){
+  if(navigator.share){ navigator.share({title:title,text:text}).catch(function(){}); return; }
+  if(navigator.clipboard) navigator.clipboard.writeText(text).then(function(){ showToast(toastMsg); });
+}
+
+/* ---------- RETURN DATE (live) ---------- */
+var startEl=document.getElementById('startDate'), numEl=document.getElementById('numDays');
+var resBox=document.getElementById('resBox'), nudgeBox=document.getElementById('nudgeBox');
+var lastResultText='', adjustedFrom=null;
+
+function idleCard(msg){ return '<div class="res"><div class="res-k">Return to work</div><div class="res-big idle">—</div><div class="res-hint">'+msg+'</div></div>'; }
+function computeLeave(start,n){
+  var d=new Date(start), counted=0, last=null, skipped=[], weekends=0;
+  while(counted<n){
+    if(isWorkingDay(d)){ counted++; last=new Date(d); }
+    else { if(isWeekend(d))weekends++; var h=holidayName(d); if(h) skipped.push([new Date(d),h]); }
+    if(counted<n) d=addDays(d,1);
+  }
+  var ret=addDays(last,1);
+  while(!isWorkingDay(ret)){
+    if(isWeekend(ret))weekends++;
+    var h2=holidayName(ret); if(h2) skipped.push([new Date(ret),h2]);
+    ret=addDays(ret,1);
+  }
+  return {last:last,ret:ret,skipped:skipped,weekends:weekends};
+}
+function renderReturn(){
+  nudgeBox.innerHTML=''; lastResultText='';
+  var start=parseDate(startEl.value), n=parseInt(numEl.value,10);
+  if(!start && !n){ resBox.innerHTML=idleCard('Pick a start date and the number of leave days.'); return; }
+  if(!start){ resBox.innerHTML=idleCard('Pick a start date.'); return; }
+  if(!n||n<1){ resBox.innerHTML=idleCard('Enter the number of leave days.'); return; }
+  if(n>365){ resBox.innerHTML=idleCard('Use 365 days or less.'); return; }
+  var reason=blockReason(start);
+  if(reason){
+    var back=nearestWorkingDay(start,-1), fwd=nearestWorkingDay(start,1);
+    nudgeBox.innerHTML='<div class="nudge">'+fmtLeave(start)+' is <b>'+reason+'</b>. Leave can’t start on a non-working day. Move it:'
+      +'<div class="seg"><button type="button" data-move="'+isoDate(back)+'">Back to<span>'+fmtLeave(back)+'</span></button>'
+      +'<button type="button" data-move="'+isoDate(fwd)+'">Forward to<span>'+fmtLeave(fwd)+'</span></button></div></div>';
+    resBox.innerHTML=idleCard('Move the start date to a working day.'); return;
+  }
+  var r=computeLeave(start,n);
+  lastResultText='Leave begins: '+fmtLeave(start)+'\nLast day of leave: '+fmtLeave(r.last)+'\nReturn to work: '+fmtLeave(r.ret)+'\nLeave days: '+n+' working day'+(n>1?'s':'');
+  var hol=r.skipped.length?'<details class="hol"><summary>'+r.skipped.length+' public holiday'+(r.skipped.length>1?'s':'')+' inside this period (not counted)</summary><ul>'
+    +r.skipped.map(function(p){return '<li><span>'+fmtLeave(p[0])+'</span><span class="hn">'+p[1]+'</span></li>';}).join('')+'</ul></details>':'';
+  resBox.innerHTML='<div class="res"><div class="res-k">Return to work</div><div class="res-big ok">'+fmtLeave(r.ret)+'</div>'
+    +'<div class="res-line">Leave runs <b>'+fmtShort(start)+'</b> to <b>'+fmtShort(r.last)+'</b></div>'
+    +(adjustedFrom?'<div class="res-note">Start adjusted from '+fmtLeave(adjustedFrom)+'</div>':'')
+    +'<div class="chips"><span><b>'+n+'</b> leave day'+(n>1?'s':'')+'</span><span><b>'+r.weekends+'</b> weekend days</span><span><b>'+r.skipped.length+'</b> holiday'+(r.skipped.length===1?'':'s')+'</span></div>'
+    +'<div class="acts"><button type="button" data-act="copy">Copy result</button><a href="../watch/?date='+isoDate(r.ret)+'">Check shift on return date</a><button type="button" class="plain" data-act="reset">Reset</button></div>'
+    +hol+'</div>';
+}
+resBox.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]'); if(!b)return;
+  if(b.dataset.act==='copy') shareText('JFB leave result',lastResultText,'Leave result copied');
+  if(b.dataset.act==='reset'){ startEl.value=''; numEl.value=''; adjustedFrom=null; store('jfb-leave-start',null); store('jfb-leave-days',null); renderReturn(); }
+});
+nudgeBox.addEventListener('click',function(e){
+  var b=e.target.closest('[data-move]'); if(!b)return;
+  adjustedFrom=parseDate(startEl.value); startEl.value=b.dataset.move; store('jfb-leave-start',startEl.value); renderReturn();
+});
+document.querySelectorAll('[data-start]').forEach(function(b){ b.addEventListener('click',function(){
+  var d=new Date(); d.setHours(0,0,0,0); if(b.dataset.start==='next')d=nearestWorkingDay(d,1);
+  adjustedFrom=null; startEl.value=isoDate(d); store('jfb-leave-start',startEl.value); renderReturn(); }); });
+document.querySelectorAll('[data-days]').forEach(function(b){ b.addEventListener('click',function(){
+  numEl.value=b.dataset.days; store('jfb-leave-days',numEl.value); renderReturn(); }); });
+startEl.addEventListener('change',function(){ adjustedFrom=null; store('jfb-leave-start',startEl.value); renderReturn(); });
+numEl.addEventListener('input',function(){ store('jfb-leave-days',numEl.value); renderReturn(); });
+
+/* ---------- LEAVE BALANCE (live) ---------- */
 var entEl=document.getElementById('entDays'), ebmEl=document.getElementById('ebm'), p02El=document.getElementById('post2002'), p02Wrap=document.getElementById('post2002Wrap');
 var lastEl=document.getElementById('lastLeave'), toEl=document.getElementById('checkTo');
 var openEl=document.getElementById('openBal'), sickEl=document.getElementById('sickDays'), takenEl=document.getElementById('takenDays');
 var balBox=document.getElementById('balBox'), sickHint=document.getElementById('sickHint'), lastBalText='', lastBalDays=0;
-var balFields=[['ent',entEl],['last',lastEl],['open',openEl],['sick',sickEl],['taken',takenEl]];
+var balFields=[['ent',entEl],['last',lastEl],['to',toEl],['open',openEl],['sick',sickEl],['taken',takenEl]];
 
-function fmt1(x){ return (Math.round(x*10)/10).toFixed(1).replace(/\.0$/,''); }
-function parseDate(v){ if(!v)return null; var p=v.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
-function sickAllowance(){ var e=parseFloat(entEl.value); return (e===15 && p02El.checked)?10:14; }
+function sickAllowance(){ return (parseFloat(entEl.value)===15 && p02El.checked)?10:14; }
 function syncEntUI(){
   var e=parseFloat(entEl.value);
   document.querySelectorAll('[data-ent]').forEach(function(b){ b.classList.toggle('on',parseFloat(b.dataset.ent)===e); });
   p02Wrap.hidden=(e!==15); if(e!==15)p02El.checked=false;
   sickHint.textContent='Free allowance is '+sickAllowance()+' days. Enter only the days beyond it.';
 }
-function saveBal(){ try{ var o={ebm:ebmEl.checked,p02:p02El.checked}; balFields.forEach(function(f){o[f[0]]=f[1].value;}); localStorage.setItem('jfb-leave-bal',JSON.stringify(o)); }catch(e){} }
-function clearBal(){ balBox.innerHTML=''; lastBalText=''; lastBalDays=0; }
-document.querySelectorAll('[data-ent]').forEach(function(b){ b.addEventListener('click',function(){ entEl.value=b.dataset.ent; syncEntUI(); saveBal(); clearBal(); }); });
-[entEl,openEl,sickEl,takenEl].forEach(function(el){ el.addEventListener('input',function(){ syncEntUI(); saveBal(); clearBal(); }); });
-[ebmEl,p02El,lastEl,toEl].forEach(function(el){ el.addEventListener('change',function(){ syncEntUI(); saveBal(); clearBal(); }); });
-document.getElementById('checkToday').addEventListener('click',function(){ toEl.value=isoDate(new Date()); saveBal(); clearBal(); });
-
-function balError(msg){ balBox.innerHTML='<div class="error">'+msg+'</div>'; }
-function calcBalance(){
-  clearBal();
+function saveBal(){ var o={ebm:ebmEl.checked,p02:p02El.checked}; balFields.forEach(function(f){o[f[0]]=f[1].value;}); store('jfb-leave-bal',JSON.stringify(o)); }
+function idleBal(msg){ return '<div class="res"><div class="res-k">Leave balance</div><div class="res-big idle">—</div><div class="res-hint">'+msg+'</div></div>'; }
+function renderBalance(){
+  syncEntUI(); lastBalText=''; lastBalDays=0;
   var ent=parseFloat(entEl.value), last=parseDate(lastEl.value), to=parseDate(toEl.value);
-  if(!ent||ent<=0){ balError('Pick or enter the days earned per year.'); return; }
-  if(!last){ balError('Enter the last date leave was taken.'); return; }
-  if(!to){ to=new Date(); to.setHours(0,0,0,0); toEl.value=isoDate(to); }
-  if(to<last){ balError('The check date must be on or after the last date leave was taken.'); return; }
+  if(!ent||ent<=0){ balBox.innerHTML=idleBal('Pick the days earned per year.'); return; }
+  if(!last){ balBox.innerHTML=idleBal('Enter the last date leave was taken.'); return; }
+  if(!to){ to=new Date(); to.setHours(0,0,0,0); }
+  if(to<last){ balBox.innerHTML=idleBal('The check date must be on or after the last leave date.'); return; }
   var days=Math.round((to-last)/86400000);
   var open=Math.max(0,parseFloat(openEl.value)||0), sick=Math.max(0,parseFloat(sickEl.value)||0), taken=Math.max(0,parseFloat(takenEl.value)||0);
-  var earned=ent/365*days;
-  var gross=open+earned-sick-taken;
+  var earned=ent/365*days, gross=open+earned-sick-taken;
   var years=ebmEl.checked?5:3, cap=ent*years;
   var lost=gross>cap?gross-cap:0, bal=gross>cap?cap:gross;
-  var pct=Math.max(0,Math.min(100,bal/cap*100));
-  var whole=Math.max(0,Math.floor(bal+1e-9));
+  var pct=Math.max(0,Math.min(100,bal/cap*100)), whole=Math.max(0,Math.floor(bal+1e-9));
   lastBalDays=whole;
   lastBalText='Leave balance as at '+fmtLeave(to)+': '+fmt1(bal)+' days\nEarned since '+fmtLeave(last)+': '+fmt1(earned)+' days ('+ent+' days/yr)\nMaximum: '+fmt1(cap)+' days ('+years+' yrs)';
-  saveBal();
-  balBox.innerHTML='<div class="result">'
-    +'<div class="rt">Leave balance as at '+fmtLeave(to)+'</div>'
-    +'<div class="big '+(bal<0?'warn':'return')+'">'+fmt1(bal)+' days</div>'
-    +(bal<0?'<div class="adjusted-note">Balance is negative: more leave has been deducted than earned.</div>':'')
-    +(lost>0?'<div class="adjusted-note">'+fmt1(lost)+' day'+(lost===1?'':'s')+' lost to the '+years+'-year limit</div>':'')
-    +'<div class="cap"><div class="track"><div class="fill'+(lost>0?' full':'')+'" style="width:'+pct+'%"></div></div>'
-    +'<div class="ends"><span>0</span><span>max '+fmt1(cap)+' ('+years+' yrs × '+ent+')</span></div></div>'
-    +'<div class="summary-grid"><div><b>'+fmt1(earned)+'</b><span>Earned</span></div><div><b>'+fmt1(sick+taken)+'</b><span>Deducted</span></div><div><b>'+fmt1(lost)+'</b><span>Lost to cap</span></div></div>'
-    +'<div class="divider"></div><div class="meta">'+days+' day'+(days===1?'':'s')+' elapsed since last leave · '+ent+' days a year ÷ 365 per day'+(open?' · includes '+fmt1(open)+' brought forward':'')+'</div>'
-    +'<div class="result-actions"><button type="button" id="balCopy">Copy result</button>'
-    +(whole>=1?'<button type="button" id="balPlan">Plan '+whole+' day'+(whole===1?'':'s')+' of leave</button>':'')
-    +'<button type="button" class="secondary" id="balReset">Reset</button></div></div>';
-  document.getElementById('balCopy').onclick=function(){
-    if(navigator.share){navigator.share({title:'JFB leave balance',text:lastBalText}).catch(function(){});return;}
-    if(navigator.clipboard)navigator.clipboard.writeText(lastBalText).then(function(){showToast('Leave balance copied');});
-  };
-  var planBtn=document.getElementById('balPlan');
-  if(planBtn)planBtn.onclick=function(){
-    numEl.value=String(Math.min(365,lastBalDays));
-    try{localStorage.setItem('jfb-leave-days',numEl.value);}catch(e){}
-    clearResult(); setMode('return'); window.scrollTo({top:0,behavior:'smooth'});
-    showToast('Pick a start date to plan it');
-  };
-  document.getElementById('balReset').onclick=function(){
-    balFields.forEach(function(f){f[1].value='';}); ebmEl.checked=false; p02El.checked=false;
-    try{localStorage.removeItem('jfb-leave-bal');}catch(e){}
-    syncEntUI(); clearBal();
-  };
+  balBox.innerHTML='<div class="res"><div class="res-k">Leave balance · '+fmtShort(to)+'</div>'
+    +'<div class="res-big '+(bal<0?'warn':'ok')+'">'+fmt1(bal)+' days</div>'
+    +'<div class="res-line">'+days+' day'+(days===1?'':'s')+' since <b>'+fmtShort(last)+'</b> at '+ent+' days a year</div>'
+    +(bal<0?'<div class="res-note">Negative: more leave deducted than earned.</div>':'')
+    +(lost>0?'<div class="res-note">'+fmt1(lost)+' day'+(lost===1?'':'s')+' lost to the '+years+'-year limit</div>':'')
+    +'<div class="bar"><div class="track"><div class="fill'+(lost>0?' full':'')+'" style="width:'+pct+'%"></div></div><div class="ends"><span>0</span><span>max '+fmt1(cap)+' ('+years+' yrs × '+ent+')</span></div></div>'
+    +'<div class="chips"><span><b>'+fmt1(earned)+'</b> earned</span><span><b>'+fmt1(sick+taken)+'</b> deducted</span><span><b>'+fmt1(lost)+'</b> lost to cap</span></div>'
+    +'<div class="acts"><button type="button" data-act="copy">Copy result</button>'
+    +(whole>=1?'<button type="button" data-act="plan">Plan '+whole+' day'+(whole===1?'':'s')+' of leave</button>':'')
+    +'<button type="button" class="plain" data-act="reset">Reset</button></div></div>';
 }
-document.getElementById('balBtn').addEventListener('click',calcBalance);
-try{ var sb=JSON.parse(localStorage.getItem('jfb-leave-bal')||'null'); if(sb){ balFields.forEach(function(f){ if(sb[f[0]]!=null)f[1].value=sb[f[0]]; }); ebmEl.checked=!!sb.ebm; p02El.checked=!!sb.p02; } }catch(e){}
-syncEntUI();
-try{ var qm=new URLSearchParams(location.search).get('mode')||localStorage.getItem('jfb-leave-mode'); if(qm==='balance')setMode('balance'); }catch(e){}
-
-/* Collapsible steps */
-var stepsEl=document.getElementById('steps');
-try{ if(localStorage.getItem('jfb-steps-hidden-leave'))stepsEl.classList.add('hidden'); }catch(e){}
-document.getElementById('stepsHide').addEventListener('click',function(){
-  stepsEl.classList.add('hidden');
-  try{ localStorage.setItem('jfb-steps-hidden-leave','1'); }catch(e){}
+balBox.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]'); if(!b)return;
+  if(b.dataset.act==='copy') shareText('JFB leave balance',lastBalText,'Leave balance copied');
+  if(b.dataset.act==='plan'){ numEl.value=String(Math.min(365,lastBalDays)); store('jfb-leave-days',numEl.value); adjustedFrom=null; renderReturn(); setMode('return'); window.scrollTo(0,0); showToast('Pick a start date to plan it'); }
+  if(b.dataset.act==='reset'){ balFields.forEach(function(f){f[1].value='';}); ebmEl.checked=false; p02El.checked=false; store('jfb-leave-bal',null); renderBalance(); }
 });
+document.querySelectorAll('[data-ent]').forEach(function(b){ b.addEventListener('click',function(){ entEl.value=b.dataset.ent; saveBal(); renderBalance(); }); });
+[entEl,openEl,sickEl,takenEl].forEach(function(el){ el.addEventListener('input',function(){ saveBal(); renderBalance(); }); });
+[ebmEl,p02El,lastEl,toEl].forEach(function(el){ el.addEventListener('change',function(){ saveBal(); renderBalance(); }); });
+document.getElementById('checkToday').addEventListener('click',function(){ toEl.value=isoDate(new Date()); saveBal(); renderBalance(); });
+
+/* ---------- Restore saved inputs, then render ---------- */
+var sStart=load('jfb-leave-start'), sDays=load('jfb-leave-days'); if(sStart)startEl.value=sStart; if(sDays)numEl.value=sDays;
+try{ var sb=JSON.parse(load('jfb-leave-bal')||'null'); if(sb){ balFields.forEach(function(f){ if(sb[f[0]]!=null)f[1].value=sb[f[0]]; }); ebmEl.checked=!!sb.ebm; p02El.checked=!!sb.p02; } }catch(e){}
+try{ var qs=new URLSearchParams(location.search).get('start'); if(qs)startEl.value=qs; }catch(e){}
+renderReturn(); renderBalance();
+try{ var qm=new URLSearchParams(location.search).get('mode')||load('jfb-leave-mode'); if(qm==='balance')setMode('balance'); }catch(e){}
 
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   addEventListener('load',function(){ navigator.serviceWorker.register('../sw.js').catch(function(){}); });

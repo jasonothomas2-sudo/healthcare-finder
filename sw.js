@@ -1,5 +1,5 @@
 /* JFB Healthcare Finder — offline cache */
-const CACHE = 'jfb-finder-v10';
+const CACHE = 'jfb-finder-v11';
 const ASSETS = ['./', 'index.html', 'data.js', 'manifest.json', 'theme.css', 'hero-firefighter.webp', 'icon-192.png', 'icon-512.png', 'watch/', 'leave/'];
 
 self.addEventListener('install', e => {

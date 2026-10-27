@@ -12,7 +12,10 @@
   --primary:#dc2626; --primary-dark:#b91c1c; --primary-text:#b91c1c; --primary-soft:#fdecea;
   --primary-rgb:220,38,38;
   --ring:#dc2626;
-  --hero1:#7f1d1d; --hero2:#b91c1c; --hero3:#ef4444;
+  --hero1:#7f1d1d; --hero2:#b91c1c; --hero3:#dc2626;
+
+  /* Selected state: neutral, so red stays for the brand and primary actions */
+  --sel-bg:var(--ink); --sel-fg:var(--card);
 
   /* Semantic colours (shared by every page) */
   --green:#059669; --green-dark:#047857;
@@ -77,3 +80,11 @@ header.hero::after{
 }
 @media (max-width:600px){ header.hero::after{opacity:.75;background-size:auto 64%} }
 @media (prefers-color-scheme: dark){ header.hero::after{filter:brightness(.85)} }
+
+/* Header text legibility on the red banner */
+header.hero .app-kicker,header.hero .kicker{color:rgba(255,255,255,.94);text-shadow:0 1px 2px rgba(50,0,0,.45)}
+header.hero .sub{color:rgba(255,255,255,.96);text-shadow:0 1px 2px rgba(50,0,0,.45)}
+header.hero h1{text-shadow:0 1px 3px rgba(50,0,0,.35)}
+header.hero .step{background:rgba(50,5,5,.34);border-color:rgba(255,255,255,.3)}
+header.hero .step .tx{color:#fff;text-shadow:0 1px 1px rgba(50,0,0,.4)}
+header.hero .steps-dismiss{color:#fff;text-shadow:0 1px 2px rgba(50,0,0,.5)}

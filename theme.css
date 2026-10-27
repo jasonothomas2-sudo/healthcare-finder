@@ -88,3 +88,16 @@ header.hero h1{text-shadow:0 1px 3px rgba(50,0,0,.35)}
 header.hero .step{background:rgba(50,5,5,.34);border-color:rgba(255,255,255,.3)}
 header.hero .step .tx{color:#fff;text-shadow:0 1px 1px rgba(50,0,0,.4)}
 header.hero .steps-dismiss{color:#fff;text-shadow:0 1px 2px rgba(50,0,0,.5)}
+
+/* Phones: compact header, so the content starts higher.
+   The 3 steps become one swipeable row; the dismiss link comes first. */
+@media (max-width:600px){
+  header.hero{padding-top:18px;padding-bottom:20px}
+  header.hero .steps{flex-wrap:nowrap;overflow-x:auto;gap:6px;margin-top:12px;margin-right:-16px;padding-right:16px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(to right,#000 90%,transparent);mask-image:linear-gradient(to right,#000 90%,transparent)}
+  header.hero .steps::-webkit-scrollbar{display:none}
+  header.hero .step{flex:0 0 auto;padding:5px 12px 5px 6px;white-space:nowrap}
+  header.hero .step .tx{font-size:12px}
+  header.hero .steps-dismiss{order:-1;flex:0 0 auto;white-space:nowrap;font-size:11.5px;padding:6px 8px}
+}

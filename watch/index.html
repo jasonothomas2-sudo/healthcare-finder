@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="../theme.css">
 <style>
   /* Redesign v2 — matches Provider Finder design system */
-  :root{ color-scheme:light dark; --nav-max:760px;
+  :root{ color-scheme:light dark; --nav-max:1120px;
     --day:#2563eb; --eve:#b45309; --night:#6d28d9; --off:#64748b;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -207,6 +207,28 @@
       --day:#60a5fa; --eve:#d97706; --night:#a78bfa; --off:#94a3b8;
     }
   }
+
+  .wrap{max-width:1120px}
+  .hero{padding:24px 16px}
+  .hero .inner{max-width:1088px}
+  .brandmark{display:none}
+  .shift-workspace{display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;align-items:start;padding:24px 16px 0}
+  .shift-controls{position:sticky;top:84px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;min-width:0}
+  .panel-title{font-family:var(--font-head);font-size:24px;letter-spacing:-.3px;line-height:1.2}
+  .panel-description{font-size:13px;color:var(--muted);margin-top:10px}
+  .shift-results{min-width:0}
+  .shift-results>h2:first-child{margin-top:0}
+  .now-card,.today-card{border-radius:20px;padding:26px;box-shadow:var(--shadow)}
+  .today-card .slot-pill{font-size:30px}
+  .today-card .date{font-size:18px}
+  .datejump input{min-width:0;width:100%}
+  footer .wrap{max-width:760px}
+  @media(max-width:760px){
+    .shift-workspace{grid-template-columns:1fr;gap:20px;padding-top:18px}
+    .shift-controls{position:static;padding:20px}
+    .hero{padding:18px 16px}
+    .now-card,.today-card{padding:22px}
+  }
 </style>
 </head>
 <body>
@@ -239,9 +261,16 @@
  </div>
 </header>
 
-<main class="wrap">
+<main class="wrap shift-workspace">
+ <aside class="shift-controls" aria-label="Shift controls">
+  <h2 class="panel-title">Your shift planner</h2>
+  <p class="panel-description">Choose your watch and explore your schedule.</p>
   <h2 class="sec">Your watch</h2>
   <div class="watchpick" id="watchpick" role="group" aria-label="Choose your watch"><button class="wbtn" data-w="A" type="button">A</button><button class="wbtn" data-w="B" type="button">B</button><button class="wbtn" data-w="C" type="button">C</button><button class="wbtn" data-w="D" type="button">D</button></div>
+  <h2 class="sec">Jump to a date</h2>
+  <div class="datejump"><input type="date" id="dateInput" aria-label="Jump to a date"></div>
+ </aside>
+ <div class="shift-results">
   <h2 class="sec">Right now</h2>
   <div class="now-card" id="nowCard"></div>
   <div class="quick-actions">
@@ -261,11 +290,10 @@
     <button type="button" data-days="14">14 days</button>
   </div>
   <div class="weekstrip" id="weekstrip"></div>
-  <h2 class="sec">Jump to a date</h2>
-  <div class="datejump"><input type="date" id="dateInput" aria-label="Jump to a date"></div>
   <h2 class="sec" id="dayDetailLabel">Day detail</h2>
   <div id="dayDetail"></div>
   <div class="legend"><span><i class="Day"></i>Day 07:00–15:00</span><span><i class="Evening"></i>Evening 15:00–22:00</span><span><i class="Night"></i>Night 22:00–07:00</span><span><i class="Off"></i>Off</span></div>
+ </div>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

@@ -50,10 +50,12 @@
       while (d.getDay() === 0 || d.getDay() === 6 || map[isoDate(d)]) d = addDays(d, 1);
       map[isoDate(d)] = s[1] + ' (observed)';
     });
-    // One-off changes
-    changes = changes || root.JFB_HOLIDAY_CHANGES || {};
-    (changes.remove || []).forEach(function (ds) { if (ds.slice(0, 4) === String(y)) delete map[ds]; });
-    (changes.add || []).forEach(function (h) { if (h.date.slice(0, 4) === String(y)) map[h.date] = h.name; });
+    // One-off changes: automatic (holidays-auto.js) first, then manual (holidays-extra.js) wins
+    var lists = changes ? [changes] : [root.JFB_HOLIDAY_AUTO || {}, root.JFB_HOLIDAY_CHANGES || {}];
+    lists.forEach(function (c) {
+      (c.remove || []).forEach(function (ds) { if (ds.slice(0, 4) === String(y)) delete map[ds]; });
+      (c.add || []).forEach(function (h) { if (h.date.slice(0, 4) === String(y)) map[h.date] = h.name; });
+    });
     return map;
   }
 

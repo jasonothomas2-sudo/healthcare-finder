@@ -56,6 +56,11 @@ const KNOWN = {
   'kingston20|St. Andrew': [18.0250, -76.8300],         // Washington Boulevard / Duhaney Park
   'rosehall|St. James': [18.5060, -77.8240],
   'barnetttechpark|St. James': [18.4640, -77.9040],    // Montego Bay
+  // Listing has these in the wrong parish or spelt differently; use the real town
+  'linstead|Clarendon': [18.1366, -77.0304],            // Linstead (St. Catherine)
+  'greaterportmore|St. Andrew': [17.9415, -76.9065],    // Greater Portmore (St. Catherine)
+  'spalding|Clarendon': [18.1560, -77.4565],            // Spaldings
+  'frankfield|Clarendon': [18.1440, -77.3680],
 };
 // Town name with post-office / road suffixes removed
 const cleanTown = (t) => (t || '').replace(/\bp\.?\s*o\.?\s*$/i, '').replace(/\bmain\s+road\s*$/i, '').replace(/^.*,\s*/, '').trim();

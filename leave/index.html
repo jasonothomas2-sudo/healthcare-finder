@@ -182,6 +182,19 @@
     .res-big{font-size:30px}
     .panel-intro{margin-bottom:22px}
   }
+
+.field-error{color:var(--red);font-size:13px;margin-top:8px}
+input[aria-invalid="true"]{border-color:var(--red)}
+.balance-bar{display:none}
+#balanceResult,#balanceResultHeading{scroll-margin-top:90px}
+@media(max-width:760px){
+ .balance-bar{position:fixed;bottom:0;left:0;right:0;z-index:45;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px calc(12px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow-lg)}
+ .balance-bar small,.balance-bar strong{display:block}
+ .balance-bar small{font-size:11px;color:var(--muted)}
+ .balance-bar strong{font-family:var(--font-head);font-size:15px}
+ .balance-bar button{min-height:44px;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--sel-bg);color:var(--sel-fg);font:700 13px var(--font-head)}
+ body.has-balance-bar{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+}
 </style>
 </head>
 <body>
@@ -226,7 +239,8 @@
     </div>
     <div class="group">
       <label class="lbl" for="numDays">Number of leave days</label>
-      <input type="number" id="numDays" min="1" max="365" inputmode="numeric" placeholder="e.g. 10">
+      <input type="number" id="numDays" min="1" max="365" step="1" aria-describedby="daysError" inputmode="numeric" placeholder="e.g. 10">
+      <p id="daysError" class="field-error" hidden></p>
       <div class="seg" aria-label="Common leave day presets">
         <button type="button" data-days="5">5</button>
         <button type="button" data-days="10">10</button>
@@ -293,11 +307,12 @@
     </details>
     </div>
     <aside class="result-panel" aria-label="Leave balance result">
-      <div id="balBox" aria-live="polite"></div>
+      <div id="balanceResult" tabindex="-1" role="region" aria-label="Leave balance result"><div id="balBox" aria-live="polite"></div></div>
       <p class="result-help">Updates as you type. Open “How it’s calculated” for accrual and accumulation rules.</p>
     </aside>
   </section>
 </main>
+<div id="balanceBar" class="balance-bar" hidden><span><small>Leave balance</small><strong id="balancePreview">Complete your details</strong></span><button type="button" id="viewBalance">View result</button></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <footer><div class="wrap"><div class="credit"><span class="cm" aria-hidden="true">JT</span> Created by <b>Jason Thomas</b> · © 2026</div>Counts Monday-Friday, excluding: New Year's Day, Ash Wednesday, Good Friday, Easter Monday, Labour Day, Emancipation Day, Independence Day, National Heroes Day, Christmas Day, Boxing Day.<br><br>Holiday dates are calculated automatically each year; a holiday that falls on a Sunday is observed on the next working day. Verify with HR/official leave policy before submitting.
@@ -361,6 +376,7 @@ function setMode(m){
   tabReturn.setAttribute('aria-selected',String(!bal)); tabBalance.setAttribute('aria-selected',String(bal));
   subEl.textContent=bal?SUB_BAL:SUB_RETURN;
   store('jfb-leave-mode',m);
+  updateBalanceBar();
 }
 tabReturn.addEventListener('click',function(){setMode('return');});
 tabBalance.addEventListener('click',function(){setMode('balance');});
@@ -404,9 +420,29 @@ function computeLeave(start,n){
   }
   return {last:last,ret:ret,skipped:skipped,weekends:weekends};
 }
+
+function validateLeaveDays(raw,badInput){
+  if(!raw.trim()&&!badInput) return {value:0,error:''};
+  var n=Number(raw);
+  if(badInput||!Number.isFinite(n)||!Number.isInteger(n)) return {value:0,error:'Enter a whole number of days, such as 1 or 2.'};
+  if(n<1||n>365) return {value:0,error:'Enter between 1 and 365 days.'};
+  return {value:n,error:''};
+}
+function openingMode(search,saved){
+  var params=new URLSearchParams(search), mode=params.get('mode');
+  if(mode==='return'||mode==='balance') return mode;
+  if(params.has('start')) return 'return';
+  return saved==='balance'?'balance':'return';
+}
+
 function renderReturn(){
   syncDateFields(); nudgeBox.innerHTML=''; lastResultText='';
-  var start=parseDate(startEl.value), n=parseInt(numEl.value,10);
+  var start=parseDate(startEl.value), validation=validateLeaveDays(numEl.value, numEl.validity.badInput), n=validation.value;
+  var errorEl=document.getElementById('daysError');
+  errorEl.textContent=validation.error; errorEl.hidden=!validation.error;
+  numEl.setAttribute('aria-invalid',String(!!validation.error));
+  numEl.setCustomValidity(validation.error);
+  if(validation.error){ resBox.innerHTML=idleCard(validation.error,!!start,false); return; }
   var reason=start?blockReason(start):null, okDays=n>=1&&n<=365;
   if(!start||!n||n<1){ resBox.innerHTML=idleCard('',start&&!reason,okDays); if(!reason)return; }
   if(n>365){ resBox.innerHTML=idleCard('Use 365 days or less.',start&&!reason,false); if(!reason)return; }
@@ -450,6 +486,7 @@ numEl.addEventListener('input',function(){ store('jfb-leave-days',numEl.value); 
 var entEl=document.getElementById('entDays'), ebmEl=document.getElementById('ebm'), p02El=document.getElementById('post2002'), p02Wrap=document.getElementById('post2002Wrap');
 var lastEl=document.getElementById('lastLeave'), toEl=document.getElementById('checkTo');
 var openEl=document.getElementById('openBal'), sickEl=document.getElementById('sickDays'), takenEl=document.getElementById('takenDays');
+var balancePreviewText='Complete your details', balanceResultVisible=false;
 var balBox=document.getElementById('balBox'), sickHint=document.getElementById('sickHint'), lastBalText='', lastBalDays=0;
 var balFields=[['ent',entEl],['last',lastEl],['to',toEl],['open',openEl],['sick',sickEl],['taken',takenEl]];
 
@@ -462,12 +499,16 @@ function syncEntUI(){
 }
 function saveBal(){ var o={ebm:ebmEl.checked,p02:p02El.checked}; balFields.forEach(function(f){o[f[0]]=f[1].value;}); store('jfb-leave-bal',JSON.stringify(o)); }
 function idleBal(msg,hasEnt,hasLast){
+  balancePreviewText=msg?'Check your details':'Complete your details';
+  updateBalanceBar();
   return emptyState('Leave balance',IC_BAL,'Your leave balance will appear here',
     [['Choose the days earned per year',!!hasEnt],['Enter when leave was last taken',!!hasLast],['See your available days',false]],msg);
 }
 function renderBalance(){
   syncEntUI(); syncDateFields(); lastBalText=''; lastBalDays=0;
   var ent=parseFloat(entEl.value), last=parseDate(lastEl.value), to=parseDate(toEl.value);
+  var invalid=balFields.some(function(f){ return f[1].validity.badInput||(f[1].value!==''&&!f[1].validity.valid); });
+  if(invalid){ balBox.innerHTML=idleBal('Check the values entered in your details.',ent>0,!!last); return; }
   if(!ent||ent<=0||!last){ balBox.innerHTML=idleBal('',ent>0,last); return; }
   if(!to){ to=new Date(); to.setHours(0,0,0,0); }
   if(to<last){ balBox.innerHTML=idleBal('The check date must be on or after the last leave date.',true,false); return; }
@@ -478,8 +519,9 @@ function renderBalance(){
   var lost=gross>cap?gross-cap:0, bal=gross>cap?cap:gross;
   var pct=Math.max(0,Math.min(100,bal/cap*100)), whole=Math.max(0,Math.floor(bal+1e-9));
   lastBalDays=whole;
+  balancePreviewText=fmt1(bal)+' days'; updateBalanceBar();
   lastBalText='Leave balance as at '+fmtLeave(to)+': '+fmt1(bal)+' days\nEarned since '+fmtLeave(last)+': '+fmt1(earned)+' days ('+ent+' days/yr)\nMaximum: '+fmt1(cap)+' days ('+years+' yrs)';
-  balBox.innerHTML='<div class="res"><div class="res-k">Leave balance · '+fmtShort(to)+'</div>'
+  balBox.innerHTML='<div class="res"><h2 id="balanceResultHeading" tabindex="-1" class="res-k">Leave balance · '+fmtShort(to)+'</h2>'
     +'<div class="res-big '+(bal<0?'warn':'ok')+'">'+fmt1(bal)+' days</div>'
     +'<div class="res-line">'+days+' day'+(days===1?'':'s')+' since <b>'+fmtShort(last)+'</b> at '+ent+' days a year</div>'
     +(bal<0?'<div class="res-note">Negative: more leave deducted than earned.</div>':'')
@@ -501,12 +543,29 @@ document.querySelectorAll('[data-ent]').forEach(function(b){ b.addEventListener(
 [ebmEl,p02El,lastEl,toEl].forEach(function(el){ el.addEventListener('change',function(){ saveBal(); renderBalance(); }); });
 document.getElementById('checkToday').addEventListener('click',function(){ toEl.value=isoDate(new Date()); saveBal(); renderBalance(); });
 
+
+function updateBalanceBar(){
+  var bar=document.getElementById('balanceBar');
+  if(!bar) return;
+  bar.hidden=modeBalance.hidden||balanceResultVisible;
+  document.getElementById('balancePreview').textContent=balancePreviewText||'Complete your details';
+  document.body.classList.toggle('has-balance-bar',!bar.hidden);
+}
+document.getElementById('viewBalance').addEventListener('click',function(){
+  var target=document.getElementById('balanceResultHeading')||document.getElementById('balanceResult');
+  target.focus({preventScroll:true});
+  target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+});
+if('IntersectionObserver' in window){
+  new IntersectionObserver(function(entries){ balanceResultVisible=entries[0].isIntersecting; updateBalanceBar(); },{rootMargin:'-70px 0px 0px 0px',threshold:0}).observe(document.getElementById('balanceResult'));
+}
+
 /* ---------- Restore saved inputs, then render ---------- */
 var sStart=load('jfb-leave-start'), sDays=load('jfb-leave-days'); if(sStart)startEl.value=sStart; if(sDays)numEl.value=sDays;
 try{ var sb=JSON.parse(load('jfb-leave-bal')||'null'); if(sb){ balFields.forEach(function(f){ if(sb[f[0]]!=null)f[1].value=sb[f[0]]; }); ebmEl.checked=!!sb.ebm; p02El.checked=!!sb.p02; } }catch(e){}
 try{ var qs=new URLSearchParams(location.search).get('start'); if(qs)startEl.value=qs; }catch(e){}
 renderReturn(); renderBalance();
-try{ var qm=new URLSearchParams(location.search).get('mode')||load('jfb-leave-mode'); if(qm==='balance')setMode('balance'); }catch(e){}
+setMode(openingMode(location.search,load('jfb-leave-mode')));
 
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   addEventListener('load',function(){ navigator.serviceWorker.register('../sw.js').catch(function(){}); });

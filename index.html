@@ -680,8 +680,8 @@ function distanceKm(d){
 }
 function distanceLabel(d){
   const km=distanceKm(d); if(km==null) return '';
-  const n=km<1?'Under 1':String(Math.round(km));
-  return placeOf(d).town ? `About ${n} km away` : `About ${n} km away (parish estimate)`;
+  const n=km<1?'Under 1 km away':`About ${Math.round(km)} km away`;
+  return placeOf(d).town ? n : `${n} (parish estimate)`;
 }
 
 function updateClear(){

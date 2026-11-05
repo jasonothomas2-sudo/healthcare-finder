@@ -1,0 +1,55 @@
+name: Deploy Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Holiday sync]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-deployment
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The sync workflow may have committed files after its starting SHA.
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run tests
+        run: node --test tests/*.test.js
+      - name: Prepare public site
+        run: |
+          mkdir _site
+          cp index.html data.js towns.js theme.css theme.js shift.js holidays*.js sw.js manifest.json hero-firefighter.webp icon-*.png _site/
+          cp -R leave watch calendar _site/
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy site
+        id: deployment
+        uses: actions/deploy-pages@v4

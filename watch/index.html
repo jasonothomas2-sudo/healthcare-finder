@@ -416,8 +416,11 @@ function countdownStr(from,to){
 
 let selectedWatch='A';
 try{ const sv=localStorage.getItem('jfb-watch'); if(sv && 'ABCD'.includes(sv)) selectedWatch=sv; }catch(e){}
-let selectedDate=S.jamaicaToday();
+let lastToday=S.jamaicaToday();
+let selectedDate=new Date(lastToday);
+let followingToday=true;
 try{ const qd=new URLSearchParams(location.search).get('date'); if(qd){ const p=qd.split('-').map(Number); if(p.length===3&&p[0]&&p[1]&&p[2]) selectedDate=new Date(p[0],p[1]-1,p[2]); } }catch(e){}
+followingToday=sameDay(selectedDate,lastToday);
 let forecastDays=7;
 try{ const r=localStorage.getItem('jfb-watch-range'); if(r==='14') forecastDays=14; else if(r==='month') forecastDays='month'; }catch(e){}
 let viewMonth=new Date(selectedDate.getFullYear(),selectedDate.getMonth(),1);
@@ -465,7 +468,7 @@ function renderForecast(){
 }
 
 /* Look ahead: 7 / 14 day rows, or a month calendar */
-function selectDay(d){ selectedDate=d; viewMonth=new Date(d.getFullYear(),d.getMonth(),1); renderAll(); }
+function selectDay(d){ followingToday=sameDay(d,S.jamaicaToday()); selectedDate=d; viewMonth=new Date(d.getFullYear(),d.getMonth(),1); renderAll(); }
 function renderWeekStrip(){
   const el=document.getElementById('weekstrip'); el.innerHTML=''; el.className=forecastDays==='month'?'':'weekstrip';
   const today=S.jamaicaToday();
@@ -497,7 +500,7 @@ function renderMonth(el,today){
 }
 document.getElementById('weekstrip').addEventListener('click',function(e){
   const nav=e.target.closest('[data-mnav]');
-  if(nav){ viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+Number(nav.dataset.mnav),1); renderWeekStrip(); return; }
+  if(nav){ followingToday=false; viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+Number(nav.dataset.mnav),1); renderWeekStrip(); return; }
   const c=e.target.closest('[data-mday]');
   if(c){ const p=c.dataset.mday.split('-').map(Number); selectDay(new Date(p[0],p[1]-1,p[2])); }
 });
@@ -575,7 +578,22 @@ document.getElementById('stepsHide').addEventListener('click',hideSteps);
 document.getElementById('watchpick').addEventListener('click',function(e){ const b=e.target.closest('.wbtn'); if(!b) return; selectedWatch=b.dataset.w; try{ localStorage.setItem('jfb-watch',selectedWatch); }catch(err){} hideSteps(); renderAll(); });
 dateInput.addEventListener('change',function(e){ if(!e.target.value) return; const p=e.target.value.split('-').map(Number); selectDay(new Date(p[0],p[1]-1,p[2])); });
 
-setInterval(function(){ renderNow(); renderForecast(); },60000);  // keep the live parts fresh
+function refreshClock(){
+  const today=S.jamaicaToday();
+  if(!sameDay(today,lastToday)){
+    if(followingToday){
+      selectedDate=new Date(today);
+      viewMonth=new Date(today.getFullYear(),today.getMonth(),1);
+    }
+    lastToday=today;
+    renderAll();
+  }else{
+    renderNow(); renderForecast();
+  }
+}
+setInterval(refreshClock,60000);
+document.addEventListener('visibilitychange',function(){ if(!document.hidden) refreshClock(); });
+window.addEventListener('pageshow',refreshClock);
 
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   addEventListener('load',()=>navigator.serviceWorker.register('../sw.js').catch(()=>{}));

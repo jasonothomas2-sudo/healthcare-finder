@@ -36,7 +36,7 @@ jobs:
       - name: Run tests before publishing
         run: |
           node -e "global.window={}; require('./holidays-auto.js'); require('./holidays-extra.js'); if(!Array.isArray(window.JFB_HOLIDAY_AUTO.add)) throw new Error('bad holidays-auto.js')"
-          node --test tests/holidays.test.js tests/shift.test.js
+          node --test tests/*.test.js
 
       - name: Publish changes
         run: |

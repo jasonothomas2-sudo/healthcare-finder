@@ -229,6 +229,81 @@
     .hero{padding:18px 16px}
     .now-card,.today-card{padding:22px}
   }
+
+  /* ---- v3: combined Today card, calendar box, month view, phone fixes ---- */
+  .now-card{display:block;padding:22px 24px}
+  .nc-top{display:flex;align-items:center;gap:18px}
+  .slot-badge{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:92px;padding:12px 14px;
+    border-radius:16px;color:#fff;font-family:var(--font-head);box-shadow:0 4px 12px -3px rgba(0,0,0,.3)}
+  .slot-badge .w{font-size:22px;font-weight:900;line-height:1.1}
+  .slot-badge .s{font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;opacity:.92;margin-top:3px}
+  .slot-badge.Day{background:var(--day)} .slot-badge.Evening{background:var(--eve)} .slot-badge.Night{background:var(--night)} .slot-badge.Off{background:var(--off)}
+  .nc-k{font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+  .nc-title{font-family:var(--font-head);font-size:clamp(20px,3vw,26px);font-weight:800;letter-spacing:-.3px;line-height:1.2;color:var(--ink);margin-top:3px}
+  .nc-hours{font-size:14px;color:var(--ink2);font-weight:600;margin-top:2px}
+  .nc-live{display:flex;align-items:flex-start;gap:9px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink2);line-height:1.55}
+  .nc-live .live-dot{margin-top:6px}
+  .nc-live b{font-family:var(--font-head);color:var(--primary-text)}
+  .nc-live .now-you{margin-left:4px}
+
+  .cal-box{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow)}
+  .cal-head{display:flex;gap:12px;align-items:flex-start}
+  .cal-head svg{width:20px;height:20px;fill:var(--primary-text);flex:0 0 auto;margin-top:2px}
+  .cal-head b{display:block;font-family:var(--font-head);font-size:14.5px;color:var(--ink)}
+  .cal-head span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+  .cal-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .cal-acts .action-btn{flex:1 1 140px}
+
+  .weekstrip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;overflow:visible;padding:2px 0 6px}
+  .daychip{width:auto;min-width:0;padding:10px 2px}
+  .daychip.today .dnum{color:var(--primary-text)}
+  .daychip .dslot{padding:3px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+
+  .month-nav{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}
+  .month-nav b{font-family:var(--font-head);font-size:16px;color:var(--ink)}
+  .month-nav button{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink2);
+    font-size:20px;font-weight:800;cursor:pointer;box-shadow:var(--shadow)}
+  .month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+  .month-grid .mh{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:center;padding-bottom:2px}
+  .mcell{min-width:0;min-height:58px;border-radius:11px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 2px;font-family:var(--font-head)}
+  .mcell .mn{font-size:14px;font-weight:800;color:var(--ink)}
+  .mcell .mt{font-size:10px;font-weight:800;color:#fff;border-radius:20px;padding:2px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  .mcell .mt.Day{background:var(--day)} .mcell .mt.Evening{background:var(--eve)} .mcell .mt.Night{background:var(--night)} .mcell .mt.Off{background:var(--off)}
+  .mcell.today .mn{color:var(--primary-text)}
+  .mcell.today{border-color:var(--primary-text)}
+  .mcell.selected{border-color:var(--ink);box-shadow:0 0 0 3px rgba(var(--shadow-rgb),.12)}
+  .mcell.blank{visibility:hidden}
+
+  /* Date field: native picker underneath, day-month-year display on top */
+  .datef{position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:48px;font-size:15px;color:var(--ink);background:var(--card);
+    border:1.5px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow);cursor:pointer}
+  .datef:focus-within{border-color:var(--primary-text)}
+  .datef .dv{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .datef svg{flex:0 0 auto;width:18px;height:18px;color:var(--ink2)}
+  .datef input[type=date]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;box-shadow:none}
+  .datef input[type=date]::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+
+  @media(max-width:600px){
+    /* Instructions: a compact list instead of a cut-off swipe row */
+    header.hero .steps{display:grid;grid-template-columns:1fr;gap:6px;overflow:visible;margin-right:0;padding-right:0}
+    header.hero .steps.hidden{display:none}
+    header.hero .step{white-space:normal;border-radius:12px;padding:6px 10px 6px 6px}
+    header.hero .steps-dismiss{order:0;justify-self:start}
+    .steps-dots{display:none !important}
+    .now-card{padding:18px}
+    .nc-top{gap:14px}
+    .slot-badge{min-width:76px;padding:10px}
+    .slot-badge .w{font-size:19px}
+    .weekstrip{gap:5px}
+    .daychip{padding:8px 1px;border-radius:11px}
+    .daychip .dname{font-size:10px}
+    .daychip .dnum{font-size:15px}
+    .daychip .dslot{font-size:9.5px;padding:2px 4px}
+    .month-grid{gap:4px}
+    .mcell{min-height:52px;border-radius:9px}
+    .mcell .mt{font-size:9px;padding:2px 4px}
+  }
 </style>
 </head>
 <body>
@@ -271,23 +346,31 @@
   <div class="datejump"><input type="date" id="dateInput" aria-label="Jump to a date"></div>
  </aside>
  <div class="shift-results">
-  <h2 class="sec">Right now</h2>
-  <div class="now-card" id="nowCard"></div>
+  <h2 class="sec">Today</h2>
+  <div class="now-card" id="nowCard" aria-live="polite"></div>
   <div class="quick-actions">
     <button class="action-btn primary" id="nextShiftBtn" type="button">Jump to my next shift</button>
     <button class="action-btn" id="shareShiftBtn" type="button">Copy shift summary</button>
   </div>
-  <h2 class="sec">Today's shift</h2>
-  <div class="today-card" id="todayCard"></div>
   <h2 class="sec">Coming up</h2>
   <div class="forecast" id="forecast"></div>
-  <div style="margin-top:14px"><button class="ics-btn" id="icsBtn" type="button">
-    <svg viewBox="0 0 24 24"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zM5 9h14v10H5V9zm7 2v3H9v2h3v3h2v-3h3v-2h-3v-3h-2z"/></svg>
-    Add my 30-day shifts to calendar</button></div>
+  <div class="cal-box">
+    <div class="cal-head">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zM5 9h14v10H5V9zm7 2v3H9v2h3v3h2v-3h3v-2h-3v-3h-2z"/></svg>
+      <div><b>Put your shifts in your phone calendar</b><span>Subscribe once and it stays up to date, with a reminder 1 hour before each shift.</span></div>
+    </div>
+    <div class="cal-acts">
+      <a class="action-btn primary" id="calApple" href="#">iPhone / Outlook</a>
+      <a class="action-btn primary" id="calGoogle" href="#" target="_blank" rel="noopener">Google Calendar</a>
+      <button class="action-btn" id="calCopy" type="button">Copy link</button>
+      <button class="action-btn" id="icsBtn" type="button">Download 30 days</button>
+    </div>
+  </div>
   <h2 class="sec">Look ahead</h2>
   <div class="range-pick" id="rangePick" role="group" aria-label="Forecast range">
     <button type="button" data-days="7" class="active">7 days</button>
     <button type="button" data-days="14">14 days</button>
+    <button type="button" data-days="month">Month</button>
   </div>
   <div class="weekstrip" id="weekstrip"></div>
   <h2 class="sec" id="dayDetailLabel">Day detail</h2>
@@ -297,7 +380,7 @@
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<footer><div class="wrap"><div class="credit"><span class="cm" aria-hidden="true">JT</span> Created by <b>Jason Thomas</b> · © 2026</div><b>How it works:</b> pick your watch once — this forecast updates itself every day, so it's always current. Your watch choice is remembered on this device.<br><br>Anchor: Fri Jul 10 2026 — C=Day, D=Evening, A=Night, B=Off. Cycle: Day → Evening → Night → Off, repeating every 4 days, per watch. Built for JFB station staff. Verify against the official roster if in doubt.
+<footer><div class="wrap"><div class="credit"><span class="cm" aria-hidden="true">JT</span> Created by <b>Jason Thomas</b> · © 2026</div><b>How it works:</b> pick your watch once — this forecast updates itself every day, so it's always current. Your watch choice is remembered on this device.<br><br>Anchor: Fri 10 Jul 2026 — C=Day, D=Evening, A=Night, B=Off. Cycle: Day → Evening → Night → Off, repeating every 4 days, per watch. Shift times are Jamaica time. Built for JFB station staff. Verify against the official roster if in doubt.
 <div class="mops" role="img" aria-label="Built with MOPS — Media Operations System">
   <svg class="mops-m" viewBox="0 0 128 128" aria-hidden="true">
     <defs><linearGradient id="mopsGrad" x1="0" y1="0" x2="1" y2="1">
@@ -314,161 +397,195 @@
   <span class="mops-tag">BUILT WITH</span><span class="mops-wm">MOPS</span>
 </div></div></footer>
 
+<script src="../shift.js"></script>
 <script>
-const ANCHOR = new Date(2026, 6, 10);
-const ANCHOR_SLOTS = { 0:'C', 1:'D', 2:'A', 3:'B' };
-const SLOT_NAMES = ['Day','Evening','Night','Off'];
-const SLOT_HOURS = { Day:'07:00 – 15:00', Evening:'15:00 – 22:00', Night:'22:00 – 07:00 (next day)', Off:'Off duty' };
-function dayOffset(date){ const a=Date.UTC(ANCHOR.getFullYear(),ANCHOR.getMonth(),ANCHOR.getDate()); const b=Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()); return Math.round((b-a)/86400000); }
-function slotsForDate(date){ const off=dayOffset(date); const r={}; for(let i=0;i<4;i++){ const src=((i-off)%4+4)%4; r[SLOT_NAMES[i]]=ANCHOR_SLOTS[src]; } return r; }
-function watchSlotForDate(w,date){ const s=slotsForDate(date); for(const n of SLOT_NAMES){ if(s[n]===w) return n; } }
-function fmtDate(d){ return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}); }
-function toISO(d){ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+day; }
-let selectedWatch='A';
-try{ const sv=localStorage.getItem('jfb-watch'); if(sv && 'ABCD'.includes(sv)) selectedWatch=sv; }catch(e){}
-let selectedDate=new Date(); selectedDate.setHours(0,0,0,0);
-try{ const qp=new URLSearchParams(location.search); const qd=qp.get('date'); if(qd){ const p=qd.split('-').map(Number); if(p.length===3&&p[0]&&p[1]&&p[2]) selectedDate=new Date(p[0],p[1]-1,p[2]); selectedDate.setHours(0,0,0,0); } }catch(e){}
-let forecastDays=7;
-function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(showToast._t); showToast._t=setTimeout(()=>t.classList.remove('on'),1600); }
-function renderWatchPicker(){ document.querySelectorAll('.wbtn').forEach(b=>{ const on=b.dataset.w===selectedWatch; b.classList.toggle('active', on); b.setAttribute('aria-pressed',on); }); }
-function renderTodayCard(){ const now=new Date(); now.setHours(0,0,0,0); const slot=watchSlotForDate(selectedWatch,now); document.getElementById('todayCard').innerHTML='<div class="dow">Today · Watch '+selectedWatch+'</div><div class="date">'+fmtDate(now)+'</div><div class="slot-pill '+slot+'">'+slot+'</div><div class="hours">'+SLOT_HOURS[slot]+'</div>'; }
-function relDay(n){ return n===0?'Today':n===1?'Tomorrow':'in '+n+' days'; }
-function renderForecast(){ const now=new Date(); now.setHours(0,0,0,0); const next={}; for(let i=0;i<28 && Object.keys(next).length<4;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); if(next[slot]===undefined) next[slot]={days:i,date:d}; } document.getElementById('forecast').innerHTML=SLOT_NAMES.map(function(name){ const info=next[name]; if(!info) return ''; const when=relDay(info.days); const dateStr=info.date.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); return '<div class="fc '+name+'"><div class="fc-slot"><span class="fc-dot '+name+'"></span>Next '+name+'</div><div class="fc-when"><b>'+when+'</b></div><div class="fc-date">'+dateStr+' · '+SLOT_HOURS[name]+'</div></div>'; }).join(''); }
-function renderWeekStrip(){ const el=document.getElementById('weekstrip'); el.innerHTML=''; const now=new Date(); now.setHours(0,0,0,0); for(let i=0;i<forecastDays;i++){ const d=new Date(now); d.setDate(d.getDate()+i); const slot=watchSlotForDate(selectedWatch,d); const chip=document.createElement('button'); chip.type='button'; chip.className='daychip'+(toISO(d)===toISO(selectedDate)?' selected':''); chip.setAttribute('aria-label',fmtDate(d)+', '+slot+' shift'); chip.innerHTML='<div class="dname">'+d.toLocaleDateString('en-US',{weekday:'short'})+'</div><div class="dnum">'+d.getDate()+'</div><div class="dslot '+slot+'">'+slot+'</div>'; chip.onclick=function(){ selectedDate=d; document.getElementById('dateInput').value=toISO(d); renderAll(); }; el.appendChild(chip); } }
-function renderDayDetail(){ document.getElementById('dayDetailLabel').textContent=fmtDate(selectedDate); const s=slotsForDate(selectedDate); const rows=SLOT_NAMES.map(function(name){ const w=s[name]; const mine=w===selectedWatch; return '<div class="row"><span class="rw"><span class="dot '+name+'"></span><span>'+name+'<span class="rsub">'+SLOT_HOURS[name]+'</span></span></span><span class="'+(mine?'rv thisWatch':'rv')+'">Watch '+w+(mine?'<span class="youtag">YOU</span>':'')+'</span></div>'; }).join(''); document.getElementById('dayDetail').innerHTML='<div class="grid-day">'+rows+'</div><div class="quick-actions"><a class="action-btn primary" href="../leave/?start='+toISO(selectedDate)+'">Calculate leave from this date</a></div>'; }
-const SLOT_START={ Day:7, Evening:15, Night:22 };  // shift start hour
-/* Which watch is on duty at a given instant, honouring real slot times.
-   Before 07:00 the on-duty Night crew is the one that started at 22:00 the previous day. */
-function currentDuty(now){
-  const h=now.getHours();
-  let slot, eff=new Date(now); eff.setHours(0,0,0,0);
-  const endsAt=new Date(now); endsAt.setSeconds(0,0);
-  if(h>=7&&h<15){ slot='Day'; endsAt.setHours(15,0,0,0); }
-  else if(h>=15&&h<22){ slot='Evening'; endsAt.setHours(22,0,0,0); }
-  else if(h>=22){ slot='Night'; endsAt.setDate(endsAt.getDate()+1); endsAt.setHours(7,0,0,0); }
-  else { slot='Night'; eff.setDate(eff.getDate()-1); endsAt.setHours(7,0,0,0); }
-  return { slot, watch:slotsForDate(eff)[slot], endsAt };
-}
-/* Next shift start strictly after `now` for watch w. */
-function nextShiftStart(w,now){
-  for(let i=0;i<8;i++){
-    const d=new Date(now); d.setDate(d.getDate()+i); d.setHours(0,0,0,0);
-    const slot=watchSlotForDate(w,d);
-    if(slot==='Off')continue;
-    const start=new Date(d); start.setHours(SLOT_START[slot],0,0,0);
-    if(start>now) return { slot, start };
-  }
-  return null;
-}
+/* Shift rota rules live in ../shift.js (shared with the calendar builder). All times are Jamaica time. */
+const S = window.JFBShift;
+const SLOT_NAMES = S.SLOT_NAMES, SLOT_HOURS = S.SLOT_HOURS;
+const SHORT = { Day:'Day', Evening:'Eve', Night:'Night', Off:'Off' };
+
+function fmtDate(d){ return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
+function fmtShort(d){ return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}); }
+function fmtField(d){ return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'}); }
+function hhmm(d){ return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+function toISO(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function sameDay(a,b){ return toISO(a)===toISO(b); }
+function daysBetween(a,b){ return Math.round((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/86400000); }
+function relDay(n){ return n===0?'Today':n===1?'Tomorrow':'In '+n+' days'; }
 function countdownStr(from,to){
-  let mins=Math.round((to-from)/60000); if(mins<0)mins=0;
+  let mins=Math.max(0,Math.round((to-from)/60000));
   const d=Math.floor(mins/1440), h=Math.floor((mins%1440)/60), m=mins%60;
   if(d>0) return 'in '+d+'d '+h+'h';
   if(h>0) return 'in '+h+'h '+m+'m';
   return 'in '+m+'m';
 }
-function hhmm(d){ return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+
+let selectedWatch='A';
+try{ const sv=localStorage.getItem('jfb-watch'); if(sv && 'ABCD'.includes(sv)) selectedWatch=sv; }catch(e){}
+let selectedDate=S.jamaicaToday();
+try{ const qd=new URLSearchParams(location.search).get('date'); if(qd){ const p=qd.split('-').map(Number); if(p.length===3&&p[0]&&p[1]&&p[2]) selectedDate=new Date(p[0],p[1]-1,p[2]); } }catch(e){}
+let forecastDays=7;
+try{ const r=localStorage.getItem('jfb-watch-range'); if(r==='14') forecastDays=14; else if(r==='month') forecastDays='month'; }catch(e){}
+let viewMonth=new Date(selectedDate.getFullYear(),selectedDate.getMonth(),1);
+
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(showToast._t); showToast._t=setTimeout(()=>t.classList.remove('on'),1600); }
+function renderWatchPicker(){ document.querySelectorAll('.wbtn').forEach(b=>{ const on=b.dataset.w===selectedWatch; b.classList.toggle('active', on); b.setAttribute('aria-pressed',on); }); }
+
+/* Today: your shift today + who's on duty now + your next shift */
+function renderNow(){
+  const now=S.jamaicaNow(), today=S.jamaicaToday();
+  const slot=S.watchSlotForDate(selectedWatch,today);
+  const duty=S.currentDuty(now), you=duty.watch===selectedWatch;
+  let live;
+  if(you){
+    live='<b>You\'re on duty now</b> · '+duty.slot+' shift until '+hhmm(duty.endsAt);
+  }else{
+    const next=S.nextShiftStart(selectedWatch,now);
+    live='On duty now: Watch '+duty.watch+' ('+duty.slot+')'
+      +(next?'<br>Your next shift: <b>'+next.slot+' '+countdownStr(now,next.start)+'</b> · '+fmtShort(next.start)+', '+hhmm(next.start):'');
+  }
+  document.getElementById('nowCard').innerHTML=
+    '<div class="nc-top"><div class="slot-badge '+slot+'"><span class="w">'+slot+'</span><span class="s">Watch '+selectedWatch+'</span></div>'
+    +'<div><div class="nc-k">Today · '+fmtShort(today)+'</div>'
+    +'<div class="nc-title">'+(slot==='Off'?'You\'re off today':'You\'re on '+slot+' shift today')+'</div>'
+    +'<div class="nc-hours">'+SLOT_HOURS[slot]+'</div></div></div>'
+    +'<div class="nc-live"><span class="live-dot"></span><span>'+live+'</span></div>';
+}
+
+/* Coming up: next Day / Evening / Night / Off, based on the time now (a finished shift isn't shown as next) */
+function renderForecast(){
+  const now=S.jamaicaNow(), today=S.jamaicaToday();
+  document.getElementById('forecast').innerHTML=SLOT_NAMES.map(function(name){
+    let date, when, detail;
+    if(name==='Off'){
+      for(let i=0;i<8;i++){ const d=new Date(today); d.setDate(d.getDate()+i); if(S.watchSlotForDate(selectedWatch,d)==='Off'){ date=d; break; } }
+      if(!date) return '';
+      when=relDay(daysBetween(today,date)); detail=fmtShort(date)+' · Off duty';
+    }else{
+      const n=S.nextShift(selectedWatch,now,name); if(!n) return '';
+      date=n.date; when=n.inProgress?'On now':relDay(daysBetween(today,n.date));
+      detail=fmtShort(n.date)+' · '+SLOT_HOURS[name];
+    }
+    return '<div class="fc '+name+'"><div class="fc-slot"><span class="fc-dot '+name+'"></span>Next '+name+'</div><div class="fc-when"><b>'+when+'</b></div><div class="fc-date">'+detail+'</div></div>';
+  }).join('');
+}
+
+/* Look ahead: 7 / 14 day rows, or a month calendar */
+function selectDay(d){ selectedDate=d; viewMonth=new Date(d.getFullYear(),d.getMonth(),1); renderAll(); }
+function renderWeekStrip(){
+  const el=document.getElementById('weekstrip'); el.innerHTML=''; el.className=forecastDays==='month'?'':'weekstrip';
+  const today=S.jamaicaToday();
+  if(forecastDays==='month'){ renderMonth(el,today); return; }
+  for(let i=0;i<forecastDays;i++){
+    const d=new Date(today); d.setDate(d.getDate()+i);
+    const slot=S.watchSlotForDate(selectedWatch,d);
+    const chip=document.createElement('button'); chip.type='button';
+    chip.className='daychip'+(sameDay(d,selectedDate)?' selected':'')+(i===0?' today':'');
+    chip.setAttribute('aria-label',fmtDate(d)+', '+slot+(slot==='Off'?'':' shift'));
+    chip.innerHTML='<div class="dname">'+d.toLocaleDateString('en-GB',{weekday:'short'})+'</div><div class="dnum">'+d.getDate()+'</div><div class="dslot '+slot+'">'+SHORT[slot]+'</div>';
+    chip.onclick=function(){ selectDay(d); };
+    el.appendChild(chip);
+  }
+}
+function renderMonth(el,today){
+  const y=viewMonth.getFullYear(), m=viewMonth.getMonth();
+  const first=new Date(y,m,1), daysIn=new Date(y,m+1,0).getDate();
+  let html='<div class="month-nav"><button type="button" data-mnav="-1" aria-label="Previous month">‹</button><b>'
+    +first.toLocaleDateString('en-GB',{month:'long',year:'numeric'})+'</b><button type="button" data-mnav="1" aria-label="Next month">›</button></div><div class="month-grid">';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(function(n){ html+='<div class="mh">'+n+'</div>'; });
+  for(let i=0;i<first.getDay();i++) html+='<div class="mcell blank"></div>';
+  for(let dd=1;dd<=daysIn;dd++){
+    const d=new Date(y,m,dd), slot=S.watchSlotForDate(selectedWatch,d);
+    html+='<button type="button" class="mcell'+(sameDay(d,today)?' today':'')+(sameDay(d,selectedDate)?' selected':'')+'" data-mday="'+toISO(d)+'" aria-label="'+fmtDate(d)+', '+slot+'">'
+      +'<span class="mn">'+dd+'</span><span class="mt '+slot+'">'+SHORT[slot]+'</span></button>';
+  }
+  el.innerHTML=html+'</div>';
+}
+document.getElementById('weekstrip').addEventListener('click',function(e){
+  const nav=e.target.closest('[data-mnav]');
+  if(nav){ viewMonth=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+Number(nav.dataset.mnav),1); renderWeekStrip(); return; }
+  const c=e.target.closest('[data-mday]');
+  if(c){ const p=c.dataset.mday.split('-').map(Number); selectDay(new Date(p[0],p[1]-1,p[2])); }
+});
+
+function renderDayDetail(){
+  document.getElementById('dayDetailLabel').textContent=fmtDate(selectedDate);
+  const s=S.slotsForDate(selectedDate);
+  const rows=SLOT_NAMES.map(function(name){ const w=s[name], mine=w===selectedWatch;
+    return '<div class="row"><span class="rw"><span class="dot '+name+'"></span><span>'+name+'<span class="rsub">'+SLOT_HOURS[name]+'</span></span></span><span class="'+(mine?'rv thisWatch':'rv')+'">Watch '+w+(mine?'<span class="youtag">YOU</span>':'')+'</span></div>'; }).join('');
+  document.getElementById('dayDetail').innerHTML='<div class="grid-day">'+rows+'</div><div class="quick-actions"><a class="action-btn primary" href="../leave/?start='+toISO(selectedDate)+'">Calculate leave from this date</a></div>';
+}
+
+/* Date field shows day-month-year whatever the browser language */
+const dateInput=document.getElementById('dateInput');
+(function(){
+  const w=document.createElement('div'); w.className='datef';
+  w.innerHTML='<span class="dv" aria-hidden="true"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>';
+  dateInput.parentNode.insertBefore(w,dateInput); w.appendChild(dateInput);
+  dateInput.addEventListener('click',function(){ try{ dateInput.showPicker(); }catch(e){} });
+})();
+function syncDateField(){ dateInput.value=toISO(selectedDate); document.querySelector('.datef .dv').textContent=fmtField(selectedDate); }
+
+/* Calendar: subscribe (self-updating, built weekly on GitHub) or download 30 days */
+function calURL(){ return new URL('../calendar/watch-'+selectedWatch+'.ics',location.href).href; }
+function renderCal(){
+  const https=calURL(), webcal=https.replace(/^https?:/,'webcal:');
+  document.getElementById('calApple').href=webcal;
+  document.getElementById('calGoogle').href='https://calendar.google.com/calendar/render?cid='+encodeURIComponent(webcal);
+}
+document.getElementById('calCopy').addEventListener('click',function(){
+  if(navigator.clipboard) navigator.clipboard.writeText(calURL()).then(()=>showToast('Calendar link copied'));
+});
+document.getElementById('icsBtn').addEventListener('click',function(){
+  const stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const blob=new Blob([S.buildICS(selectedWatch,S.jamaicaToday(),30,{alarmMinutes:60,stamp})],{type:'text/calendar'});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download='JFB-Watch-'+selectedWatch+'-shifts.ics'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+
 function shiftSummary(){
-  const today=new Date(); today.setHours(0,0,0,0);
-  const todaySlot=watchSlotForDate(selectedWatch,today);
-  const now=new Date(), duty=currentDuty(now), next=nextShiftStart(selectedWatch,now);
-  const lines=['JFB Watch '+selectedWatch,'Today: '+todaySlot+' · '+SLOT_HOURS[todaySlot],'On duty now: Watch '+duty.watch+' · '+duty.slot];
+  const today=S.jamaicaToday(), now=S.jamaicaNow(), slot=S.watchSlotForDate(selectedWatch,today);
+  const duty=S.currentDuty(now), next=S.nextShiftStart(selectedWatch,now);
+  const lines=['JFB Watch '+selectedWatch,'Today: '+slot+' · '+SLOT_HOURS[slot],'On duty now: Watch '+duty.watch+' · '+duty.slot];
   if(next) lines.push('Next shift: '+next.slot+' on '+fmtDate(next.start)+' at '+hhmm(next.start));
   return lines.join('\n');
 }
-function renderNow(){
-  const now=new Date();
-  const duty=currentDuty(now);
-  const you=duty.watch===selectedWatch;
-  let sub;
-  if(you){
-    sub='<b>You\'re on duty</b> — '+duty.slot+' shift, until '+hhmm(duty.endsAt);
-  }else{
-    const next=nextShiftStart(selectedWatch,now);
-    sub=next
-      ? 'Your next shift: <b>'+next.slot+' '+countdownStr(now,next.start)+'</b> · '
-        +next.start.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' at '+hhmm(next.start)
-      : 'You are off duty.';
-  }
-  document.getElementById('nowCard').innerHTML=
-    '<div class="now-main">'
-    +'<div class="now-pill '+duty.slot+'"><span class="w">'+duty.watch+'</span><span class="s">'+duty.slot+'</span></div>'
-    +'<div class="now-txt">'
-      +'<div class="now-lead"><span class="live-dot"></span>On duty now: Watch '+duty.watch+(you?'<span class="now-you">YOU</span>':'')+'</div>'
-      +'<div class="now-sub">'+sub+'</div>'
-    +'</div></div>';
-}
-
-/* ---- Add to calendar (.ics) ---- */
-function pad(n){ return String(n).padStart(2,'0'); }
-function icsLocal(d){ return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00'; }
-function icsUTC(d){ return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+'00Z'; }
-function buildICS(w){
-  const base=new Date(); base.setHours(0,0,0,0);
-  const stamp=icsUTC(new Date());
-  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//JFB Tools by Jay//Shift Forecast//EN','CALSCALE:GREGORIAN'];
-  for(let i=0;i<30;i++){
-    const d=new Date(base); d.setDate(d.getDate()+i);
-    const slot=watchSlotForDate(w,d);
-    if(slot==='Off')continue;
-    const start=new Date(d); start.setHours(SLOT_START[slot],0,0,0);
-    const end=new Date(start);
-    if(slot==='Day')end.setHours(15,0,0,0);
-    else if(slot==='Evening')end.setHours(22,0,0,0);
-    else { end.setDate(end.getDate()+1); end.setHours(7,0,0,0); }
-    L.push('BEGIN:VEVENT','UID:jfb-'+w+'-'+icsLocal(start)+'@jfbtools','DTSTAMP:'+stamp,
-      'DTSTART:'+icsLocal(start),'DTEND:'+icsLocal(end),
-      'SUMMARY:Watch '+w+' — '+slot+' shift','END:VEVENT');
-  }
-  L.push('END:VCALENDAR');
-  return L.join('\r\n');
-}
-function downloadICS(){
-  const blob=new Blob([buildICS(selectedWatch)],{type:'text/calendar'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='JFB-Watch-'+selectedWatch+'-shifts.ics';
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-document.getElementById('icsBtn').addEventListener('click',downloadICS);
 document.getElementById('shareShiftBtn').addEventListener('click',function(){
   const text=shiftSummary();
   if(navigator.share){ navigator.share({title:'JFB Watch '+selectedWatch,text}).catch(()=>{}); return; }
   if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>showToast('Shift summary copied')); }
 });
 document.getElementById('nextShiftBtn').addEventListener('click',function(){
-  const next=nextShiftStart(selectedWatch,new Date());
+  const next=S.nextShiftStart(selectedWatch,S.jamaicaNow());
   if(!next){ showToast('No upcoming shift found'); return; }
-  selectedDate=new Date(next.start); selectedDate.setHours(0,0,0,0);
-  document.getElementById('dateInput').value=toISO(selectedDate);
-  renderAll();
+  selectDay(new Date(next.date));
   document.getElementById('dayDetail').scrollIntoView({behavior:'smooth',block:'center'});
 });
 document.getElementById('rangePick').addEventListener('click',function(e){
   const b=e.target.closest('button[data-days]'); if(!b)return;
-  forecastDays=Number(b.dataset.days);
-  document.querySelectorAll('#rangePick button').forEach(x=>x.classList.toggle('active',x===b));
-  renderWeekStrip();
+  forecastDays=b.dataset.days==='month'?'month':Number(b.dataset.days);
+  try{ localStorage.setItem('jfb-watch-range',String(forecastDays)); }catch(err){}
+  renderWeekStrip(); renderRange();
 });
-setInterval(renderNow,60000);  // keep the live card fresh
+function renderRange(){ document.querySelectorAll('#rangePick button').forEach(x=>x.classList.toggle('active',x.dataset.days===String(forecastDays))); }
 
-function renderAll(){ renderWatchPicker(); renderNow(); renderTodayCard(); renderForecast(); renderWeekStrip(); renderDayDetail(); }
-document.getElementById('watchpick').addEventListener('click',function(e){ const b=e.target.closest('.wbtn'); if(!b) return; selectedWatch=b.dataset.w; try{ localStorage.setItem('jfb-watch',selectedWatch); }catch(err){} renderAll(); });
-document.getElementById('dateInput').addEventListener('change',function(e){ const p=e.target.value.split('-').map(Number); selectedDate=new Date(p[0],p[1]-1,p[2]); renderAll(); });
-document.getElementById('dateInput').value=toISO(selectedDate);
+function renderAll(){ renderWatchPicker(); renderNow(); renderForecast(); renderRange(); renderWeekStrip(); renderDayDetail(); syncDateField(); renderCal(); }
 
-/* Collapsible steps */
+/* Instructions: hide once dismissed, or once a watch has been picked */
 const stepsEl=document.getElementById('steps');
+function hideSteps(){ stepsEl.classList.add('hidden'); try{ localStorage.setItem('jfb-steps-hidden-watch','1'); }catch(e){} }
 try{ if(localStorage.getItem('jfb-steps-hidden-watch'))stepsEl.classList.add('hidden'); }catch(e){}
-document.getElementById('stepsHide').addEventListener('click',function(){
-  stepsEl.classList.add('hidden');
-  try{ localStorage.setItem('jfb-steps-hidden-watch','1'); }catch(e){}
-});
+document.getElementById('stepsHide').addEventListener('click',hideSteps);
+
+document.getElementById('watchpick').addEventListener('click',function(e){ const b=e.target.closest('.wbtn'); if(!b) return; selectedWatch=b.dataset.w; try{ localStorage.setItem('jfb-watch',selectedWatch); }catch(err){} hideSteps(); renderAll(); });
+dateInput.addEventListener('change',function(e){ if(!e.target.value) return; const p=e.target.value.split('-').map(Number); selectDay(new Date(p[0],p[1]-1,p[2])); });
+
+setInterval(function(){ renderNow(); renderForecast(); },60000);  // keep the live parts fresh
 
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   addEventListener('load',()=>navigator.serviceWorker.register('../sw.js').catch(()=>{}));
 }
-
 renderAll();
 </script>
 <script src="../theme.js" defer></script>

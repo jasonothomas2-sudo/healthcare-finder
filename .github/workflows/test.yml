@@ -16,7 +16,7 @@ jobs:
         run: |
           node -e "global.window={}; require('./holidays-extra.js'); const c=window.JFB_HOLIDAY_CHANGES; if(!c) throw new Error('JFB_HOLIDAY_CHANGES missing'); for (const h of c.add||[]) if(!/^\d{4}-\d{2}-\d{2}$/.test(h.date)||!h.name) throw new Error('Bad add entry: '+JSON.stringify(h)); for (const d of c.remove||[]) if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) throw new Error('Bad remove entry: '+d); console.log('holidays-extra.js OK')"
       - name: Run tests
-        run: node --test tests/holidays.test.js
+        run: node --test tests/holidays.test.js tests/shift.test.js
       - name: Holiday source check (dry run, informational)
         continue-on-error: true
         run: node scripts/sync-holidays.js --dry-run

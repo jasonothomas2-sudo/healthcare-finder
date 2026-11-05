@@ -90,27 +90,16 @@ header.hero .step .tx{color:#fff;text-shadow:0 1px 1px rgba(50,0,0,.4)}
 header.hero .steps-dismiss{color:#fff;text-shadow:0 1px 2px rgba(50,0,0,.5)}
 
 /* Phones: compact header, so the content starts higher.
-   The 3 steps become one swipeable row; the dismiss link comes first. */
+   The 3 steps become a short list (nothing cut off); the dismiss link sits under it. */
 @media (max-width:600px){
   header.hero{padding-top:18px;padding-bottom:20px}
-  header.hero .steps{flex-wrap:nowrap;overflow-x:auto;gap:6px;margin-top:12px;margin-right:-16px;padding-right:16px;
-    scrollbar-width:none;-webkit-overflow-scrolling:touch;
-    -webkit-mask-image:linear-gradient(to right,#000 90%,transparent);mask-image:linear-gradient(to right,#000 90%,transparent)}
-  header.hero .steps::-webkit-scrollbar{display:none}
-  header.hero .step{flex:0 0 auto;padding:5px 12px 5px 6px;white-space:nowrap}
+  header.hero .steps{display:grid;grid-template-columns:1fr;gap:6px;margin-top:12px}
+  header.hero .steps.hidden{display:none}
+  header.hero .step{border-radius:12px;padding:6px 10px 6px 6px;white-space:normal}
   header.hero .step .tx{font-size:12px}
-  header.hero .steps-dismiss{order:-1;flex:0 0 auto;white-space:nowrap;font-size:11.5px;padding:6px 8px}
+  header.hero .steps-dismiss{justify-self:start;font-size:11.5px;padding:6px 8px}
 }
 
 /* Touch-friendly sizes: buttons are at least 44px tall */
 .act,.catchip,.near,.seg button,.quick-row button,.range-pick button,.modes button,.acts button,.acts a,.steps-dismiss{min-height:44px}
 .act,.acts button,.acts a,.seg button,.quick-row button,.range-pick button{display:inline-flex;align-items:center;justify-content:center}
-
-/* Phones: dots under the steps row (added by theme.js) */
-.steps-dots{display:none}
-@media (max-width:600px){
-  .steps-dots{display:flex;gap:5px;justify-content:center;margin-top:8px}
-  .steps-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);transition:width .2s,background .2s}
-  .steps-dots i.on{width:16px;background:#fff}
-  .steps.hidden + .steps-dots{display:none}
-}

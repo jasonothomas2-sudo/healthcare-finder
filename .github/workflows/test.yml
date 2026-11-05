@@ -1,0 +1,19 @@
+name: Holiday tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check holidays-extra.js is valid
+        run: |
+          node -e "global.window={}; require('./holidays-extra.js'); const c=window.JFB_HOLIDAY_CHANGES; if(!c) throw new Error('JFB_HOLIDAY_CHANGES missing'); for (const h of c.add||[]) if(!/^\d{4}-\d{2}-\d{2}$/.test(h.date)||!h.name) throw new Error('Bad add entry: '+JSON.stringify(h)); for (const d of c.remove||[]) if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) throw new Error('Bad remove entry: '+d); console.log('holidays-extra.js OK')"
+      - name: Run tests
+        run: node --test tests/holidays.test.js

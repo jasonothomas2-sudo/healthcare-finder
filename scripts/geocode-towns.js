@@ -6,8 +6,11 @@
 // - Everything else is looked up on OpenStreetMap (Nominatim), politely:
 //   one request per second, results cached in towns.js so each town is
 //   only looked up once.
-// - A result more than 45 km from its parish centre is rejected as a wrong
-//   match; that town then falls back to the parish centre in the app.
+// - A result is only accepted if OpenStreetMap puts it in the same parish
+//   (Kingston and St. Andrew count as one) and within 45 km of the parish
+//   centre; otherwise that town falls back to the parish centre in the app.
+// - Spelling variants ("Spalding P.O.", "Yallahs Main Road", "Unit 13, Kingston 6")
+//   reuse the plain town's location.
 //
 // Usage: node scripts/geocode-towns.js   (run by .github/workflows/geocode-towns.yml)
 const fs = require('fs');
@@ -51,7 +54,13 @@ const KNOWN = {
   'kingston17|St. Andrew': [17.9500, -76.7250],         // Harbour View / Bull Bay
   'kingston19|St. Andrew': [18.0400, -76.8200],         // Meadowbrook / Red Hills Road
   'kingston20|St. Andrew': [18.0250, -76.8300],         // Washington Boulevard / Duhaney Park
+  'rosehall|St. James': [18.5060, -77.8240],
+  'barnetttechpark|St. James': [18.4640, -77.9040],    // Montego Bay
 };
+// Town name with post-office / road suffixes removed
+const cleanTown = (t) => (t || '').replace(/\bp\.?\s*o\.?\s*$/i, '').replace(/\bmain\s+road\s*$/i, '').replace(/^.*,\s*/, '').trim();
+const parishNorm = (p) => (p || '').toLowerCase().replace(/saint/g, 'st').replace(/parish/g, '').replace(/[^a-z]/g, '')
+  .replace(/^kingston$/, 'kingstonstandrew').replace(/^standrew$/, 'kingstonstandrew');
 
 function km(a, b) {
   const R = 6371, r = (x) => (x * Math.PI) / 180;
@@ -62,10 +71,11 @@ function km(a, b) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function lookup(q) {
-  const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=3&countrycodes=jm&q=' + encodeURIComponent(q);
+  const url = 'https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=jm&q=' + encodeURIComponent(q);
   const res = await fetch(url, { headers: { 'User-Agent': 'jfb-tools-provider-finder (github.com/jasonothomas2-sudo/healthcare-finder)' }, signal: AbortSignal.timeout(20000) });
   if (!res.ok) throw new Error('HTTP ' + res.status);
-  return (await res.json()).map((r) => [Number(Number(r.lat).toFixed(4)), Number(Number(r.lon).toFixed(4))]);
+  return (await res.json()).map((r) => ({ ll: [Number(Number(r.lat).toFixed(4)), Number(Number(r.lon).toFixed(4))],
+    parish: (r.address && (r.address.state || r.address.county)) || '' }));
 }
 
 async function main() {
@@ -78,14 +88,19 @@ async function main() {
   const out = {}, log = [];
   for (const [k, { town, parish }] of wanted) {
     if (KNOWN[k]) { out[k] = KNOWN[k]; continue; }
+    const kd = town.toLowerCase().match(/kingston\s*(\d+)/);
+    if (kd && KNOWN['kingston' + kd[1] + '|St. Andrew']) { out[k] = KNOWN['kingston' + kd[1] + '|St. Andrew']; continue; }
     if (cache[k]) { out[k] = cache[k]; continue; }
     if (!town) continue;
+    const base = cleanTown(town), bk = townKey(base, parish);
+    if (bk !== k && (KNOWN[bk] || out[bk] || cache[bk])) { out[k] = KNOWN[bk] || out[bk] || cache[bk]; continue; }
     const centre = PARISH_CENTERS[parish];
     let found = null;
-    for (const q of [`${town}, ${parish}, Jamaica`, `${town}, Jamaica`]) {
+    for (const q of [`${base}, ${parish}, Jamaica`, `${base}, Jamaica`]) {
       try {
         const hits = await lookup(q);
-        found = hits.find((h) => !centre || km(h, centre) <= 45) || null;
+        const h = hits.find((x) => (!x.parish || parishNorm(x.parish) === parishNorm(parish)) && (!centre || km(x.ll, centre) <= 45));
+        found = h ? h.ll : null;
       } catch (e) { log.push(`${k}: lookup failed (${e.message})`); }
       await sleep(1100);
       if (found) break;

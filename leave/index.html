@@ -80,14 +80,14 @@
     border:1px solid var(--line);border-radius:10px;padding:12px 13px;appearance:none;-webkit-appearance:none;min-height:48px}
   input[type=date]:focus,input[type=number]:focus{outline:none;border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(var(--primary-rgb),.18)}
   .seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-  .seg button{flex:1 1 auto;min-width:56px;font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--ink2);
+  .seg button{flex:1 1 0;min-width:0;font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--ink2);
     background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:8px 12px;cursor:pointer}
   .seg button:hover{border-color:var(--accent-2);color:var(--accent)}
   .seg button.on{background:var(--sel-bg);border-color:var(--sel-bg);color:var(--sel-fg)}
   .nudge{margin-top:10px;background:var(--gold-soft);border:1px solid var(--gold);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--ink2)}
   .nudge b{color:var(--gold)}
   .nudge .seg{margin-top:10px}
-  .nudge .seg button{border-radius:10px;text-align:left;font-size:12.5px;line-height:1.35}
+  .nudge .seg button{display:flex;flex-direction:column;align-items:flex-start;border-radius:10px;text-align:left;font-size:12.5px;line-height:1.35}
   .nudge .seg button span{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
   .row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
   .row:last-of-type{border-bottom:1px solid var(--line)}
@@ -144,6 +144,28 @@
   .chips{margin-top:24px}
   .acts{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
   .acts a{flex:1 1 100%;background:var(--primary-soft);color:var(--primary-text);border-color:rgba(var(--primary-rgb),.3);order:-1}
+  /* Empty-state guide shown before a result is available */
+  .empty-ic{width:46px;height:46px;border-radius:13px;background:var(--primary-soft);color:var(--primary-text);display:flex;align-items:center;justify-content:center;margin:16px 0 12px}
+  .empty-t{font-family:var(--font-head);font-weight:800;font-size:21px;line-height:1.25;letter-spacing:-.3px;color:var(--ink)}
+  .steps{list-style:none;margin-top:18px;display:grid;gap:12px}
+  .steps li{display:flex;align-items:center;gap:12px;font-size:14.5px;color:var(--muted)}
+  .steps .n{width:26px;height:26px;flex:0 0 auto;border-radius:50%;border:1.5px solid var(--line);display:inline-flex;align-items:center;justify-content:center;
+    font-family:var(--font-head);font-weight:800;font-size:12px;color:var(--muted)}
+  .steps li.next{color:var(--ink);font-weight:600}
+  .steps li.next .n{border-color:var(--primary);color:var(--primary-text)}
+  .steps li.done .n{background:var(--green);border-color:var(--green);color:#fff}
+  .steps+.res-hint{margin-top:16px}
+
+  /* Date field: native picker underneath, unambiguous day-month display on top */
+  .datef{position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:48px;font-size:16px;color:var(--ink);background:var(--bg);
+    border:1px solid var(--line);border-radius:10px;padding:12px 13px;cursor:pointer}
+  .datef:focus-within{border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(var(--primary-rgb),.18)}
+  .datef .dv{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .datef .dv.ph{color:var(--muted)}
+  .datef svg{flex:0 0 auto;color:var(--ink2)}
+  .datef input[type=date]{position:absolute;inset:0;width:100%;height:100%;min-height:0;opacity:0;cursor:pointer;border:none;padding:0}
+  .datef input[type=date]::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+
   .result-help{font-size:12.5px;line-height:1.7;color:var(--muted);padding:0 12px}
   footer{padding-top:40px}
   footer .wrap{max-width:760px}
@@ -308,8 +330,25 @@ function isWeekend(d){ var g=d.getDay(); return g===0||g===6; }
 function isWorkingDay(d){ return !isWeekend(d) && !holidayName(d); }
 function blockReason(d){ if(isWeekend(d)) return d.getDay()===6?'a Saturday':'a Sunday'; var h=holidayName(d); return h?h+' (public holiday)':null; }
 function nearestWorkingDay(d,dir){ var x=new Date(d); while(!isWorkingDay(x)) x=addDays(x,dir); return x; }
-function fmtLeave(d){ return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}); }
-function fmtShort(d){ return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }
+function fmtLeave(d){ return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }
+function fmtShort(d){ return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}); }
+function fmtField(d){ return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'}); }
+
+/* ---------- Date fields: show day-month-year regardless of browser locale ---------- */
+var CAL_SVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>';
+document.querySelectorAll('input[type=date]').forEach(function(inp){
+  var w=document.createElement('div'); w.className='datef';
+  var dv=document.createElement('span'); dv.className='dv'; dv.setAttribute('aria-hidden','true');
+  inp.parentNode.insertBefore(w,inp); w.appendChild(dv); w.insertAdjacentHTML('beforeend',CAL_SVG); w.appendChild(inp);
+  inp.addEventListener('click',function(){ try{ inp.showPicker(); }catch(e){} });
+  inp.addEventListener('input',syncDateFields); inp.addEventListener('change',syncDateFields);
+});
+function syncDateFields(){
+  document.querySelectorAll('.datef').forEach(function(w){
+    var inp=w.querySelector('input'), dv=w.querySelector('.dv'), d=parseDate(inp.value);
+    dv.textContent=d?fmtField(d):'dd/mm/yyyy'; dv.classList.toggle('ph',!d);
+  });
+}
 function fmt1(x){ return (Math.round(x*10)/10).toFixed(1).replace(/\.0$/,''); }
 function parseDate(v){ if(!v)return null; var p=v.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
 function store(k,v){ try{ if(v==null)localStorage.removeItem(k); else localStorage.setItem(k,v); }catch(e){} }
@@ -341,7 +380,19 @@ var startEl=document.getElementById('startDate'), numEl=document.getElementById(
 var resBox=document.getElementById('resBox'), nudgeBox=document.getElementById('nudgeBox');
 var lastResultText='', adjustedFrom=null;
 
-function idleCard(msg){ return '<div class="res"><div class="res-k">Return to work</div><div class="res-big idle">—</div><div class="res-hint">'+msg+'</div></div>'; }
+var IC_RETURN='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M9 15l2 2 4-4"/></svg>';
+var IC_BAL='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>';
+/* Guided empty state: steps tick off as the inputs are filled in */
+function emptyState(kicker,icon,title,steps,msg){
+  var firstOpen=steps.findIndex(function(s){return !s[1];});
+  return '<div class="res"><div class="res-k">'+kicker+'</div><div class="empty-ic">'+icon+'</div><div class="empty-t">'+title+'</div><ol class="steps">'
+    +steps.map(function(s,i){ var c=s[1]?'done':(i===firstOpen?'next':''); return '<li class="'+c+'"><span class="n">'+(s[1]?'✓':(i+1))+'</span>'+s[0]+'</li>'; }).join('')
+    +'</ol>'+(msg?'<div class="res-hint">'+msg+'</div>':'')+'</div>';
+}
+function idleCard(msg,hasStart,hasDays){
+  return emptyState('Return to work',IC_RETURN,'Your return date will appear here',
+    [['Pick a leave start date',!!hasStart],['Enter the number of leave days',!!hasDays],['See your return-to-work date',false]],msg);
+}
 function computeLeave(start,n){
   var d=new Date(start), counted=0, last=null, skipped=[], weekends=0;
   while(counted<n){
@@ -358,20 +409,19 @@ function computeLeave(start,n){
   return {last:last,ret:ret,skipped:skipped,weekends:weekends};
 }
 function renderReturn(){
-  nudgeBox.innerHTML=''; lastResultText='';
+  syncDateFields(); nudgeBox.innerHTML=''; lastResultText='';
   var start=parseDate(startEl.value), n=parseInt(numEl.value,10);
-  if(!start && !n){ resBox.innerHTML=idleCard('Pick a start date and the number of leave days.'); return; }
-  if(!start){ resBox.innerHTML=idleCard('Pick a start date.'); return; }
-  if(!n||n<1){ resBox.innerHTML=idleCard('Enter the number of leave days.'); return; }
-  if(n>365){ resBox.innerHTML=idleCard('Use 365 days or less.'); return; }
-  var reason=blockReason(start);
+  var reason=start?blockReason(start):null, okDays=n>=1&&n<=365;
+  if(!start||!n||n<1){ resBox.innerHTML=idleCard('',start&&!reason,okDays); if(!reason)return; }
+  if(n>365){ resBox.innerHTML=idleCard('Use 365 days or less.',start&&!reason,false); if(!reason)return; }
   if(reason){
     var back=nearestWorkingDay(start,-1), fwd=nearestWorkingDay(start,1);
     nudgeBox.innerHTML='<div class="nudge">'+fmtLeave(start)+' is <b>'+reason+'</b>. Leave can’t start on a non-working day. Move it:'
       +'<div class="seg"><button type="button" data-move="'+isoDate(back)+'">Back to<span>'+fmtLeave(back)+'</span></button>'
       +'<button type="button" data-move="'+isoDate(fwd)+'">Forward to<span>'+fmtLeave(fwd)+'</span></button></div></div>';
-    resBox.innerHTML=idleCard('Move the start date to a working day.'); return;
+    resBox.innerHTML=idleCard('Move the start date to a working day.',false,okDays); return;
   }
+  if(!okDays) return;
   var r=computeLeave(start,n);
   lastResultText='Leave begins: '+fmtLeave(start)+'\nLast day of leave: '+fmtLeave(r.last)+'\nReturn to work: '+fmtLeave(r.ret)+'\nLeave days: '+n+' working day'+(n>1?'s':'');
   var hol=r.skipped.length?'<details class="hol"><summary>'+r.skipped.length+' public holiday'+(r.skipped.length>1?'s':'')+' inside this period (not counted)</summary><ul>'
@@ -415,14 +465,16 @@ function syncEntUI(){
   sickHint.textContent='Free allowance is '+sickAllowance()+' days. Enter only the days beyond it.';
 }
 function saveBal(){ var o={ebm:ebmEl.checked,p02:p02El.checked}; balFields.forEach(function(f){o[f[0]]=f[1].value;}); store('jfb-leave-bal',JSON.stringify(o)); }
-function idleBal(msg){ return '<div class="res"><div class="res-k">Leave balance</div><div class="res-big idle">—</div><div class="res-hint">'+msg+'</div></div>'; }
+function idleBal(msg,hasEnt,hasLast){
+  return emptyState('Leave balance',IC_BAL,'Your leave balance will appear here',
+    [['Choose the days earned per year',!!hasEnt],['Enter when leave was last taken',!!hasLast],['See your available days',false]],msg);
+}
 function renderBalance(){
-  syncEntUI(); lastBalText=''; lastBalDays=0;
+  syncEntUI(); syncDateFields(); lastBalText=''; lastBalDays=0;
   var ent=parseFloat(entEl.value), last=parseDate(lastEl.value), to=parseDate(toEl.value);
-  if(!ent||ent<=0){ balBox.innerHTML=idleBal('Pick the days earned per year.'); return; }
-  if(!last){ balBox.innerHTML=idleBal('Enter the last date leave was taken.'); return; }
+  if(!ent||ent<=0||!last){ balBox.innerHTML=idleBal('',ent>0,last); return; }
   if(!to){ to=new Date(); to.setHours(0,0,0,0); }
-  if(to<last){ balBox.innerHTML=idleBal('The check date must be on or after the last leave date.'); return; }
+  if(to<last){ balBox.innerHTML=idleBal('The check date must be on or after the last leave date.',true,false); return; }
   var days=Math.round((to-last)/86400000);
   var open=Math.max(0,parseFloat(openEl.value)||0), sick=Math.max(0,parseFloat(sickEl.value)||0), taken=Math.max(0,parseFloat(takenEl.value)||0);
   var earned=ent/365*days, gross=open+earned-sick-taken;

@@ -312,6 +312,14 @@
   .actions{padding-top:12px}
   .finder-results main{gap:12px}
 
+  /* Specialty row under the Specialist chip */
+  .subbar{display:flex;flex-wrap:wrap;gap:6px;padding:0 0 14px}
+  .subbar[hidden]{display:none}
+  .subchip{min-height:36px;font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--ink2);background:var(--card2);
+    border:1.5px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer}
+  .subchip.on{background:var(--cat-spec);border-color:var(--cat-spec);color:#fff}
+  @media(max-width:760px){.subbar{flex-wrap:nowrap;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}.subchip{flex:0 0 auto}}
+
   /* Filters & sort: always open on desktop, a toggle on phones */
   .filter-toggle{display:none}
   @media(max-width:760px){
@@ -451,6 +459,7 @@
 </footer>
 
 <script src="data.js?v=7"></script>
+<script src="towns.js"></script>
 <script>
 const PHONE_ICON = '<svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.5-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1z"/></svg>';
 const WA_ICON = '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.3c-.2.2-.3.4-.2.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.6-.1l.7-.9c.2-.3.4-.2.7-.1l2 .9c.2.1.4.2.5.3.1.2.1.7-.1 1.3z"/></svg>';
@@ -524,6 +533,7 @@ typeEl.innerHTML='<option value="">All services</option>'+types.map(t=>`<option>
 
 let shown=0; const PAGE=40; let current=[];
 let catFilter='';      // active category family key, '' = none
+let subFilter='';      // specialty within the Specialist chip, '' = all
 let favFilter=false;   // showing favorites only
 let userLoc=null;      // browser geolocation, if allowed
 
@@ -570,12 +580,34 @@ function renderCatbar(){
     return `<button class="catchip${on?' on':''}" data-cat="${k}" style="--cc:var(--cat-${k})" aria-pressed="${on}"><svg viewBox="0 0 24 24">${CAT_ICONS[k]}</svg>${CAT_LABELS[k]}</button>`;
   }).join('');
   catbarEl.innerHTML=html;
+  renderSubbar();
 }
+/* Specialist chip: a second row to pick the specialty (largest first, small ones grouped as Other) */
+const SPEC_COUNTS={};
+DATA.forEach(d=>{ if(catOf(d.t)[0]==='spec') SPEC_COUNTS[d.t]=(SPEC_COUNTS[d.t]||0)+1; });
+const SPEC_MAIN=Object.keys(SPEC_COUNTS).filter(t=>SPEC_COUNTS[t]>=8).sort((a,b)=>SPEC_COUNTS[b]-SPEC_COUNTS[a]);
+function specOf(t){ return SPEC_MAIN.includes(t)?t:'Other'; }
+const OTHER_COUNT=Object.keys(SPEC_COUNTS).filter(t=>!SPEC_MAIN.includes(t)).reduce((n,t)=>n+SPEC_COUNTS[t],0);
+const OTHER_TITLE=Object.keys(SPEC_COUNTS).filter(t=>!SPEC_MAIN.includes(t)).sort().join(', ');
+const subbarEl=document.createElement('div'); subbarEl.className='subbar'; subbarEl.id='subbar';
+subbarEl.setAttribute('role','group'); subbarEl.setAttribute('aria-label','Choose a specialty');
+catbarEl.after(subbarEl);
+function renderSubbar(){
+  if(catFilter!=='spec'){ subbarEl.hidden=true; subbarEl.innerHTML=''; return; }
+  subbarEl.hidden=false;
+  const opts=[['','All specialists'],...SPEC_MAIN.map(t=>[t,t+' ('+SPEC_COUNTS[t]+')'])];
+  if(OTHER_COUNT) opts.push(['Other','Other ('+OTHER_COUNT+')']);
+  subbarEl.innerHTML=opts.map(([v,l])=>`<button type="button" class="subchip${subFilter===v?' on':''}" data-sub="${esc(v)}" aria-pressed="${subFilter===v}"${v==='Other'?` title="${esc(OTHER_TITLE)}"`:''}>${esc(l)}</button>`).join('');
+}
+subbarEl.addEventListener('click',e=>{
+  const b=e.target.closest('.subchip'); if(!b)return;
+  subFilter=b.dataset.sub; renderSubbar(); render(true);
+});
 catbarEl.addEventListener('click',e=>{
   const b=e.target.closest('.catchip'); if(!b)return;
   const c=b.dataset.cat;
   if(c==='__fav'){ favFilter=!favFilter; }
-  else { catFilter = catFilter===c ? '' : c; }
+  else { catFilter = catFilter===c ? '' : c; if(catFilter!=='spec') subFilter=''; }
   renderCatbar(); render(true);
 });
 
@@ -634,13 +666,22 @@ function kmBetween(a,b){
   const x=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
   return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
 }
+/* Location of a provider: its town if known (towns.js), otherwise its parish centre */
+const TOWNS=window.JFB_TOWNS||{};
+function townKey(town,parish){ return (town||'').toLowerCase().replace(/[^a-z0-9]+/g,'')+'|'+parish; }
+function placeOf(d){
+  if(d._place===undefined){ const t=TOWNS[townKey(d.c,d.p)]; d._place=t?{ll:t,town:true}:(PARISH_CENTERS[d.p]?{ll:PARISH_CENTERS[d.p],town:false}:null); }
+  return d._place;
+}
 function distanceKm(d){
-  if(!userLoc||!PARISH_CENTERS[d.p]) return null;
-  return kmBetween(userLoc,PARISH_CENTERS[d.p]);
+  const pl=placeOf(d);
+  if(!userLoc||!pl) return null;
+  return kmBetween(userLoc,pl.ll);
 }
 function distanceLabel(d){
-  const km=distanceKm(d);
-  return km==null ? '' : `Approx. ${Math.round(km)} km from you`;
+  const km=distanceKm(d); if(km==null) return '';
+  const n=km<1?'Under 1':String(Math.round(km));
+  return placeOf(d).town ? `About ${n} km away` : `About ${n} km away (parish estimate)`;
 }
 
 function updateClear(){
@@ -654,13 +695,14 @@ function filterChips(){
   const q=qEl.value.trim();
   if(q)chips.push(`<button class="fchip" data-f="q" aria-label="Remove search ${esc(q)}">“${esc(q)}”<span class="x">✕</span></button>`);
   if(parishEl.value)chips.push(`<button class="fchip" data-f="parish" aria-label="Remove parish filter">${esc(parishEl.value)}<span class="x">✕</span></button>`);
+  if(catFilter==='spec'&&subFilter)chips.push(`<button class="fchip" data-f="sub" aria-label="Remove specialty filter">${esc(subFilter)}<span class="x">✕</span></button>`);
   if(typeEl.value)chips.push(`<button class="fchip" data-f="type" aria-label="Remove service filter">${esc(typeEl.value)}<span class="x">✕</span></button>`);
   if(userLoc)chips.push(`<button class="fchip" data-f="near" aria-label="Remove nearby sorting">Near me<span class="x">✕</span></button>`);
   return chips.join('');
 }
 countEl.addEventListener('click',e=>{
   const b=e.target.closest('.fchip'); if(!b)return;
-  ({q:()=>qEl.value='',parish:()=>parishEl.value='',type:()=>typeEl.value='',near:()=>{userLoc=null; nearEl.classList.remove('on'); nearEl.setAttribute('aria-pressed','false'); if(sortEl.value==='distance')sortEl.value='default';}})[b.dataset.f]();
+  ({sub:()=>{subFilter='';renderSubbar();},q:()=>qEl.value='',parish:()=>parishEl.value='',type:()=>typeEl.value='',near:()=>{userLoc=null; nearEl.classList.remove('on'); nearEl.setAttribute('aria-pressed','false'); if(sortEl.value==='distance')sortEl.value='default';}})[b.dataset.f]();
   render(true);
 });
 
@@ -673,6 +715,7 @@ function render(reset){
     current=DATA.filter(d=>{
       if(favFilter&&!FAVS.has(favId(d)))return false;
       if(catFilter&&catOf(d.t)[0]!==catFilter)return false;
+      if(catFilter==='spec'&&subFilter&&specOf(d.t)!==subFilter)return false;
       if(fp&&d.p!==fp)return false;
       if(ft&&d.t!==ft)return false;
       if(needles.length){
@@ -819,7 +862,7 @@ nearEl.addEventListener('click',()=>{
 });
 clearEl.addEventListener('click',()=>{
   qEl.value=''; parishEl.value=''; typeEl.value=''; sortEl.value='default';
-  catFilter=''; favFilter=false; userLoc=null; nearEl.classList.remove('on'); nearEl.setAttribute('aria-pressed','false'); renderCatbar();
+  catFilter=''; subFilter=''; favFilter=false; userLoc=null; nearEl.classList.remove('on'); nearEl.setAttribute('aria-pressed','false'); renderCatbar();
   render(true); window.scrollTo({top:0,behavior:'smooth'});
 });
 
@@ -848,7 +891,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
 const STATE_KEY='jfb-finder-state';
 function saveState(){
   try{ localStorage.setItem(STATE_KEY,JSON.stringify({q:qEl.value,parish:parishEl.value,type:typeEl.value,
-    sort:sortEl.value==='distance'?'default':sortEl.value,cat:catFilter,fav:favFilter})); }catch(e){}
+    sort:sortEl.value==='distance'?'default':sortEl.value,cat:catFilter,sub:subFilter,fav:favFilter})); }catch(e){}
 }
 function restoreState(){
   try{
@@ -858,6 +901,7 @@ function restoreState(){
     if([...typeEl.options].some(o=>o.value===st.type)) typeEl.value=st.type||'';
     if([...sortEl.options].some(o=>o.value===st.sort)) sortEl.value=st.sort||'default';
     catFilter=CAT_LABELS[st.cat]?st.cat:''; favFilter=!!st.fav;
+    subFilter=(catFilter==='spec'&&(SPEC_MAIN.includes(st.sub)||st.sub==='Other'))?st.sub:'';
   }catch(e){}
 }
 

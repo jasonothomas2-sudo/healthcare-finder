@@ -1,6 +1,6 @@
 /* JFB Healthcare Finder — offline cache */
-const CACHE = 'jfb-finder-v16';
-const ASSETS = ['./', 'index.html', 'data.js', 'manifest.json', 'theme.css', 'theme.js', 'hero-firefighter.webp', 'icon-192.png', 'icon-512.png', 'watch/', 'leave/', 'holidays.js', 'holidays-extra.js', 'holidays-auto.js', 'shift.js'];
+const CACHE = 'jfb-finder-v17';
+const ASSETS = ['./', 'index.html', 'data.js', 'manifest.json', 'theme.css', 'theme.js', 'hero-firefighter.webp', 'icon-192.png', 'icon-512.png', 'watch/', 'leave/', 'holidays.js', 'holidays-extra.js', 'holidays-auto.js', 'shift.js', 'towns.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));

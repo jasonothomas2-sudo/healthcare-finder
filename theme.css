@@ -1,35 +1,45 @@
 /* JFB Tools: shared theme.
-   One place for the colours, fonts, shadows and navigation used by
+   One place for the colours, fonts, shadows, navigation and header used by
    Provider Finder, Shift Forecast and Leave Calculator.
-   Change the look of the whole site here. */
+   Change the look of the whole site here.
+
+   Palette "Station Night": uniform navy for structure, engine red for
+   actions, brass for small highlights, cool paper neutrals for surfaces. */
 
 :root{ color-scheme:light dark;
-  /* Surfaces & text (warm neutrals) */
-  --bg:#f7f3f2; --card:#ffffff; --card2:#fbf3f2;
-  --ink:#2a1517; --ink2:#5b4143; --muted:#85696b; --line:#ecdcda;
+  /* Surfaces & text (cool neutrals) */
+  --bg:#f3f5f9; --card:#ffffff; --card2:#eef2f7;
+  --ink:#0f1a2e; --ink2:#38465c; --muted:#617089; --line:#dde3ec;
 
-  /* Brand: red */
-  --primary:#dc2626; --primary-dark:#b91c1c; --primary-text:#b91c1c; --primary-soft:#fdecea;
-  --primary-rgb:220,38,38;
-  --ring:#dc2626;
-  --hero1:#7f1d1d; --hero2:#b91c1c; --hero3:#dc2626;
+  /* Brand: engine red (actions, active states) */
+  --primary:#d92d20; --primary-dark:#b42318; --primary-text:#b42318; --primary-soft:#fdeeec;
+  --primary-rgb:217,45,32;
+  --ring:#2f6fed;
+  --accent-grad:linear-gradient(90deg,#b42318,#f04438);
 
-  /* Selected state: neutral, so red stays for the brand and primary actions */
-  --sel-bg:var(--ink); --sel-fg:var(--card);
+  /* Header: uniform navy */
+  --hero1:#0a1322; --hero2:#12223d; --hero3:#1b3357;
+
+  /* Brass: small highlights only */
+  --brass:#b7791f; --brass-on-dark:#f3c267;
+
+  /* Selected state: navy, so red stays for the brand and primary actions */
+  --sel-bg:#12223d; --sel-fg:#ffffff;
 
   /* Semantic colours (shared by every page) */
-  --green:#059669; --green-dark:#047857;
-  --red:#c0392b; --red-lit:#e0503f; --red-soft:#fdecea;
-  --gold:#b45309; --gold-soft:#fdf3e4;
+  --green:#067647; --green-dark:#05603a;
+  --red:#b42318; --red-lit:#f04438; --red-soft:#fdeeec;
+  --gold:#b54708; --gold-soft:#fef4e6;
 
   /* Type */
+  --font-display:'Barlow Condensed','Arial Narrow',var(--font-head);
   --font-head:'Figtree',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   --font-body:'Noto Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 
   /* Elevation */
-  --shadow-rgb:90,25,25;
-  --shadow:0 1px 3px rgba(var(--shadow-rgb),.10),0 1px 2px rgba(var(--shadow-rgb),.05);
-  --shadow-lg:0 10px 30px -10px rgba(var(--shadow-rgb),.25),0 4px 10px -4px rgba(var(--shadow-rgb),.12);
+  --shadow-rgb:15,26,46;
+  --shadow:0 1px 2px rgba(var(--shadow-rgb),.06);
+  --shadow-lg:0 12px 28px -14px rgba(var(--shadow-rgb),.28),0 2px 6px -2px rgba(var(--shadow-rgb),.08);
 
   /* Scales (use these for new work) */
   --r-sm:8px; --r-md:12px; --r-lg:16px; --r-pill:999px;
@@ -37,62 +47,114 @@
 
   /* Page width for the nav bar (pages can override) */
   --nav-max:1080px;
+  /* Height of the bottom tab bar on phones */
+  --tabbar-h:66px;
 }
 
 @media (prefers-color-scheme: dark){
   :root{
-    --bg:#140e0f; --card:#1d1517; --card2:#241a1c;
-    --ink:#f4e9e8; --ink2:#d3bfbe; --muted:#a58d8e; --line:#35272a;
-    --primary:#ef4444; --primary-dark:#dc2626; --primary-text:#ff8a7a; --primary-soft:rgba(239,68,68,.16);
-    --primary-rgb:239,68,68; --ring:#ef4444;
-    --hero1:#450a0a; --hero2:#991b1b; --hero3:#dc2626;
-    --green:#10b981; --green-dark:#059669;
-    --red:#ff6b5b; --red-lit:#ff8577; --red-soft:rgba(255,107,91,.16);
-    --gold:#fbbf24; --gold-soft:rgba(251,191,36,.12);
+    --bg:#0a101a; --card:#121a28; --card2:#182334;
+    --ink:#eef2f8; --ink2:#c2ccdc; --muted:#8e9bb0; --line:#243145;
+    --primary:#f04438; --primary-dark:#d92d20; --primary-text:#ff8f82; --primary-soft:rgba(240,68,56,.16);
+    --primary-rgb:240,68,56; --ring:#7aa7ff;
+    --accent-grad:linear-gradient(90deg,#d92d20,#ff7a66);
+    --hero1:#070d18; --hero2:#0f1d35; --hero3:#18304f;
+    --brass:#f3c267;
+    --sel-bg:#e8eef8; --sel-fg:#0f1a2e;
+    --green:#12b76a; --green-dark:#039855;
+    --red:#ff7a66; --red-lit:#ff9585; --red-soft:rgba(255,122,102,.16);
+    --gold:#fdb022; --gold-soft:rgba(253,176,34,.12);
     --shadow-rgb:0,0,0;
-    --shadow-lg:0 10px 30px -10px rgba(0,0,0,.5),0 4px 10px -4px rgba(0,0,0,.4);
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+    --shadow-lg:0 12px 28px -14px rgba(0,0,0,.7),0 2px 6px -2px rgba(0,0,0,.4);
   }
-  .nav{box-shadow:0 2px 10px rgba(0,0,0,.35)}
 }
 
-/* Navigation bar (identical on every page) */
-.nav{position:sticky;top:0;z-index:40;background:var(--card);
-  border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(var(--shadow-rgb),.06)}
-.nav-inner{max-width:var(--nav-max);margin:0 auto;display:flex;gap:4px;padding:8px 16px}
-.nav a{flex:1;text-align:center;text-decoration:none;font-size:13.5px;font-weight:700;
-  font-family:var(--font-head);color:var(--muted);padding:10px 8px;border-radius:9px;
-  border:1.5px solid transparent;transition:background .15s,color .15s}
-.nav a.active{color:var(--primary-text);background:var(--primary-soft);border-color:rgba(var(--primary-rgb),.25)}
-.nav a:not(.active):hover{background:var(--card2);color:var(--ink)}
-@media (max-width:480px){
-  .nav a{font-size:11.5px;padding:9px 2px;white-space:nowrap}
+/* ---------- Navigation (identical on every page) ----------
+   Desktop: brand on the left, tools on the right.
+   Phones: a tab bar fixed to the bottom, within thumb reach. */
+.nav{position:sticky;top:0;z-index:40;background:var(--card);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:var(--nav-max);margin:0 auto;display:flex;align-items:center;gap:4px;padding:8px 16px;min-height:58px}
+.nav-brand{display:flex;align-items:center;gap:10px;margin-right:auto;text-decoration:none;
+  font-family:var(--font-head);font-size:15px;font-weight:800;letter-spacing:-.1px;color:var(--ink)}
+.nav-brand .mark{width:32px;height:32px;border-radius:9px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--hero2),var(--hero3));box-shadow:inset 0 -3px 0 var(--primary)}
+.nav-brand .mark svg{width:16px;height:16px;fill:#fff}
+.nav-brand small{font-size:12px;font-weight:600;color:var(--muted);margin-left:2px}
+.nav-inner a:not(.nav-brand){display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
+  font-family:var(--font-head);font-size:13.5px;font-weight:700;color:var(--ink2);min-height:42px;padding:9px 14px;
+  border-radius:10px;transition:background .15s,color .15s}
+.nav-inner a:not(.nav-brand) svg{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-inner a:not(.nav-brand) .sm{display:none}
+.nav-inner a:not(.nav-brand):hover{background:var(--card2);color:var(--ink)}
+.nav-inner a.active{background:var(--sel-bg);color:var(--sel-fg)}
+.nav-inner a.active:hover{background:var(--sel-bg);color:var(--sel-fg)}
+.nav a:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
+
+@media (max-width:760px){
+  .nav{position:fixed;top:auto;bottom:0;left:0;right:0;border-bottom:none;border-top:1px solid var(--line);
+    padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -6px 20px -12px rgba(var(--shadow-rgb),.35)}
+  .nav-inner{padding:6px 8px;gap:4px;min-height:var(--tabbar-h)}
+  .nav-brand{display:none}
+  .nav-inner a:not(.nav-brand){flex:1;flex-direction:column;gap:3px;font-size:11.5px;padding:6px 2px;min-height:50px;
+    border-radius:12px;color:var(--muted)}
+  .nav-inner a:not(.nav-brand) svg{width:21px;height:21px}
+  .nav-inner a:not(.nav-brand) .lg{display:none}
+  .nav-inner a:not(.nav-brand) .sm{display:inline}
+  .nav-inner a.active,.nav-inner a.active:hover{background:var(--primary-soft);color:var(--primary-text)}
+
+  /* Keep page content and floating controls clear of the tab bar */
+  html body{padding-bottom:calc(var(--tabbar-h) + 28px + env(safe-area-inset-bottom))}
+  html body.has-balance-bar{padding-bottom:calc(var(--tabbar-h) + 104px + env(safe-area-inset-bottom))}
+  body .totop{bottom:calc(var(--tabbar-h) + 14px + env(safe-area-inset-bottom))}
+  body .toast{bottom:calc(var(--tabbar-h) + 14px + env(safe-area-inset-bottom))}
+  body .balance-bar{bottom:calc(var(--tabbar-h) + env(safe-area-inset-bottom));padding-bottom:12px;box-shadow:none}
 }
 
-/* Header photo: firefighter blended into the red banner.
-   The image itself is colour-graded red and feathered at the sides, so it
-   melts into the gradient. It stays inside the content width. */
+/* ---------- Header (shared by every page) ----------
+   Navy night scene; the firefighter is lit by an ember glow on the right.
+   A thin engine-striping band closes the header. */
+header.hero{isolation:isolate;
+  --fig-x:calc(min(100%, 50% + var(--nav-max) / 2) - 118px);
+  background:
+    radial-gradient(300px 150% at var(--fig-x) 85%,rgba(240,68,56,.46),rgba(240,68,56,0) 70%),
+    radial-gradient(170px 70% at var(--fig-x) 105%,rgba(247,144,9,.38),rgba(247,144,9,0) 72%),
+    linear-gradient(115deg,var(--hero1) 0%,var(--hero2) 58%,var(--hero3) 100%)}
+header.hero::before{
+  content:"";position:absolute;inset:auto 0 0 0;top:auto;height:4px;opacity:1;z-index:2;pointer-events:none;
+  background:repeating-linear-gradient(-45deg,var(--primary) 0 12px,var(--brass-on-dark) 12px 24px)}
 header.hero::after{
-  content:"";position:absolute;top:0;bottom:0;left:auto;height:auto;border-radius:0;
+  content:"";position:absolute;top:auto;bottom:0;left:auto;border-radius:0;
   right:max(0px,calc((100% - var(--nav-max)) / 2));
-  width:min(100%,520px);
-  background:url("hero-firefighter.webp") right bottom / auto 112% no-repeat;
+  height:112%;width:auto;aspect-ratio:399/440;
+  background:url("hero-firefighter.webp") center / 100% 100% no-repeat;
+  /* soft oval mask: keeps the figure, fades the photo's background into the glow */
+  -webkit-mask-image:radial-gradient(ellipse 50% 62% at 50% 52%,#000 48%,transparent 100%);
+          mask-image:radial-gradient(ellipse 50% 62% at 50% 52%,#000 48%,transparent 100%);
   opacity:.95;pointer-events:none;
 }
-@media (max-width:600px){ header.hero::after{opacity:.75;background-size:auto 64%} }
-@media (prefers-color-scheme: dark){ header.hero::after{filter:brightness(.85)} }
+@media (max-width:600px){
+  header.hero{--fig-x:calc(100% - 70px)}
+  header.hero::after{opacity:.5;height:74%}
+  header.hero .step{background:rgba(10,19,34,.62);backdrop-filter:none}
+}
+@media (prefers-color-scheme: dark){ header.hero::after{filter:brightness(.88)} }
 
-/* Header text legibility on the red banner */
-header.hero .app-kicker,header.hero .kicker{color:rgba(255,255,255,.94);text-shadow:0 1px 2px rgba(50,0,0,.45)}
-header.hero .sub{color:rgba(255,255,255,.96);text-shadow:0 1px 2px rgba(50,0,0,.45)}
-header.hero h1{text-shadow:0 1px 3px rgba(50,0,0,.35)}
-header.hero .step{background:rgba(50,5,5,.34);border-color:rgba(255,255,255,.3)}
-header.hero .step .tx{color:#fff;text-shadow:0 1px 1px rgba(50,0,0,.4)}
-header.hero .steps-dismiss{color:#fff;text-shadow:0 1px 2px rgba(50,0,0,.5)}
+/* Header type: apparatus-style condensed lettering for the title */
+header.hero h1{font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.012em;
+  font-size:clamp(34px,6vw,50px);line-height:.98;margin:2px 0 4px;text-shadow:0 2px 12px rgba(4,9,18,.45)}
+header.hero .app-kicker,header.hero .kicker{color:var(--brass-on-dark);letter-spacing:1.6px;text-shadow:0 1px 2px rgba(4,9,18,.5)}
+header.hero .sub{color:rgba(255,255,255,.88);text-shadow:0 1px 2px rgba(4,9,18,.5)}
+header.hero .badge{color:var(--brass-on-dark);border-color:rgba(243,194,103,.6);border-radius:6px;align-self:center}
+header.hero .step{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);backdrop-filter:blur(6px)}
+header.hero .step .n{background:var(--brass-on-dark);color:#1a1204}
+header.hero .step .tx{color:#fff;text-shadow:0 1px 1px rgba(4,9,18,.4)}
+header.hero .steps-dismiss{color:#fff;text-shadow:0 1px 2px rgba(4,9,18,.5)}
 
 /* Phones: compact header, so the content starts higher.
    The 3 steps become a short list (nothing cut off); the dismiss link sits under it. */
 @media (max-width:600px){
-  header.hero{padding-top:18px;padding-bottom:20px}
+  header.hero{padding-top:18px;padding-bottom:22px}
   header.hero .steps{display:grid;grid-template-columns:1fr;gap:6px;margin-top:12px}
   header.hero .steps.hidden{display:none}
   header.hero .step{border-radius:12px;padding:6px 10px 6px 6px;white-space:normal}

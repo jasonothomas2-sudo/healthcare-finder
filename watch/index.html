@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#b91c1c">
+<meta name="theme-color" content="#0a1322">
 <title>JFB Work Shift Forecast</title>
 <link rel="manifest" href="../manifest.json">
 <link rel="apple-touch-icon" href="../icon-192.png">
 <link rel="icon" type="image/png" href="../icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Figtree:wght@500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../theme.css">
 <style>
   /* Redesign v2 — matches Provider Finder design system */
@@ -80,7 +80,7 @@
   .today-card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);
     border-radius:18px;padding:24px 16px;text-align:center;box-shadow:var(--shadow-lg)}
   .today-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;
-    background:linear-gradient(90deg,var(--hero2),var(--hero3))}
+    background:var(--accent-grad)}
   .today-card .dow{font-family:var(--font-head);font-size:12px;color:var(--muted);letter-spacing:.5px;
     text-transform:uppercase;font-weight:700}
   .today-card .date{font-size:15px;color:var(--ink2);margin-bottom:14px}
@@ -94,7 +94,7 @@
   /* Right now (live) card */
   .now-card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);
     border-radius:18px;padding:16px 18px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-  .now-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--hero2),var(--hero3))}
+  .now-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--accent-grad)}
   .now-main{display:flex;align-items:center;gap:14px;flex:1;min-width:220px}
   .now-pill{font-family:var(--font-head);display:inline-flex;flex-direction:column;align-items:center;
     justify-content:center;min-width:60px;padding:10px 12px;border-radius:14px;color:#fff;
@@ -134,9 +134,9 @@
 
   .forecast{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
   .fc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;
-    box-shadow:var(--shadow);border-left:4px solid var(--fcc,var(--line));
+    box-shadow:var(--shadow);
     transition:transform .15s ease,box-shadow .15s ease}
-  .fc:hover{transform:translateY(-2px);box-shadow:0 8px 20px -8px rgba(var(--shadow-rgb),.28)}
+  .fc:hover{border-color:var(--fcc,var(--line));box-shadow:var(--shadow-lg)}
   .fc.Day{--fcc:var(--day)} .fc.Evening{--fcc:var(--eve)} .fc.Night{--fcc:var(--night)} .fc.Off{--fcc:var(--off)}
   .fc .fc-slot{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:5px}
   .fc .fc-dot{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
@@ -204,8 +204,10 @@
 
   @media (prefers-color-scheme: dark){
     :root{
-      --day:#60a5fa; --eve:#d97706; --night:#a78bfa; --off:#94a3b8;
+      --day:#60a5fa; --eve:#f59e0b; --night:#a78bfa; --off:#94a3b8;
     }
+    /* light shift colours need dark text to stay readable */
+    .slot-badge,.slot-pill,.now-pill,.daychip .dslot,.mcell .mt{color:#0b1220}
   }
 
   .wrap{max-width:1120px}
@@ -312,11 +314,12 @@
 </style>
 </head>
 <body>
-<nav class="nav">
+<nav class="nav" aria-label="JFB tools">
   <div class="nav-inner">
-    <a href="../">Provider Finder</a>
-    <a href="./" class="active">Shift Forecast</a>
-    <a href="../leave/">Leave Calculator</a>
+    <a class="nav-brand" href="../" aria-label="JFB Tools home"><span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12.6 2.2c.5 3.3-1.3 5-2.9 6.9C8.2 10.9 7 12.6 7 15a5 5 0 0 0 10 0c0-1.9-.8-3.400-1.8-4.700-.3 1.2-.9 2-1.9 2.6.6-3.500-.2-7.3-.7-10.700z"/></svg></span>JFB Tools <small>by Jay</small></a>
+    <a href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></svg><span class="lg">Provider Finder</span><span class="sm">Providers</span></a>
+    <a href="./" class="active" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lg">Shift Forecast</span><span class="sm">Shifts</span></a>
+    <a href="../leave/"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg><span class="lg">Leave Calculator</span><span class="sm">Leave</span></a>
   </div>
 </nav>
 
